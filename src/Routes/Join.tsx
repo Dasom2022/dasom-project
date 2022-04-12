@@ -1,10 +1,9 @@
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { userInfoData } from "../atoms";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
-import { userInfo } from "../atoms";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
-  width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,11 +23,11 @@ const Wrapper = styled.div`
   }
 `;
 const Loginwrap = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 450px;
-  height: 250px;
+  padding: 30px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
@@ -55,9 +54,6 @@ const Form = styled.form`
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     font-size: 18px;
     margin-bottom: 10px;
-    :nth-child(2) {
-      margin-bottom: 25px;
-    }
     ::placeholder {
       color: rgba(0, 0, 0, 0.4);
     }
@@ -68,100 +64,72 @@ const Form = styled.form`
   }
 `;
 
-const Joinwrap = styled.div``;
-
-const APIlogin = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+const Joinbtn = styled.button`
+  width: 400px;
+  height: 50px;
+  background-color: #388e3c;
+  margin-top: 15px;
 `;
 
-const Loginbtn = styled.button`
-  width: 400px;
+const Authbtn = styled.button`
+  position: absolute;
+  width: 50px;
   height: 50px;
   background-color: #388e3c;
 `;
 
-const Kakaobtn = styled.button`
-  width: 300px;
-  height: 50px;
-  color: #6b7280;
-  background-color: #ffc107;
-`;
-
-const Naverbtn = styled.button`
-  margin-top: 20px;
-  width: 300px;
-  height: 50px;
-  background-color: #4caf50;
-`;
-
-const Ul = styled.ul`
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Li = styled.li`
-  cursor: pointer;
-  display: inline-block;
-  margin: 0px 20px;
-  color: rgba(0, 0, 0, 0.5);
-  font-weight: 400;
-`;
-
 interface IForm {
-  id: string;
-  pw: string;
+  userId: string;
+  userPw: string;
+  userEmail: string;
 }
 
 function Login() {
   const navigate = useNavigate();
-  const setUserInfo = useSetRecoilState(userInfo);
+  const setUserInfo = useSetRecoilState(userInfoData);
   const { register, handleSubmit } = useForm<IForm>();
-  const onSubmit = ({ id, pw }: IForm) => {
-    setUserInfo((old) => [{ id, pw }, ...old]);
+  const onSubmit = ({ userId, userPw, userEmail }: IForm) => {
+    setUserInfo((old) => [{ userId, userPw, userEmail }, ...old]);
     navigate("/shopinglist");
   };
   return (
     <Wrapper>
       <Titlewrap>
-        <Title>로그인</Title>
+        <Title>회원가입</Title>
       </Titlewrap>
       <Loginwrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <input
-            {...register("id", {
+            {...register("userId", {
               required: "아이디 입력은 필수입니다.",
             })}
             placeholder="아이디를 입력하세요"
             type="text"
           />
           <input
-            {...register("pw", {
+            {...register("userPw", {
               required: "비밀번호 입력은 필수입니다.",
             })}
             placeholder="비밀번호를 입력하세요"
             type="password"
           />
-          <Loginbtn>로그인</Loginbtn>
+          <input type="password" placeholder="비밀번호 재입력" />
+          <div style={{ display: "flex", justifyContent: "right" }}>
+            <input
+              {...register("userEmail", {
+                required: "이메일 입력은 필수입니다.",
+              })}
+              placeholder="이메일를 입력하세요"
+              type="password"
+            />
+            <Authbtn>인증</Authbtn>
+          </div>
+
+          <input type="text" placeholder="이메일 인증 코드" />
+
+          <Joinbtn>회원가입</Joinbtn>
         </Form>
       </Loginwrap>
-      <Joinwrap>
-        <Ul>
-          <Li>비밀번호 찾기</Li> |<Li>아이디 찾기</Li> |
-          <Link to="/join">
-            <Li>회원가입</Li>
-          </Link>
-        </Ul>
-      </Joinwrap>
-      <APIlogin>
-        <Kakaobtn>카카오 로그인</Kakaobtn>
-        <Naverbtn>네이버 로그인</Naverbtn>
-      </APIlogin>
     </Wrapper>
   );
 }
