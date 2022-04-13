@@ -124,7 +124,7 @@ function Login() {
   const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
     setUserInfo((old) => [{ id, pw }, ...old]);
-    navigate("/shopinglist");
+    navigate("/main");
   };
   return (
     <Wrapper>

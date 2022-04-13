@@ -1,10 +1,6 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-const { persistAtom } = recoilPersist({
-  key: "userInfoLocal",
-  storage: localStorage,
-});
 export interface IInfoData {
   userId: string;
   userPw: string;

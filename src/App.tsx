@@ -1,16 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Join from "./Routes/Join";
 import Login from "./Routes/Login";
+import Welcome from "./Routes/Welcome";
 import Main from "./Routes/Main";
-import Shopinglist from "./Routes/Shopinglist";
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Main />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/join" element={<Join />}></Route>
-        <Route path="/shopinglist" element={<Shopinglist />}></Route>
+        <Route path="/main" element={<Main />}>
+          <Route path=":itemId" element={<Main />} />
+        </Route>
+        <Route path="/" element={<Welcome />}></Route>
       </Routes>
     </Router>
   );
