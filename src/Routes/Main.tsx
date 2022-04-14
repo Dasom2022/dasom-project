@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMatch, useNavigate } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -117,9 +117,11 @@ const RightTitle = styled.div`
   font-weight: bold;
   padding: 7px 0;
   padding-left: 15px;
+  font-size: 18px;
 `;
 const GuideText = styled.div`
-  height: 125px;
+  font-size: 18px;
+  height: 135px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -137,6 +139,8 @@ const GuideText = styled.div`
 `;
 
 const Lists = styled.div`
+  overflow: scroll;
+  height: calc(100% - 247px);
   ul,
   li {
     list-style: none;
@@ -144,15 +148,20 @@ const Lists = styled.div`
   li {
     padding: 7px 0;
     font-weight: bold;
+    font-size: 18px;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
 `;
 const CompletedList = styled.div``;
 const ListTitle = styled.div`
+  font-size: 18px;
   padding: 10px 0;
   padding-left: 20px;
   background-color: grey;
   font-weight: bold;
-  margin-top: 2px;
   cursor: pointer;
 `;
 const PopularList = styled(motion.div)``;
@@ -179,7 +188,7 @@ const Ul = styled(motion.ul)`
 const ItemModal = styled(motion.div)`
   width: 70%;
   height: 80%;
-  background: white;
+  background: #dfdfdf;
   position: absolute;
   border-radius: 30px;
   left: 0;
@@ -227,24 +236,31 @@ const ItemLocation = styled.div`
 `;
 
 const MapTop = styled.div`
-  grid-column: 1/10;
-  border: 1px solid black;
+  grid-column: 1/9;
   display: flex;
 `;
 const MapRight = styled.div`
   grid-column: 9/10;
   grid-row: 2/12;
-  border: 1px solid black;
 `;
 const MapBottom = styled.div`
-  grid-column: 1/10;
+  grid-column: 1/9;
   grid-row: 12/13;
-  border: 1px solid black;
+  display: flex;
 `;
 const Box = styled(motion.div)`
-  width: 25%;
+  box-sizing: border-box;
+  width: 20%;
   height: 100%;
   background-color: white;
+  border: 1px solid black;
+`;
+const SideBox = styled(motion.div)`
+  box-sizing: border-box;
+  width: 100%;
+  height: 16.7%;
+  background-color: white;
+  border: 1px solid black;
 `;
 
 const modalVariants = {
@@ -275,8 +291,10 @@ const boxVariants = {
     },
   },
 };
-const witch = "a-3";
-const locationCode = ["a-1", "a-2", "a-3", "a-4"];
+const witch = "c-2";
+const locationCode = ["a-1", "a-2", "a-3", "a-4", "a-5"];
+const sideLocationCode = ["b-1", "b-2", "b-3", "b-4", "b-5", "b-6"];
+const bottomLocationCode = ["c-1", "c-2", "c-3", "c-4", "c-5"];
 const itemList = [
   "Milk",
   "Eggs",
@@ -303,11 +321,9 @@ function Main() {
   }
   function togglePopular() {
     setPopularListOpen((prev) => !prev);
-    setCompletedListOpen(false);
   }
   function toggleCompleted() {
     setCompletedListOpen((prev) => !prev);
-    setPopularListOpen(false);
   }
   return (
     <Container>
@@ -334,7 +350,9 @@ function Main() {
             </div>
           </Icons>
           <SelectedItems>
-            <AddButton>Add PLU Item</AddButton>
+            <Link to="/itemcode">
+              <AddButton>Add PLU Item</AddButton>
+            </Link>
           </SelectedItems>
           <SelectedInfo>
             <InfoText>
@@ -375,8 +393,8 @@ function Main() {
             </Ul>
           </CompletedList>
           <PopularList
-            initial={{ y: -345 }}
-            animate={{ y: completedListOpen ? 0 : -300 }}
+            initial={{ y: -370 }}
+            animate={{ y: completedListOpen ? 0 : -320 }}
             transition={{ type: "linear" }}
           >
             <ListTitle onClick={togglePopular}>Popular List Items</ListTitle>
@@ -459,8 +477,44 @@ function Main() {
                     )
                   )}
                 </MapTop>
-                <MapRight></MapRight>
-                <MapBottom></MapBottom>
+                <MapRight>
+                  {sideLocationCode.map((item) =>
+                    item === witch ? (
+                      <SideBox
+                        key={item}
+                        animate={{
+                          backgroundColor: [
+                            "rgba(0,0,0,0)",
+                            "rgba(0,0,0,1)",
+                            "rgba(0,0,0,0)",
+                          ],
+                          transition: { repeat: Infinity },
+                        }}
+                      ></SideBox>
+                    ) : (
+                      <SideBox />
+                    )
+                  )}
+                </MapRight>
+                <MapBottom>
+                  {bottomLocationCode.map((item) =>
+                    item === witch ? (
+                      <Box
+                        key={item}
+                        animate={{
+                          backgroundColor: [
+                            "rgba(0,0,0,0)",
+                            "rgba(0,0,0,1)",
+                            "rgba(0,0,0,0)",
+                          ],
+                          transition: { repeat: Infinity },
+                        }}
+                      ></Box>
+                    ) : (
+                      <Box />
+                    )
+                  )}
+                </MapBottom>
               </ItemLocation>
             </ItemModal>
           </>

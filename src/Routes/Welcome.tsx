@@ -4,9 +4,11 @@ import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
-  display: flex;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  display: flex;
+  min-width: 1000px;
+  min-height: 600px;
 `;
 
 const LeftWrap = styled.div`
