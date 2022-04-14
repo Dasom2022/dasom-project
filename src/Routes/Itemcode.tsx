@@ -19,7 +19,7 @@ const LightWrap = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: #388e3c;
-  padding: 30px;
+  padding: 40px;
   width: 35%;
 `;
 
@@ -35,7 +35,6 @@ const Leftheader = styled.div`
 const CloseBtn = styled.div``;
 
 const Codeview = styled.div`
-  margin-top: 80px;
   margin-bottom: 30px;
   display: flex;
   align-items: center;
@@ -90,9 +89,7 @@ function Itemcode() {
         <Leftheader>Enter the item's PLU #</Leftheader>
       </LeftWrap>
       <LightWrap>
-        <Link to="/itemadd">
-          <Codeview>Enter code</Codeview>
-        </Link>
+        <Codeview>Enter code</Codeview>
         <Numberpad>
           {[1, 2, 3].map((item) => (
             <Numbers key={item}>{item}</Numbers>
@@ -113,7 +110,9 @@ function Itemcode() {
             <Numbers key={item}>{item}</Numbers>
           ))}
           <Numbers style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <Enter>Enter</Enter>
+            <Link to="/itemadd">
+              <Enter>Enter</Enter>
+            </Link>
           </Numbers>
         </Numberpad>
       </LightWrap>
