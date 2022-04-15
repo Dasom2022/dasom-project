@@ -84,7 +84,9 @@ const Svg = styled.svg`
 `;
 
 const Footter = styled.div`
-  margin-top: 250px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 60px;
   color: white;
 `;
 

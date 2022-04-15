@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const Wrapper = styled.div`
   width: 100%;
@@ -16,6 +17,7 @@ const LeftWrap = styled.div`
 
 const LightWrap = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   background-color: #388e3c;
@@ -52,10 +54,12 @@ const Codeview = styled.div`
 `;
 
 const Numberpad = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 `;
 
 const Numbers = styled.div`
+  cursor: pointer;
   font-size: 30px;
   font-weight: 600;
   width: 110px;
@@ -66,11 +70,38 @@ const Numbers = styled.div`
   align-items: center;
   margin: 5px;
   border-radius: 55px;
-`;
-const Enter = styled.div`
-  color: rgba(0, 0, 0, 0.3);
+  :last-child {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 `;
 function Itemcode() {
+  const NumberpadData = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "X",
+    "0",
+    "Enter",
+  ];
+  const navigate = useNavigate();
+  const [code, setCode] = useState("");
+  function onClick(item: string) {
+    if (item !== "X" && item !== "Enter") {
+      setCode((prev) => prev + item);
+    }
+    if (item === "X") {
+      setCode((prev) => prev.substring(0, prev.length - 1));
+    }
+    if (item === "Enter") {
+      navigate("/itemadd");
+    }
+  }
   return (
     <Wrapper>
       <LeftWrap>
@@ -89,31 +120,13 @@ function Itemcode() {
         <Leftheader>Enter the item's PLU #</Leftheader>
       </LeftWrap>
       <LightWrap>
-        <Codeview>Enter code</Codeview>
+        <Codeview>{code}</Codeview>
         <Numberpad>
-          {[1, 2, 3].map((item) => (
-            <Numbers key={item}>{item}</Numbers>
+          {NumberpadData.map((item) => (
+            <Numbers onClick={() => onClick(item)} key={item}>
+              {item}
+            </Numbers>
           ))}
-        </Numberpad>
-        <Numberpad>
-          {[4, 5, 6].map((item) => (
-            <Numbers key={item}>{item}</Numbers>
-          ))}
-        </Numberpad>
-        <Numberpad>
-          {[7, 8, 9].map((item) => (
-            <Numbers key={item}>{item}</Numbers>
-          ))}
-        </Numberpad>
-        <Numberpad>
-          {["X", 0].map((item) => (
-            <Numbers key={item}>{item}</Numbers>
-          ))}
-          <Numbers style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-            <Link to="/itemadd">
-              <Enter>Enter</Enter>
-            </Link>
-          </Numbers>
         </Numberpad>
       </LightWrap>
     </Wrapper>
