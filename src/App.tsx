@@ -4,7 +4,6 @@ import Login from "./Routes/Login";
 import Welcome from "./Routes/Welcome";
 import Main from "./Routes/Main";
 import Itemcode from "./Routes/Itemcode";
-import Itemadd from "./Routes/Itemadd";
 import { useEffect } from "react";
 import axios from "axios";
 
