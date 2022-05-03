@@ -6,7 +6,6 @@ import { RecoilRoot } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { QueryClient, QueryClientProvider } from "react-query";
 const GlobalStyle = createGlobalStyle`
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -20,8 +19,7 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 main, menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-  margin: 0;
-  padding: 0;
+
   border: 0;
   font-size: 100%;
   font: inherit;
@@ -78,7 +76,6 @@ ReactDOM.render(
     <RecoilRoot>
       <QueryClientProvider client={client}>
         <ThemeProvider theme={theme}>
-          <GlobalStyle />
           <App />
         </ThemeProvider>
       </QueryClientProvider>

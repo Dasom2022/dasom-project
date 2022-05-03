@@ -4,11 +4,9 @@ import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100vh;
   display: flex;
-  min-width: 1000px;
-  min-height: 600px;
+  width: 100vw;
+  height: 100vh;
 `;
 
 const LeftWrap = styled.div`
@@ -84,9 +82,7 @@ const Svg = styled.svg`
 `;
 
 const Footter = styled.div`
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 60px;
+  margin-top: 250px;
   color: white;
 `;
 
@@ -102,7 +98,7 @@ const Loginbtn = styled.div`
 function Main() {
   const navigate = useNavigate();
   const OnshopingList = () => {
-    navigate("/main");
+    navigate("/DAMA/main");
   };
   return (
     <Wrapper>
