@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Itemadd from "./Itemadd";
 const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -37,15 +38,15 @@ const Leftheader = styled.div`
 const CloseBtn = styled.div``;
 
 const Codeview = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 350px;
+  width: 310px;
   height: 150px;
   background-color: white;
   font-size: 30px;
-  color: rgba(0, 0, 0, 0.3);
+  color: rgba(0, 0, 0, 0.7);
   font-weight: 500;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -62,13 +63,13 @@ const Numbers = styled.div`
   cursor: pointer;
   font-size: 30px;
   font-weight: 600;
-  width: 110px;
-  height: 110px;
+  width: 90px;
+  height: 90px;
   background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5px;
+  margin: 10px;
   border-radius: 55px;
   :last-child {
     background-color: rgba(0, 0, 0, 0.5);
@@ -91,15 +92,28 @@ function Itemcode() {
   ];
   const navigate = useNavigate();
   const [code, setCode] = useState("");
+  const [dumyCode, setDumyCode] = useState(["5959", "1234"]); // 더미 상품리스트
+  const [dumyData, setDumyData] = useState({
+    data: {
+      code: ["5959", "1234"],
+      value: ["바나나", "치킨"],
+      price: ["1500", "3000"],
+    },
+  });
   function onClick(item: string) {
-    if (item !== "X" && item !== "Enter") {
-      setCode((prev) => prev + item);
-    }
-    if (item === "X") {
-      setCode((prev) => prev.substring(0, prev.length - 1));
-    }
+    if (item !== "X" && item !== "Enter") setCode((prev) => prev + item);
+    if (item === "X") setCode((prev) => prev.substring(0, prev.length - 1));
     if (item === "Enter") {
-      navigate("/itemadd");
+      let item = dumyCode.filter((val) => val === code);
+      if (item.length === 0) setCode("");
+      else {
+        for (let i = 0; i < dumyData.data.code.length; i++) {
+          if (item[0] === dumyData.data.code[i]) {
+            setCode("");
+            navigate(`/itemcode/${i}`);
+          }
+        }
+      }
     }
   }
   return (
@@ -122,13 +136,14 @@ function Itemcode() {
       <LightWrap>
         <Codeview>{code}</Codeview>
         <Numberpad>
-          {NumberpadData.map((item) => (
-            <Numbers onClick={() => onClick(item)} key={item}>
-              {item}
+          {NumberpadData.map((num) => (
+            <Numbers onClick={() => onClick(num)} key={num}>
+              {num}
             </Numbers>
           ))}
         </Numberpad>
       </LightWrap>
+      <Itemadd />
     </Wrapper>
   );
 }
