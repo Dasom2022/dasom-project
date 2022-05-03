@@ -124,7 +124,7 @@ function Login() {
   const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
     setUserInfo((old) => [{ id, pw }, ...old]);
-    navigate("/main");
+    navigate("/DAMA/main");
   };
   return (
     <Wrapper>
@@ -153,7 +153,7 @@ function Login() {
       <Joinwrap>
         <Ul>
           <Li>비밀번호 찾기</Li> |<Li>아이디 찾기</Li> |
-          <Link to="/join">
+          <Link to="/DAMA/join">
             <Li>회원가입</Li>
           </Link>
         </Ul>
