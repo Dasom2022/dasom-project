@@ -110,7 +110,7 @@ function Itemcode() {
         for (let i = 0; i < dumyData.data.code.length; i++) {
           if (item[0] === dumyData.data.code[i]) {
             setCode("");
-            navigate(`/itemcode/${i}`);
+            navigate(`/DAMA/itemcode/${i}`);
           }
         }
       }
