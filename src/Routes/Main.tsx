@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState } from "recoil";
 import { searchOpenState } from "../atoms";
+import { clickOptions } from "@testing-library/user-event/dist/click";
 const Container=styled.div`
     width:100%;
     height:100vh;
@@ -199,6 +200,17 @@ const Ul=styled(motion.ul)`
     transform-origin:top center;
     list-style:none;
 `;
+const SecondUl=styled(motion.ul)`
+    transform-origin:top center;
+    &, & > li{
+        margin:0;
+        padding:0;
+    }
+    & > li{
+        font-size:16px;
+        font-weight:500;
+    }
+`;
 const ItemModal=styled(motion.div)`
     width:70%;
     height:80%;
@@ -215,6 +227,7 @@ const ItemModal=styled(motion.div)`
     min-height:500px;
     display:flex;
     justify-content:space-between;
+    z-index:10;
 
 `;
 const ModalBg=styled(motion.div)`
@@ -223,6 +236,7 @@ const ModalBg=styled(motion.div)`
     height:100%;
     position:absolute;
     opacity:0.3;
+    z-index:10;
 `;
 const ModalLeft=styled.div`
     width:52%;
@@ -329,13 +343,62 @@ const boxVariants={
         }
     }
 }
+const imsiData=[{
+    id:"1",
+    title:"[원스위크라이프] 모음전 캠핑 의자 테이블 웨건 테이블 선반 박스",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"0"
+},{
+    id:"2",
+    title:"로티캠프 캐노피 원터치텐트 3-4인용 캠핑 테이블 의자 캠핑용품 모음전",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"1"
+},{
+    id:"3",
+    title:"[줄리샵] 50% 봄 신상 파격세일 원피스/트레이닝세트외",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"2",
+},{
+    id:"4",
+    title:"[줄리샵] 50% 봄 신상 파격세일 원피스/트레이닝세트외",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"3",
+},{
+    id:"5",
+    title:"[줄리샵] 50% 봄 신상 파격세일 원피스/트레이닝세트외",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"4",
+},{
+    id:"6",
+    title:"[줄리샵] 50% 봄 신상 파격세일 원피스/트레이닝세트외",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"5",
+},{
+    id:"7",
+    title:"[줄리샵] 50% 봄 신상 파격세일 원피스/트레이닝세트외",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"6",
+},{
+    id:"8",
+    title:"[줄리샵] 50% 봄 신상 파격세일 원피스/트레이닝세트외",
+    price:"28,000",
+    itemImg:`${process.env.PUBLIC_URL}/image/apple.jpg`,
+    category:"7",
+},]
 const witch="d-4";
 const locationCode=["a-1", "a-2", "a-3", "a-4","a-5"];
 const sideLocationCode=["b-1","b-2","b-3","b-4","b-5","b-6"];
 const bottomLocationCode=["c-1", "c-2","c-3","c-4","c-5"];
 const centerOneLocationCode=['d-1','d-2','d-3','d-4','d-5','d-6'];
 const centerTwoLocationCode=['e-1','e-2','e-3','e-4','e-5'];
-const itemList=["Milk","Eggs","Bread","Butter","Toilet paper", "Paper towels", "Bananas", "Coffee", "Cheese"];
+const itemList=["뷰티", "식품", "스포츠/레저/자동차", "출산/육아", "가구/인테리어", "생활/건강", "가전/디지털", "도서/취미"];
 function Main(){
     const navigate=useNavigate();
     const itemMatch=useMatch("/DAMA/main/:itemId");
@@ -344,6 +407,7 @@ function Main(){
     const [popularListOpen, setPopularListOpen]=useState(false);
     const [completedListOpen, setCompletedListOpen]=useState(false);
     const [searchOpen, setSearchOpen]=useRecoilState(searchOpenState);
+    const [categoryOpen, setCategoryOpen]=useState<{[key:string]:boolean}>({"0":false,"1":true,"2":false,"3":false,"4":false,"5":false,"6":false,"7":false});
     function toggleTab(index:number){
         setTabmenu(index);
     }
@@ -355,6 +419,13 @@ function Main(){
     }
     function toggleCompleted(){
         setCompletedListOpen(prev=>!prev);
+    }
+    function toggleCategory(index:number){
+        setCategoryOpen({...categoryOpen, [index]:!categoryOpen[index]})
+    }
+    function itemClick(e:React.MouseEvent<HTMLLIElement>, id:string){  
+        e.stopPropagation();
+        navigate(`/DAMA/main/${id}`)
     }
     return (
         <Container>
@@ -394,14 +465,11 @@ function Main(){
                     </SelectedInfo>
                 </LeftLine>
             </Left>
-
-
             <Right>
                 <RightTitle>
                     <span>DAMA Shoppinng</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" onClick={()=>setSearchOpen(true)}><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
                 </RightTitle>
- 
                 <Lists>
                     <CompletedList >
                         <ListTitle onClick={toggleCompleted}>Completed (0)</ListTitle>
@@ -412,14 +480,20 @@ function Main(){
                             {itemList.map((item)=><li key={item}>{item}</li>)}
                         </Ul>
                     </CompletedList>
-                    <PopularList initial={{y:-370}} animate={{y:completedListOpen?0:-370}} transition={{type:"linear"}} >
+                    <PopularList initial={{y:-332}} animate={{y:completedListOpen?0:-332}} transition={{type:"linear"}} >
                         <ListTitle onClick={togglePopular}>Popular List Items</ListTitle>
                         <Ul
                             initial={{scaleY:0}}
                             animate={{scaleY:popularListOpen?1:0}}
                             transition={{duration:0.3}}
                         >
-                            {itemList.map((item)=><li key={item} onClick={()=>{navigate(`${item}`)}}>{item}</li>)}
+                            {itemList.map((item, index)=><motion.li key={item} transition={{duration:0.5}} onClick={()=>{toggleCategory(index)}}>{item}
+                                <AnimatePresence>
+                                    {categoryOpen[index]?<SecondUl initial={{scaleY:0}} animate={{scaleY:1}} exit={{scaleY:0}} transition={{type:"linear"}}>
+                                        {imsiData.filter((item)=>item.category==index.toString()).map((item)=><li onClick={(event)=>itemClick(event, item.id)} key={item.id}>{item.title}</li>)}
+                                    </SecondUl>:null}
+                                </AnimatePresence>
+                            </motion.li>)}
                         </Ul>
                     </PopularList>
                 </Lists>
