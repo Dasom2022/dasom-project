@@ -4,26 +4,8 @@ import Login from "./Routes/Login";
 import Welcome from "./Routes/Welcome";
 import Main from "./Routes/Main";
 import Itemcode from "./Routes/Itemcode";
-import { useEffect } from "react";
-import axios from "axios";
 
 function App() {
-  const baseURL = "http://52.55.54.57:3333";
-
-  useEffect(() => {
-    getData();
-  }, []);
-  async function getData() {
-    await axios
-      .get(baseURL)
-      .then((response) => {
-        console.log(response.data);
-        // setValue(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
   return (
     <Router>
       <Routes>

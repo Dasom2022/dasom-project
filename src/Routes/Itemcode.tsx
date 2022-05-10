@@ -120,7 +120,7 @@ function Itemcode() {
     <Wrapper>
       <LeftWrap>
         <CloseBtn>
-          <Link to="/main">
+          <Link to="/DAMA/main">
             <svg
               style={{ width: "30px" }}
               xmlns="http://www.w3.org/2000/svg"

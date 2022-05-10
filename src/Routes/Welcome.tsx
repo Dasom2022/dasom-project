@@ -6,9 +6,16 @@ import { useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
+
   display: flex;
   min-width: 1000px;
   min-height: 600px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
 `;
 
 const LeftWrap = styled.div`

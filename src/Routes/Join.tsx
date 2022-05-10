@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 const Wrapper = styled.div`
   height: 100vh;
   display: flex;
@@ -49,7 +51,7 @@ const Form = styled.form`
   align-items: center;
   input {
     width: 400px;
-    height: 50px;
+    height: 30px;
     padding: 15px 0px;
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -79,20 +81,44 @@ const Authbtn = styled.button`
   background-color: #388e3c;
 `;
 
-interface IForm {
-  userId: string;
-  userPw: string;
-  userEmail: string;
+interface ISignup {
+  email: string;
+  password: string;
+  username: string;
 }
 
-function Login() {
+function Join() {
   const navigate = useNavigate();
-  const setUserInfo = useSetRecoilState(userInfoData);
-  const { register, handleSubmit } = useForm<IForm>();
-  const onSubmit = ({ userId, userPw, userEmail }: IForm) => {
-    setUserInfo((old) => [{ userId, userPw, userEmail }, ...old]);
-    navigate("/shopinglist");
+  const { register, handleSubmit, watch } = useForm<ISignup>();
+  const onSubmit = ({ username, password, email }: ISignup) => {
+    postUserData();
   };
+  const auth = () => {};
+
+  const baseURL = "http://52.55.54.57:3333/member/signup";
+  function postUserData() {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    axios
+      .post(
+        baseURL,
+        JSON.stringify({
+          email: watch().email,
+          password: watch().password,
+          username: watch().username,
+        }),
+        config
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <Wrapper>
       <Titlewrap>
@@ -100,15 +126,18 @@ function Login() {
       </Titlewrap>
       <Loginwrap>
         <Form onSubmit={handleSubmit(onSubmit)}>
+          <div style={{ display: "flex", justifyContent: "right" }}>
+            <input
+              {...register("username", {
+                required: "아이디 입력은 필수입니다.",
+              })}
+              placeholder="아이디를 입력하세요"
+              type="text"
+            />
+            <Authbtn>중복</Authbtn>
+          </div>
           <input
-            {...register("userId", {
-              required: "아이디 입력은 필수입니다.",
-            })}
-            placeholder="아이디를 입력하세요"
-            type="text"
-          />
-          <input
-            {...register("userPw", {
+            {...register("password", {
               required: "비밀번호 입력은 필수입니다.",
             })}
             placeholder="비밀번호를 입력하세요"
@@ -117,13 +146,13 @@ function Login() {
           <input type="password" placeholder="비밀번호 재입력" />
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
-              {...register("userEmail", {
+              {...register("email", {
                 required: "이메일 입력은 필수입니다.",
               })}
               placeholder="이메일를 입력하세요"
-              type="password"
+              type="text"
             />
-            <Authbtn>인증</Authbtn>
+            <Authbtn onClick={auth}>인증</Authbtn>
           </div>
 
           <input type="text" placeholder="이메일 인증 코드" />
@@ -134,4 +163,5 @@ function Login() {
     </Wrapper>
   );
 }
-export default Login;
+
+export default Join;
