@@ -4,9 +4,13 @@ import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
-  display: flex;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  display: flex;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 const LeftWrap = styled.div`
@@ -82,7 +86,9 @@ const Svg = styled.svg`
 `;
 
 const Footter = styled.div`
-  margin-top: 250px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 60px;
   color: white;
 `;
 

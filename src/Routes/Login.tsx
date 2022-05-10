@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
-import { userInfo } from "../atoms";
+import axios from "axios";
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -13,14 +12,9 @@ const Wrapper = styled.div`
   button {
     border: none;
     cursor: pointer;
-    padding: 20px 0px;
     color: aliceblue;
     font-size: 16px;
     border-radius: 10px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 `;
 const Loginwrap = styled.div`
@@ -34,13 +28,10 @@ const Loginwrap = styled.div`
   box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
     0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
 `;
-const Titlewrap = styled.div`
-  font-weight: 600;
-`;
+const Titlewrap = styled.div``;
 
 const Title = styled.h1`
   margin: 30px 0px;
-  font-size: 30px;
 `;
 
 const Form = styled.form`
@@ -49,7 +40,7 @@ const Form = styled.form`
   align-items: center;
   input {
     width: 400px;
-    height: 50px;
+    height: 25px;
     padding: 15px 0px;
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -68,7 +59,9 @@ const Form = styled.form`
   }
 `;
 
-const Joinwrap = styled.div``;
+const Joinwrap = styled.div`
+  margin: 10px 0px;
+`;
 
 const APIlogin = styled.div`
   display: flex;
@@ -99,10 +92,7 @@ const Naverbtn = styled.button`
 `;
 
 const Ul = styled.ul`
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0;
 `;
 
 const Li = styled.li`
@@ -120,12 +110,35 @@ interface IForm {
 
 function Login() {
   const navigate = useNavigate();
-  const setUserInfo = useSetRecoilState(userInfo);
-  const { register, handleSubmit } = useForm<IForm>();
+  const { register, handleSubmit, watch } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-    setUserInfo((old) => [{ id, pw }, ...old]);
-    navigate("/DAMA/main");
+    // navigate("/DAMA/main");
+    postUserData();
   };
+
+  const baseURL = `http://52.55.54.57:3333/member/signin`;
+  function postUserData() {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    axios
+      .post(
+        baseURL,
+        JSON.stringify({
+          username: watch().id,
+          password: watch().pw,
+        }),
+        config
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <Wrapper>
       <Titlewrap>
