@@ -20,3 +20,8 @@ export const userInfo = atom<IInfo[]>({
   key: "userInfo",
   default: [],
 });
+
+export const searchOpenState = atom({
+  key: "searchOpen",
+  default: false,
+});

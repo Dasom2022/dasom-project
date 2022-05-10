@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useMatch, useNavigate } from "react-router-dom";
+import ItemSearch from "../Components/ItemSearch";
+import { useRecoilState } from "recoil";
+import { searchOpenState } from "../atoms";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -115,9 +118,18 @@ const Right = styled.div`
 const RightTitle = styled.div`
   background-color: black;
   font-weight: bold;
-  padding: 7px 0;
+  padding: 12px 0;
   padding-left: 15px;
   font-size: 18px;
+  position: relative;
+  & > svg {
+    width: 20px;
+    fill: white;
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+  }
 `;
 const GuideText = styled.div`
   font-size: 18px;
@@ -126,7 +138,6 @@ const GuideText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   & > div:first-child {
     font-weight: bold;
     margin-bottom: 18px;
@@ -140,7 +151,7 @@ const GuideText = styled.div`
 
 const Lists = styled.div`
   overflow: scroll;
-  height: calc(100% - 247px);
+  height: calc(100% - 100px);
   ul,
   li {
     list-style: none;
@@ -248,6 +259,18 @@ const MapBottom = styled.div`
   grid-row: 12/13;
   display: flex;
 `;
+const MapCenterOne = styled(motion.div)`
+  grid-column: 2/8;
+  grid-row: 3/7;
+  display: flex;
+  flex-wrap: wrap;
+`;
+const MapCenterTwo = styled(motion.div)`
+  grid-column: 2/8;
+  grid-row: 8/11;
+  display: flex;
+  justify-content: space-between;
+`;
 const Box = styled(motion.div)`
   box-sizing: border-box;
   width: 20%;
@@ -259,6 +282,20 @@ const SideBox = styled(motion.div)`
   box-sizing: border-box;
   width: 100%;
   height: 16.7%;
+  background-color: white;
+  border: 1px solid black;
+`;
+const CenterBoxOne = styled(motion.div)`
+  box-sizing: border-box;
+  width: 50%;
+  height: 19%;
+  background-color: white;
+  border: 1px solid black;
+`;
+const CenterBoxTwo = styled(motion.div)`
+  box-sizing: border-box;
+  width: 12%;
+  height: 100%;
   background-color: white;
   border: 1px solid black;
 `;
@@ -291,10 +328,12 @@ const boxVariants = {
     },
   },
 };
-const witch = "c-2";
+const witch = "d-4";
 const locationCode = ["a-1", "a-2", "a-3", "a-4", "a-5"];
 const sideLocationCode = ["b-1", "b-2", "b-3", "b-4", "b-5", "b-6"];
 const bottomLocationCode = ["c-1", "c-2", "c-3", "c-4", "c-5"];
+const centerOneLocationCode = ["d-1", "d-2", "d-3", "d-4", "d-5", "d-6"];
+const centerTwoLocationCode = ["e-1", "e-2", "e-3", "e-4", "e-5"];
 const itemList = [
   "Milk",
   "Eggs",
@@ -308,11 +347,12 @@ const itemList = [
 ];
 function Main() {
   const navigate = useNavigate();
-  const itemMatch = useMatch("main/:itemId");
+  const itemMatch = useMatch("/main/:itemId");
   const [tabMenu, setTabmenu] = useState(0);
   const [selectedRightMenu, setSelectedRightMenu] = useState(0);
   const [popularListOpen, setPopularListOpen] = useState(false);
   const [completedListOpen, setCompletedListOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   function toggleTab(index: number) {
     setTabmenu(index);
   }
@@ -374,27 +414,33 @@ function Main() {
       </Left>
 
       <Right>
-        <RightTitle>Alexa Shooing List</RightTitle>
-        <GuideText>
-          <div>You don't have any items in your list.</div>
-          <div>Add Items below to build your shopping list.</div>
-        </GuideText>
+        <RightTitle>
+          <span>DAMA Shoppinng</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            onClick={() => setSearchOpen(true)}
+          >
+            <path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z" />
+          </svg>
+        </RightTitle>
+
         <Lists>
-          <CompletedList onClick={toggleCompleted}>
-            <ListTitle>Completed (0)</ListTitle>
+          <CompletedList>
+            <ListTitle onClick={toggleCompleted}>Completed (0)</ListTitle>
             <Ul
               initial={{ scaleY: 0 }}
               animate={{ scaleY: completedListOpen ? 1 : 0 }}
               transition={{ duration: 0.3 }}
             >
               {itemList.map((item) => (
-                <li>{item}</li>
+                <li key={item}>{item}</li>
               ))}
             </Ul>
           </CompletedList>
           <PopularList
             initial={{ y: -370 }}
-            animate={{ y: completedListOpen ? 0 : -320 }}
+            animate={{ y: completedListOpen ? 0 : -370 }}
             transition={{ type: "linear" }}
           >
             <ListTitle onClick={togglePopular}>Popular List Items</ListTitle>
@@ -405,6 +451,7 @@ function Main() {
             >
               {itemList.map((item) => (
                 <li
+                  key={item}
                   onClick={() => {
                     navigate(`${item}`);
                   }}
@@ -454,8 +501,11 @@ function Main() {
               transition={{ type: "linear" }}
             >
               <ModalLeft>
-                <ItemImg src="./image/apple.jpg" />
-                <ItemInfo>물건 상세정보</ItemInfo>
+                <ItemImg src={`${process.env.PUBLIC_URL}/image/apple.jpg`} />
+                <ItemInfo>
+                  <div>이미자 경상도 산사과</div>
+                  <div></div>
+                </ItemInfo>
               </ModalLeft>
               <ItemLocation>
                 <MapTop>
@@ -515,6 +565,44 @@ function Main() {
                     )
                   )}
                 </MapBottom>
+                <MapCenterOne>
+                  {centerOneLocationCode.map((item) =>
+                    item === witch ? (
+                      <CenterBoxOne
+                        key={item}
+                        animate={{
+                          backgroundColor: [
+                            "rgba(0,0,0,0)",
+                            "rgba(0,0,0,1)",
+                            "rgba(0,0,0,0)",
+                          ],
+                          transition: { repeat: Infinity },
+                        }}
+                      ></CenterBoxOne>
+                    ) : (
+                      <CenterBoxOne />
+                    )
+                  )}
+                </MapCenterOne>
+                <MapCenterTwo>
+                  {centerTwoLocationCode.map((item) =>
+                    item === witch ? (
+                      <CenterBoxTwo
+                        key={item}
+                        animate={{
+                          backgroundColor: [
+                            "rgba(0,0,0,0)",
+                            "rgba(0,0,0,1)",
+                            "rgba(0,0,0,0)",
+                          ],
+                          transition: { repeat: Infinity },
+                        }}
+                      ></CenterBoxTwo>
+                    ) : (
+                      <CenterBoxTwo />
+                    )
+                  )}
+                </MapCenterTwo>
               </ItemLocation>
             </ItemModal>
           </>
@@ -526,6 +614,7 @@ function Main() {
           }}
         ></div>
       </AnimatePresence>
+      {searchOpen ? <ItemSearch></ItemSearch> : null}
     </Container>
   );
 }
