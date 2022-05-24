@@ -490,7 +490,7 @@ function Main(){
                             {itemList.map((item, index)=><motion.li key={item} transition={{duration:0.5}} onClick={()=>{toggleCategory(index)}}>{item}
                                 <AnimatePresence>
                                     {categoryOpen[index]?<SecondUl initial={{scaleY:0}} animate={{scaleY:1}} exit={{scaleY:0}} transition={{type:"linear"}}>
-                                        {imsiData.filter((item)=>item.category==index.toString()).map((item)=><li onClick={(event)=>itemClick(event, item.id)} key={item.id}>{item.title}</li>)}
+                                        {imsiData.filter((item)=>item.category==index.toString()).map((item)=><li style={{marginLeft:"25px"}} onClick={(event)=>itemClick(event, item.id)} key={item.id}>{item.title}</li>)}
                                     </SecondUl>:null}
                                 </AnimatePresence>
                             </motion.li>)}

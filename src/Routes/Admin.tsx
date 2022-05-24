@@ -49,6 +49,7 @@ const Right=styled.div`
             vertical-align: top;
             border:2px solid #dfdfdf;
             padding-left:35px;
+            font-size:18px;
         }
         svg{
             position:absolute;
@@ -99,6 +100,28 @@ const UserLists=styled.ul`
         display:none;
     }
 `;
+const ItemList=styled.div`
+    background-color:white;
+    border:2px solid #dfdfdf;
+    & > div:first-child{
+        padding:10px 15px;
+    }
+    & > table{
+        border-collapse: collapse;
+        th, td{
+            border-bottom:1px solid #dfdfdf;
+            padding:15px 0;
+            padding-right:40px;
+            text-align: left;
+        }
+        th:first-child, td:first-child{
+            padding-left:20px;
+        }
+        th{
+            color:#dfdfdf;
+        }
+    }
+`;
 const userList=[{
     num:0,
     id:"dfdf123",
@@ -120,6 +143,27 @@ const userList=[{
     admin:"admin",
     type:"카카오"
 }]
+const itemList=[
+    {
+        num:0,
+        name:"휠체어",
+        price:319400,
+        code:"1042",
+        category:"편의 제품"
+    },{
+        num:1,
+        name:"동양미래대학교 졸업장",
+        price:100,
+        code:"4444",
+        category:"장식"
+    },{
+        num:2,
+        name:"과자",
+        price:2000,
+        code:"5320",
+        category:"식품"
+    }
+]
 function Admin(){
     const {category:params}=useParams<string>();
     const navigate=useNavigate();
@@ -127,15 +171,15 @@ function Admin(){
     return (
         <Container>
             <List category={params||"user"}>
-                <li onClick={()=>navigate("/DAMA/admin/user")}>전체 사용자</li>
-                <li onClick={()=>navigate("/DAMA/admin/product")}>상품 관리</li>
+                <li onClick={()=>navigate("/DAMA/admin/user")}>전체 사용자</li><li onClick={()=>navigate("/DAMA/admin/product")}>상품 관리</li>
             </List>
             <Right>
                 <div>
                     <input type="text" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
                 </div>
-                <UserList>
+                {params=="user"?(
+                    <UserList>
                     <div>전체 사용자 {userList.length}명</div>
                     <ListHead>
                         <li style={{width:"60px"}}>번호</li>
@@ -150,6 +194,33 @@ function Admin(){
                         ))}
                     </UserLists>
                 </UserList>
+                ):(
+                    <ItemList>
+                        <div>전체 아이템 개</div>
+                        <table >
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>제품명</th>
+                                    <th>제품 가격</th>
+                                    <th>제품 코드</th>
+                                    <th>카테고리</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {itemList.map((item)=>(
+                                <tr key={item.num}>
+                                    <td>{item.num}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.price}</td>
+                                    <td>{item.code}</td>
+                                    <td>{item.category}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </ItemList>
+                )}
             </Right>
         </Container>
     )
