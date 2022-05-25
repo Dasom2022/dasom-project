@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import AppendItem from "../Components/AppendItem";
 import User from "../Components/User";
 
 const Container=styled.div`
@@ -69,13 +71,14 @@ const UserList=styled.div`
 `;
 const ListHead=styled.ul`
     display:flex;
-    width:100%;
+    width:800px;
+    border-bottom:1px solid #dfdfdf;
     padding:10px 15px !important;
     box-sizing: border-box;
-    border-bottom:1px solid #dfdfdf;
     font-size:14px;
     color:#dfdfdf;
     font-weight:bold;
+    flex-wrap: wrap;
     &, &>li{
         list-style:none;
         margin:0;
@@ -93,7 +96,7 @@ const UserLists=styled.ul`
     & > li::after{
         display:block;
         content:"";
-        width:100%;
+        width:800px;
         border-bottom:1px solid #dfdfdf;
     }
     & > li:last-child::after{
@@ -103,16 +106,35 @@ const UserLists=styled.ul`
 const ItemList=styled.div`
     background-color:white;
     border:2px solid #dfdfdf;
+    position:relative;
+    & > button{
+        position:absolute;
+        right:0;
+        transform:translateY(50%);
+        border:none;
+        background-color:#01b9ff;
+        padding: 5px 10px;
+        border-radius:5px;
+        cursor: pointer;
+    }
     & > div:first-child{
         padding:10px 15px;
     }
     & > table{
         border-collapse: collapse;
+        button{
+            background-color:#01b9ff;
+            border:none;
+            border-radius:5px;
+            margin-right:5px;
+            cursor: pointer;
+            padding:5px 10px;
+        }
         th, td{
             border-bottom:1px solid #dfdfdf;
             padding:15px 0;
-            padding-right:40px;
             text-align: left;
+            padding-right:40px;
         }
         th:first-child, td:first-child{
             padding-left:20px;
@@ -167,7 +189,7 @@ const itemList=[
 function Admin(){
     const {category:params}=useParams<string>();
     const navigate=useNavigate();
-    
+    const [modalOpen, setModalOpen]=useState(false);
     return (
         <Container>
             <List category={params||"user"}>
@@ -205,6 +227,7 @@ function Admin(){
                                     <th>제품 가격</th>
                                     <th>제품 코드</th>
                                     <th>카테고리</th>
+                                    <th>편집</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -215,13 +238,16 @@ function Admin(){
                                     <td>{item.price}</td>
                                     <td>{item.code}</td>
                                     <td>{item.category}</td>
+                                    <td><button>수정</button><button>삭제</button></td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>
+                        <button onClick={()=>setModalOpen(true)}>상품등록</button>
                     </ItemList>
                 )}
             </Right>
+            {modalOpen&&<AppendItem closer={setModalOpen} />}
         </Container>
     )
 }
