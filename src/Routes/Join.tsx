@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 const Wrapper = styled.div`
   height: 100vh;
@@ -65,6 +65,9 @@ const Form = styled.form`
       border-color: #388e3c;
     }
   }
+  span {
+    color: tomato;
+  }
 `;
 
 const Joinbtn = styled.button`
@@ -84,16 +87,30 @@ const Authbtn = styled.button`
 interface ISignup {
   email: string;
   password: string;
+  password2: string;
   username: string;
 }
 
 function Join() {
   const navigate = useNavigate();
-  const { register, handleSubmit, watch } = useForm<ISignup>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ISignup>();
+  const password = useRef({});
   const onSubmit = ({ username, password, email }: ISignup) => {
     postUserData();
   };
-  const auth = () => {};
+  const joinMatch = (val: number) => {
+    if (val === 200) {
+      console.log("회원가입 완료!!");
+      navigate("/login");
+    } else {
+      console.log("이미 존재하는 아이디입니다.");
+    }
+  };
 
   const baseURL = "http://52.55.54.57:3333/member/signup";
   function postUserData() {
@@ -113,10 +130,10 @@ function Join() {
         config
       )
       .then((response) => {
-        console.log(response);
+        joinMatch(response.status);
       })
       .catch((error) => {
-        console.log(error);
+        joinMatch(error);
       });
   }
   return (
@@ -136,14 +153,29 @@ function Join() {
             />
             <Authbtn>중복</Authbtn>
           </div>
+          <span>{errors?.username?.message}</span>
           <input
             {...register("password", {
               required: "비밀번호 입력은 필수입니다.",
+              minLength: {
+                value: 8,
+                message: "8자 이상 입력해야합니다.",
+              },
             })}
             placeholder="비밀번호를 입력하세요"
             type="password"
           />
-          <input type="password" placeholder="비밀번호 재입력" />
+          <span>{errors?.password?.message}</span>
+          <input
+            {...register("password2", {
+              required: "비밀번호 재입력은 필수입니다.",
+              validate: (value) =>
+                value === password.current || "비밀번호가 일치하지 않습니다.",
+            })}
+            placeholder="비밀번호를 재입력하세요"
+            type="password"
+          />
+          <span>{errors?.password2?.message}</span>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
               {...register("email", {
@@ -152,11 +184,10 @@ function Join() {
               placeholder="이메일를 입력하세요"
               type="text"
             />
-            <Authbtn onClick={auth}>인증</Authbtn>
+            <Authbtn>인증</Authbtn>
           </div>
-
+          <span>{errors?.email?.message}</span>
           <input type="text" placeholder="이메일 인증 코드" />
-
           <Joinbtn>회원가입</Joinbtn>
         </Form>
       </Loginwrap>

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useState } from "react";
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -21,8 +22,7 @@ const Loginwrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 450px;
-  height: 250px;
+  padding: 30px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
@@ -109,6 +109,7 @@ interface IForm {
 }
 
 function Login() {
+  const [seccess, Setseccess] = useState("");
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
@@ -116,7 +117,15 @@ function Login() {
     postUserData();
   };
 
-  const baseURL = `http://52.55.54.57:3333/member/signin`;
+  const baseURL = "http://52.55.54.57:3333/login";
+  const LoginMatch = (val: string) => {
+    Setseccess(val);
+    if (seccess === "seccess") {
+      navigate("/DAMA/main");
+    } else {
+      console.log("로그인 실패");
+    }
+  };
   function postUserData() {
     const config = {
       headers: {
