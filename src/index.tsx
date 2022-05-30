@@ -5,6 +5,9 @@ import { theme } from "./theme";
 import { RecoilRoot } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { QueryClient, QueryClientProvider } from "react-query";
+import axios from "axios";
+// 모든 Axios 요청에 JWT 추가하도록 설정
+axios.defaults.withCredentials = true;
 const GlobalStyle = createGlobalStyle`
 body, div{
   margin: 0;
