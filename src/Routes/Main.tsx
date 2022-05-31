@@ -376,6 +376,7 @@ function Main() {
   const [selectedRightMenu, setSelectedRightMenu] = useState(0);
   const [popularListOpen, setPopularListOpen] = useState(false);
   const [completedListOpen, setCompletedListOpen] = useState(false);
+  //쿠키에서 유저네임 가져옴
   const [username, setUsername] = useState(
     document.cookie.split("; username=")[1]
   );
@@ -393,6 +394,7 @@ function Main() {
     setCompletedListOpen((prev) => !prev);
   }
   useEffect(() => {
+    // 유저 네임 정보
     // setUsername(document.cookie.split("; username=")[1]);
     console.log(username);
   }, []);
