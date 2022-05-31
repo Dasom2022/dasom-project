@@ -6,6 +6,7 @@ import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+
 const client = new QueryClient();
 
 ReactDOM.render(

@@ -101,7 +101,7 @@ const Loginbtn = styled.div`
   border-radius: 5px;
 `;
 
-function Main() {
+function Welcome() {
   const navigate = useNavigate();
   const OnshopingList = () => {
     navigate("/DAMA/main");
@@ -169,4 +169,4 @@ function Main() {
     </Wrapper>
   );
 }
-export default Main;
+export default Welcome;

@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+
 const Wrapper = styled.div`
   height: 100vh;
   display: flex;
@@ -65,6 +66,9 @@ const Form = styled.form`
       border-color: #388e3c;
     }
   }
+  span {
+    color: tomato;
+  }
 `;
 
 const Joinbtn = styled.button`
@@ -84,36 +88,86 @@ const Authbtn = styled.button`
 interface ISignup {
   email: string;
   password: string;
+  password2: string;
   username: string;
+  emailauth: string;
 }
 
 function Join() {
+  const [joins, setJoin] = useState(false);
+  const [emailAuthMsg, setEmailAuthMsg] = useState("");
   const navigate = useNavigate();
-  const { register, handleSubmit, watch } = useForm<ISignup>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ISignup>();
+  const join = () => {
+    setJoin((prev) => !prev);
+  };
   const onSubmit = ({ username, password, email }: ISignup) => {
     postUserData();
   };
-  const auth = () => {};
-
-  const baseURL = "http://52.55.54.57:3333/member/signup";
+  const joinMatch = (val: number) => {
+    if (joins) {
+      if (val === 200) {
+        console.log("회원가입 완료!!");
+        navigate("/login");
+      } else {
+        console.log("이미 존재하는 아이디입니다.");
+      }
+    }
+  };
+  const emailMath = (val: number) => {
+    if (val === 1) {
+      setEmailAuthMsg("이메일 인증 완료!");
+    } else {
+      setEmailAuthMsg("다시 입력해주세요...");
+    }
+  };
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
   function postUserData() {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
     axios
       .post(
-        baseURL,
+        "/member/signup",
         JSON.stringify({
-          email: watch().email,
           password: watch().password,
           username: watch().username,
         }),
         config
       )
       .then((response) => {
+
+        joinMatch(response.status);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  async function Emailsend() {
+    const val = watch().email;
+    axios
+      .post(`/member/mail?email=${val}`, config)
+      .then((response) => {
+
         console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  async function Emailsendauth() {
+    const val = watch().emailauth;
+    axios
+      .post(`/member/verifyCode?confirm_email=${val}`, config)
+      .then((response) => {
+        emailMath(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -136,14 +190,31 @@ function Join() {
             />
             <Authbtn>중복</Authbtn>
           </div>
+
+          <span>{errors?.username?.message}</span>
+
           <input
             {...register("password", {
               required: "비밀번호 입력은 필수입니다.",
+              minLength: {
+                value: 1,
+                message: "8자 이상 입력해야합니다.",
+              },
             })}
             placeholder="비밀번호를 입력하세요"
             type="password"
           />
-          <input type="password" placeholder="비밀번호 재입력" />
+          <span>{errors?.password?.message}</span>
+          <input
+            {...register("password2", {
+              required: "비밀번호 재입력은 필수입니다.",
+              // validate: (value) =>
+              //   value === password.current || "비밀번호가 일치하지 않습니다.",
+            })}
+            placeholder="비밀번호를 재입력하세요"
+            type="password"
+          />
+          <span>{errors?.password2?.message}</span>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
               {...register("email", {
@@ -152,12 +223,22 @@ function Join() {
               placeholder="이메일를 입력하세요"
               type="text"
             />
-            <Authbtn onClick={auth}>인증</Authbtn>
+            <Authbtn onClick={Emailsend}>전송</Authbtn>
           </div>
-
-          <input type="text" placeholder="이메일 인증 코드" />
-
-          <Joinbtn>회원가입</Joinbtn>
+          <span>{errors?.email?.message}</span>
+          <div style={{ display: "flex", justifyContent: "right" }}>
+            <input
+              {...register("emailauth", {
+                required: "이메일 인증은 필수입니다.",
+              })}
+              placeholder="이메일 인증코드를 입력하세요"
+              type="text"
+            />
+            <Authbtn onClick={Emailsendauth}>인증</Authbtn>
+            {/* 1뜨면 인증완료 */}
+            <span>{emailAuthMsg}</span>
+          </div>
+          <Joinbtn onClick={join}>회원가입</Joinbtn>
         </Form>
       </Loginwrap>
     </Wrapper>

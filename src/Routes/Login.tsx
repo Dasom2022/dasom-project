@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useEffect, useState } from "react";
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -21,8 +22,7 @@ const Loginwrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 450px;
-  height: 250px;
+  padding: 30px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
@@ -109,23 +109,37 @@ interface IForm {
 }
 
 function Login() {
+  const [seccess, Setseccess] = useState(0);
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
+
     // navigate("/DAMA/main");
     postUserData();
   };
-
-  const baseURL = `http://52.55.54.57:3333/member/signin`;
   function postUserData() {
+    onLogin();
+  };
+
+  const LoginMatch = (val: number) => {
+    if (val === 200) {
+      navigate("/main");
+      console.log("성공");
+    } else {
+      console.log("로그인 실패");
+    }
+  };
+
+  function onLogin() {
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     };
     axios
       .post(
-        baseURL,
+        "/login",
         JSON.stringify({
           username: watch().id,
           password: watch().pw,
@@ -134,6 +148,18 @@ function Login() {
       )
       .then((response) => {
         console.log(response);
+
+        // token이 필요한 API 요청 시 header Authorization에 token 담아서 보내기
+        //  axios.defaults.headers.common[
+        //   "Authorization"
+        // ] = `Bearer ${response.data["accessToken"]}`;
+        localStorage.setItem("accessToken", response.data["authorization"]);
+        localStorage.setItem(
+          "refreshToken",
+          response.data["authorization-refresh"]
+        );
+        localStorage.setItem("user", JSON.stringify(response.data["user"]));
+        LoginMatch(response.status);
       })
       .catch((error) => {
         console.log(error);
