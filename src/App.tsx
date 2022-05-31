@@ -12,12 +12,11 @@ import Itemcode from "./Routes/Itemcode";
 import Payment from "./Routes/Payment";
 import Receipt from "./Routes/Receipt";
 
-
 function App() {
   const token = localStorage.getItem("accessToken");
 
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Welcome />}></Route>
         <Route path="login" element={<Login />}></Route>
@@ -25,7 +24,7 @@ function App() {
         <Route path="main" element={<Main />}>
           <Route path="/main/:itemId" element={<Main />} />
         </Route>
-        <Route path="/DAMA/itemcode" element={<Itemcode />}>
+        <Route path="/itemcode" element={<Itemcode />}>
           <Route path=":num" element={<Itemcode />} />
         </Route>
         <Route path="pay" element={<Payment />} />

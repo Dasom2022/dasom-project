@@ -113,13 +113,12 @@ function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-
     // navigate("/DAMA/main");
     postUserData();
   };
   function postUserData() {
     onLogin();
-  };
+  }
 
   const LoginMatch = (val: number) => {
     if (val === 200) {
@@ -192,7 +191,7 @@ function Login() {
       <Joinwrap>
         <Ul>
           <Li>비밀번호 찾기</Li> |<Li>아이디 찾기</Li> |
-          <Link to="/DAMA/join">
+          <Link to="/join">
             <Li>회원가입</Li>
           </Link>
         </Ul>

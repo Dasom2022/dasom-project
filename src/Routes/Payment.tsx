@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -59,7 +58,7 @@ function Payment() {
         <span>$</span>26.46
       </div>
       <div>*Includes Taxese & Fees.</div>
-      <Link to="/DAMA/receipt">
+      <Link to="/receipt">
         <Button>View receipt</Button>
       </Link>
     </Container>

@@ -440,7 +440,7 @@ function Main() {
             </UserInfoHeader>
           </Header>
           <SelectedItems>
-            <Link to="/DAMA/itemcode">
+            <Link to="/itemcode">
               <AddButton>Add PLU Item</AddButton>
             </Link>
           </SelectedItems>
@@ -539,7 +539,7 @@ function Main() {
         {itemMatch ? (
           <>
             <ModalBg
-              onClick={() => navigate("/DAMA/main")}
+              onClick={() => navigate("/main")}
               animate={{ opacity: 0.3 }}
               exit={{ opacity: 0 }}
             ></ModalBg>

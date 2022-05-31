@@ -121,7 +121,7 @@ const InfoImg = styled.svg`
 `;
 
 function Itemadd() {
-  const match: PathMatch<string> | null = useMatch("/DAMA/itemcode/:num");
+  const match: PathMatch<string> | null = useMatch("/itemcode/:num");
   const [dumyData, setDumyData] = useState({
     data: {
       code: ["5959", "1234"],
@@ -141,7 +141,7 @@ function Itemadd() {
   function BackBtn() {
     setPrice(0);
     setCount(1);
-    navigate("/DAMA/itemcode");
+    navigate("/itemcode");
   }
   return (
     <>
