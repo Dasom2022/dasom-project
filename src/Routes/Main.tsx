@@ -37,6 +37,7 @@ const Bottom=styled.div`
     align-items: center;
     color:white;
     position:relative;
+    padding:0 20px;
 `;
 const Content=styled.div`
     height:calc(100% - 140px);
@@ -124,8 +125,8 @@ const Main=()=>{
                 <span>박진우님 사랑합니다!</span>
             </Header>
             <Content>
-                {imsi.map((item:any)=>(
-                    <SelectedItem>
+                {imsi.map((item,index:any)=>(
+                    <SelectedItem key={index}>
                         <img src={process.env.PUBLIC_URL+"/image/apple.jpg"} />
                         <SelectedItemInfo>
                             <div>{item.name}</div>

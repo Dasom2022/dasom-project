@@ -11,9 +11,9 @@ const Modal=styled.div`
     top:50%;
     left:50%;
     transform:translateX(-50%) translateY(-50%);
-    border:1px solid #9d9c9c;
+    border:1px solid #5a5a5a;
     border-radius:4px;
-    width:60%;
+    width:70%;
     height:75%;
     background-color:#dfdfdf;
     padding:10px 10px;
@@ -71,13 +71,14 @@ const Items=styled.div`
     }
 `;
 
-const imsi=[{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960},
-{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960},
-{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960},
-{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960},
-{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960},
-{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960},
-{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960}];
+const imsi=[
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"c-4"},
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"a-2"},
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"d-2"},
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"b-6"},
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"d-1"},
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"a-7"},
+{name:"남양유업 이오 요구르트, 80ml, 10개입", price:3960, where:"c-8"}];
 function ItemSearch(){
     const closeSearch=useSetRecoilState(searchOpenState);
     const [search, setSearch]=useState("");
@@ -94,7 +95,7 @@ function ItemSearch(){
                     </Search>
                 </Header>
                 <Items>
-                    {imsi.filter((item)=>item.name.includes(search)).map((item)=><SearchResultItem name={item.name} price={item.price} />)}
+                    {imsi.filter((item)=>item.name.includes(search)).map((item, index)=><SearchResultItem key={index} name={item.name} price={item.price} where={item.where} index={index} />)}
                 </Items>
             </Modal>
         </>
