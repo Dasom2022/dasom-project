@@ -11,6 +11,7 @@ import Main from "./Routes/Main";
 import Itemcode from "./Routes/Itemcode";
 import Payment from "./Routes/Payment";
 import Receipt from "./Routes/Receipt";
+import KaKaoAuth from "./Components/KakaoAuth";
 
 function App() {
   const token = localStorage.getItem("accessToken");
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Welcome />}></Route>
         <Route path="login" element={<Login />}></Route>
+        <Route path="/auth/kakao" element={<KaKaoAuth />}></Route>
         <Route path="join" element={<Join />}></Route>
 
         <Route path="main" element={<Main />}>

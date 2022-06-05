@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import qs from "qs";
+import KaKaoLogin from "react-kakao-login";
 import { useEffect, useState } from "react";
 const Wrapper = styled.div`
   width: 100vw;
@@ -108,9 +110,11 @@ interface IForm {
   pw: string;
 }
 
-const JWT_EXPIRY_TIME = 24 * 3600 * 1000;
-const baseURL = "/login";
 function Login() {
+  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
   const [seccess, Setseccess] = useState(0);
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm<IForm>();
@@ -126,14 +130,13 @@ function Login() {
       console.log("로그인 실패");
     }
   };
-
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
   function onLogin() {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    };
     axios
       .post(
         "/login",
@@ -154,13 +157,18 @@ function Login() {
           "refreshToken",
           response.data["authorization-refresh"]
         );
-        localStorage.setItem("user", JSON.stringify(response.data["user"]));
+        // localStorage.setItem("user", JSON.stringify(response.data["user"]));
         LoginMatch(response.status);
       })
       .catch((error) => {
         console.log(error);
       });
   }
+  const _clickSnsLoginKakao = (e: any) => {
+    let kakaoid = e; // 카카오에서 제공한 ID
+    console.log(kakaoid);
+  };
+
   return (
     <Wrapper>
       <Titlewrap>
@@ -194,7 +202,30 @@ function Login() {
         </Ul>
       </Joinwrap>
       <APIlogin>
-        <Kakaobtn>카카오 로그인</Kakaobtn>
+        <Kakaobtn>
+          <a href={KAKAO_AUTH_URL}>카카오 로그인</a>
+        </Kakaobtn>
+        {/* <KaKaoLogin
+            token={REST_API_KEY}
+            onSuccess={(e) => _clickSnsLoginKakao(e)} // 성공 시 실행할 함수
+            onFail={(err) => {
+              console.log("로그인실패", err);
+            }}
+            onLogout={() => {
+              console.log("로그아웃");
+            }}
+            render={({ onClick }) => (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  onClick();
+                }}
+              >
+                카카오로 로그인하기
+              </div>
+            )}
+          ></KaKaoLogin> */}
+
         <Naverbtn>네이버 로그인</Naverbtn>
       </APIlogin>
     </Wrapper>
