@@ -7,12 +7,14 @@ import Main from "./Routes/Main";
 import Payment from "./Routes/Payment";
 import Receipt from "./Routes/Receipt";
 import Admin from "./Routes/Admin";
+import AdminDetail from "./Routes/AdminDetail";
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="DAMA/login" element={<Login />}></Route>
-        <Route path="DAMA/admin/:category" element={<Admin />}></Route>
+        <Route path="DAMA/admin" element={<Admin />}></Route>
+        <Route path="DAMA/admin/:category" element={<AdminDetail />}></Route>
         <Route path="DAMA/join" element={<Join />}></Route>
         <Route path="DAMA/main" element={<Main />}>
           <Route path="/DAMA/main/:itemId" element={<Main />} />
