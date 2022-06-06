@@ -18,6 +18,7 @@ function App() {
         <Route path="/" element={<Welcome />}></Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="/auth/kakao" element={<KaKaoAuth />}></Route>
+        <Route path="/auth/kakao/logout" element={<Main />}></Route>
         <Route path="/auth/naver" element={<NaverAuth />}></Route>
         <Route path="join" element={<Join />}></Route>
         <Route path="main" element={<Main />}>
