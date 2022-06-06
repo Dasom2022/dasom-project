@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Join from "./Routes/Join";
 import Login from "./Routes/Login";
 import Welcome from "./Routes/Welcome";
@@ -11,6 +6,8 @@ import Main from "./Routes/Main";
 import Itemcode from "./Routes/Itemcode";
 import Payment from "./Routes/Payment";
 import Receipt from "./Routes/Receipt";
+import KaKaoAuth from "./Auth/KakaoAuth";
+import NaverAuth from "./Auth/NaverAuth";
 
 function App() {
   const token = localStorage.getItem("accessToken");
@@ -20,6 +17,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Welcome />}></Route>
         <Route path="login" element={<Login />}></Route>
+        <Route path="/auth/kakao" element={<KaKaoAuth />}></Route>
+        <Route path="/auth/naver" element={<NaverAuth />}></Route>
         <Route path="join" element={<Join />}></Route>
         <Route path="main" element={<Main />}>
           <Route path="/main/:itemId" element={<Main />} />

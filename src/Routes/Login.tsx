@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHref, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import NaverLogin from "../Auth/NaverLogin";
+
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -77,18 +79,10 @@ const Loginbtn = styled.button`
   background-color: #388e3c;
 `;
 
-const Kakaobtn = styled.button`
-  width: 300px;
-  height: 50px;
-  color: #6b7280;
-  background-color: #ffc107;
-`;
-
-const Naverbtn = styled.button`
-  margin-top: 20px;
-  width: 300px;
-  height: 50px;
-  background-color: #4caf50;
+const KakaoBtn = styled.img`
+  height: 60px;
+  width: 280px;
+  margin-bottom: 20px;
 `;
 
 const Ul = styled.ul`
@@ -120,6 +114,7 @@ function Login() {
     onLogin();
   }
 
+  //로그인 성공여부
   const LoginMatch = (val: number) => {
     if (val === 200) {
       navigate("/main");
@@ -129,13 +124,21 @@ function Login() {
     }
   };
 
+  //카카오 로그인시
+  const KakaoClick = () => {
+    const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+    const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    window.location.href = KAKAO_AUTH_URL;
+  };
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+  //기본 로그인 api 요청
   function onLogin() {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    };
     axios
       .post(
         "/login",
@@ -157,7 +160,7 @@ function Login() {
           "refreshToken",
           response.data["authorization-refresh"]
         );
-        localStorage.setItem("user", JSON.stringify(response.data["user"]));
+        // localStorage.setItem("user", JSON.stringify(response.data["user"]));
         LoginMatch(response.status);
       })
       .catch((error) => {
@@ -197,8 +200,9 @@ function Login() {
         </Ul>
       </Joinwrap>
       <APIlogin>
-        <Kakaobtn>카카오 로그인</Kakaobtn>
-        <Naverbtn>네이버 로그인</Naverbtn>
+        {/* <a href={KAKAO_AUTH_URL}>카카오 로그인</a> */}
+        <KakaoBtn onClick={KakaoClick} src="img/kakao_login_large_narrow.png" />
+        <NaverLogin />
       </APIlogin>
     </Wrapper>
   );

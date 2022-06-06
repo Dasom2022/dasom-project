@@ -5,8 +5,6 @@ import { Link, useMatch, useNavigate } from "react-router-dom";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState } from "recoil";
 import { searchOpenState } from "../atoms";
-import axios from "axios";
-import { Cookies } from "react-cookie";
 const Container = styled.div`
   width: 100%;
   height: 100vh;

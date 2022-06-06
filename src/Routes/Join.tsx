@@ -1,9 +1,7 @@
-import { userInfoData } from "../atoms";
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const Wrapper = styled.div`
@@ -119,6 +117,13 @@ function Join() {
       }
     }
   };
+  const idMath = (val: number) => {
+    if (val === 1) {
+      setEmailAuthMsg("id 중복!");
+    } else {
+      setEmailAuthMsg("아이디가 중복됩니다.");
+    }
+  };
   const emailMath = (val: number) => {
     if (val === 1) {
       setEmailAuthMsg("이메일 인증 완료!");
@@ -142,8 +147,7 @@ function Join() {
         config
       )
       .then((response) => {
-
-        joinMatch(response.status);
+        console.log(response.status);
       })
       .catch((error) => {
         console.log(error);
@@ -154,7 +158,6 @@ function Join() {
     axios
       .post(`/member/mail?email=${val}`, config)
       .then((response) => {
-
         console.log(response);
       })
       .catch((error) => {
@@ -162,6 +165,18 @@ function Join() {
       });
   }
 
+  async function Idsendauth() {
+    const val = watch().username;
+    axios
+      .post(`/api/signup/username/exist?username=${val}`, config)
+      .then((response) => {
+        idMath(response.data);
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   async function Emailsendauth() {
     const val = watch().emailauth;
     axios
@@ -188,7 +203,7 @@ function Join() {
               placeholder="아이디를 입력하세요"
               type="text"
             />
-            <Authbtn>중복</Authbtn>
+            <Authbtn onClick={Idsendauth}>중복</Authbtn>
           </div>
 
           <span>{errors?.username?.message}</span>
