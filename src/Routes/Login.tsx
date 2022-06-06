@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHref, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import qs from "qs";
-import KaKaoLogin from "react-kakao-login";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import NaverLogin from "../Auth/NaverLogin";
+
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -79,18 +79,10 @@ const Loginbtn = styled.button`
   background-color: #388e3c;
 `;
 
-const Kakaobtn = styled.button`
-  width: 300px;
-  height: 50px;
-  color: #6b7280;
-  background-color: #ffc107;
-`;
-
-const Naverbtn = styled.button`
-  margin-top: 20px;
-  width: 300px;
-  height: 50px;
-  background-color: #4caf50;
+const KakaoBtn = styled.img`
+  height: 60px;
+  width: 280px;
+  margin-bottom: 20px;
 `;
 
 const Ul = styled.ul`
@@ -111,10 +103,6 @@ interface IForm {
 }
 
 function Login() {
-  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-
   const [seccess, Setseccess] = useState(0);
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm<IForm>();
@@ -122,6 +110,7 @@ function Login() {
     onLogin();
   };
 
+  //로그인 성공여부
   const LoginMatch = (val: number) => {
     if (val === 200) {
       navigate("/main");
@@ -130,12 +119,21 @@ function Login() {
       console.log("로그인 실패");
     }
   };
+
+  //카카오 로그인시
+  const KakaoClick = () => {
+    const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+    const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    window.location.href = KAKAO_AUTH_URL;
+  };
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
     withCredentials: true,
   };
+  //기본 로그인 api 요청
   function onLogin() {
     axios
       .post(
@@ -164,11 +162,6 @@ function Login() {
         console.log(error);
       });
   }
-  const _clickSnsLoginKakao = (e: any) => {
-    let kakaoid = e; // 카카오에서 제공한 ID
-    console.log(kakaoid);
-  };
-
   return (
     <Wrapper>
       <Titlewrap>
@@ -202,31 +195,9 @@ function Login() {
         </Ul>
       </Joinwrap>
       <APIlogin>
-        <Kakaobtn>
-          <a href={KAKAO_AUTH_URL}>카카오 로그인</a>
-        </Kakaobtn>
-        {/* <KaKaoLogin
-            token={REST_API_KEY}
-            onSuccess={(e) => _clickSnsLoginKakao(e)} // 성공 시 실행할 함수
-            onFail={(err) => {
-              console.log("로그인실패", err);
-            }}
-            onLogout={() => {
-              console.log("로그아웃");
-            }}
-            render={({ onClick }) => (
-              <div
-                onClick={(e) => {
-                  e.preventDefault();
-                  onClick();
-                }}
-              >
-                카카오로 로그인하기
-              </div>
-            )}
-          ></KaKaoLogin> */}
-
-        <Naverbtn>네이버 로그인</Naverbtn>
+        {/* <a href={KAKAO_AUTH_URL}>카카오 로그인</a> */}
+        <KakaoBtn onClick={KakaoClick} src="img/kakao_login_large_narrow.png" />
+        <NaverLogin />
       </APIlogin>
     </Wrapper>
   );
