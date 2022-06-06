@@ -22,8 +22,12 @@ export const userInfo = atom<IInfo[]>({
   default: [],
 });
 
+export const searchOpenState=atom({
+  key:"searchOpen",
+  default:false
+})
 
-export const searchOpenState = atom({
-  key: "searchOpen",
-  default: false,
-});
+export const openedMap=atom({
+  key:"openedMap",
+  default:-1
+})

@@ -33,35 +33,36 @@ const Container = styled.div`
     }
   }
 `;
-const Button = styled.button`
-  position: absolute;
-  left: 50%;
-  bottom: 90px;
-  transform: translateX(-50%);
-  color: white;
-  background-color: transparent;
-  border: 3px solid white;
-  padding: 10px 50px;
-  border-radius: 20px;
-  cursor: pointer;
+
+const Button=styled.button`
+    bottom:90px;
+    color:white;
+    background-color:transparent;
+    border:3px solid white;
+    padding:10px 50px;
+    border-radius:20px;
+    cursor:pointer;
+    margin-top:30px;
 `;
-function Payment() {
-  return (
-    <Container>
-      <div>Almost done...</div>
-      <div>Keep walking or remove your bags to complete your payment.</div>
-      <div>
-        <div>Other discounts</div>
-        <div>-$10.00</div>
-      </div>
-      <div>
-        <span>$</span>26.46
-      </div>
-      <div>*Includes Taxese & Fees.</div>
-      <Link to="/receipt">
-        <Button>View receipt</Button>
-      </Link>
-    </Container>
-  );
+function Payment(){
+    return (
+        <Container>
+            <div>Almost done...</div>
+            <div>Keep walking or remove your bags to complete your payment.</div>
+            <div>
+                <div>Other discounts</div>
+                <div>-$10.00</div>
+            </div>
+            <div>
+                <span>$</span>26.46
+            </div>
+            <div>*Includes Taxese & Fees.</div>
+            <Link to="/receipt">
+                <Button>
+                    View receipt
+                </Button>
+            </Link>
+        </Container>
+    )
 }
 export default Payment;

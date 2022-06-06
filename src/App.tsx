@@ -8,7 +8,8 @@ import Payment from "./Routes/Payment";
 import Receipt from "./Routes/Receipt";
 import KaKaoAuth from "./Auth/KakaoAuth";
 import NaverAuth from "./Auth/NaverAuth";
-
+import Admin from "./Routes/Admin";
+import AdminDetail from "./Routes/AdminDetail";
 function App() {
   const token = localStorage.getItem("accessToken");
 
@@ -29,6 +30,7 @@ function App() {
         </Route>
         <Route path="pay" element={<Payment />} />
         <Route path="receipt" element={<Receipt />} />
+
       </Routes>
     </Router>
   );
