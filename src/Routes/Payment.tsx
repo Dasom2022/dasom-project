@@ -34,16 +34,14 @@ const Container=styled.div`
     }
 `;
 const Button=styled.button`
-    position:absolute;
-    left:50%;
     bottom:90px;
-    transform:translateX(-50%);
     color:white;
     background-color:transparent;
     border:3px solid white;
     padding:10px 50px;
     border-radius:20px;
     cursor:pointer;
+    margin-top:30px;
 `;
 function Payment(){
     return (
@@ -58,7 +56,7 @@ function Payment(){
                 <span>$</span>26.46
             </div>
             <div>*Includes Taxese & Fees.</div>
-            <Link to="/DAMA/receipt">
+            <Link to="/receipt">
                 <Button>
                     View receipt
                 </Button>

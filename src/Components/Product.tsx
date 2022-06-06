@@ -139,7 +139,7 @@ const Product=()=>{
                     </ItemInfo>
                 ))}
             </ItemList>
-            <AddButton onClick={()=>navigate("/DAMA/admin/addItem")}>물품추가</AddButton>
+            <AddButton onClick={()=>navigate("/admin/addItem")}>물품추가</AddButton>
         </Container>
     )
 }

@@ -10,18 +10,18 @@ import Admin from "./Routes/Admin";
 import AdminDetail from "./Routes/AdminDetail";
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
-        <Route path="DAMA/login" element={<Login />}></Route>
-        <Route path="DAMA/admin" element={<Admin />}></Route>
-        <Route path="DAMA/admin/:category" element={<AdminDetail />}></Route>
-        <Route path="DAMA/join" element={<Join />}></Route>
-        <Route path="DAMA/main" element={<Main />}>
-          <Route path="/DAMA/main/:itemId" element={<Main />} />
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/admin" element={<Admin />}></Route>
+        <Route path="/admin/:category" element={<AdminDetail />}></Route>
+        <Route path="/join" element={<Join />}></Route>
+        <Route path="/main" element={<Main />}>
+          <Route path="/main/:itemId" element={<Main />} />
         </Route>
-        <Route path="DAMA/pay" element={<Payment />} />
-        <Route path="DAMA/receipt" element={<Receipt />} />
-        <Route path="DAMA/" element={<Welcome />}></Route>
+        <Route path="/pay" element={<Payment />} />
+        <Route path="/receipt" element={<Receipt />} />
+        <Route path="/" element={<Welcome />}></Route>
       </Routes>
     </Router>
   );

@@ -101,6 +101,7 @@ const User=()=>{
     useEffect(()=>{
         axios.get("/member/memberList").then(res=>setUsers(res.data))
     },[])
+    console.log(users);
     return(
         <Container>
             <Head>
@@ -121,7 +122,7 @@ const User=()=>{
                         <Id>{item.username}</Id>
                         <Name>{item.name}</Name>
                         <Email>{item.email}</Email>
-                        <Social>{item.social}</Social>
+                        <Social>{item.socialType}</Social>
                         <Buttons>
                             <button>수정</button>
                             <button>삭제</button>

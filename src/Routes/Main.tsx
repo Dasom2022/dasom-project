@@ -3,7 +3,7 @@ import {useState} from "react";
 import ItemSearch from "../Components/ItemSearch"
 import { useRecoilState } from "recoil";
 import { searchOpenState } from "../atoms";
-
+import { useNavigate } from "react-router-dom";
 const Container=styled.div`
     width:100%;
     height:100vh;
@@ -108,6 +108,43 @@ const SelectedItemInfo=styled.div`
         font-weight:bold;
     }
 `;
+const Pay=styled.div`
+    width:30%;
+    height:20vh;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translateX(-50%) translateY(-50%);
+    background-color:white;
+    border:1px solid black;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    align-items:center;
+    & > span{
+        font-weight:bold;
+    }
+    & > div{
+        width:100%;
+        text-align:center;
+    }
+    button{
+        padding:5px 8px;
+        border-radius:20px;
+        border:2px solid white;
+        color:white;
+        font-weight:bold;
+        box-shadow:1px 4px 3px -3px #bbbbbb;
+        cursor:pointer;
+    }
+    button:first-child{
+        background-color:red;
+    }
+    button:last-child{
+        background-color:#31a737;
+    }
+    
+`;
 const imsi=[{name:"남양유업 이오 요구르트, 80ml, 10개입", count:1, price:3960},
 {name:"남양유업 이오 요구르트, 80ml, 10개입", count:1, price:3960},
 {name:"남양유업 이오 요구르트, 80ml, 10개입", count:1, price:3960},
@@ -116,6 +153,8 @@ const imsi=[{name:"남양유업 이오 요구르트, 80ml, 10개입", count:1, p
 {name:"남양유업 이오 요구르트, 80ml, 10개입", count:1, price:3960},]
 const Main=()=>{
     const [searchOpen, setSearchOpen]=useRecoilState(searchOpenState);
+    const [payOpen, setPayOpen]=useState(false);
+    const navigate=useNavigate();
     return (
         <Container>
             <Header>
@@ -144,9 +183,17 @@ const Main=()=>{
                         <span>{"342,400"}</span><span>원</span>
                     </span>
                 </TotalPrice>
-                <PayBtn>결제하기</PayBtn>
+                <PayBtn onClick={()=>setPayOpen(true)}>결제하기</PayBtn>
             </Bottom>
             {searchOpen?<ItemSearch />:null}
+            {payOpen?(
+            <Pay>
+                <span>결제하시겠습니까?</span>
+                <div>
+                    <button onClick={()=>setPayOpen(false)}>돌아가기</button>
+                    <button onClick={()=>navigate("/pay")}>결제하기</button>
+                </div>
+            </Pay>):null}
         </Container>
     )
 }

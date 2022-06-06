@@ -98,7 +98,7 @@ const Loginbtn = styled.div`
 function Main() {
   const navigate = useNavigate();
   const OnshopingList = () => {
-    navigate("/DAMA/main");
+    navigate("/main");
   };
   return (
     <Wrapper>
