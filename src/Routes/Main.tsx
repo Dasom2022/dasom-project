@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState } from "recoil";
-import { searchOpenState } from "../atoms";
+import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   width: 100%;
@@ -17,7 +17,8 @@ const Header = styled.div`
   height: 70px;
   padding: 0 15px;
   color: white;
-  & > button {
+  div > button {
+    margin: 0px 10px;
     background-color: transparent;
     border: 2px solid white;
     padding: 7px 15px;
@@ -154,56 +155,105 @@ const imsi = [
 ];
 const Main = () => {
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
+  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
   const navigate = useNavigate();
+
+  //네이버 로그아웃 팝업창
+  let testPopUp: any;
+  const openPopUp = () => {
+    testPopUp = window.open(
+      "https://nid.naver.com/nidlogin.logout",
+      "_blank",
+      "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1"
+    );
+  };
+  const LogOut = (social: string) => {
+    if (social === "KAKAO") {
+      //카카오 로그아웃
+      const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+      const LOGOUT_REDIRECT_URL = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
+      const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URL}`;
+      setUserInfo([]);
+      window.location.href = KAKAO_AUTH_URL_LOGOUT;
+    } else if (social === "NAVER") {
+      //네이버 로그아웃
+      openPopUp();
+      setTimeout(() => testPopUp.close(), 1000);
+      setUserInfo([]);
+      navigate("/");
+    } else {
+      //기본 로그아웃
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setUserInfo([]);
+      navigate("/");
+    }
+  };
   return (
     <Container>
-      <Header>
-        <button
-          onClick={() => {
-            setSearchOpen(true);
-          }}
-        >
-          물건 검색
-        </button>
-        <span>박진우님 사랑합니다!</span>
-      </Header>
-      <Content>
-        {imsi.map((item, index: any) => (
-          <SelectedItem key={index}>
-            <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
-            <SelectedItemInfo>
-              <div>{item.name}</div>
-              <div>{item.count}</div>
-              <div>{item.price.toLocaleString()}</div>
-            </SelectedItemInfo>
-          </SelectedItem>
-        ))}
-      </Content>
-      <Bottom>
-        <TotalCount>
-          <span>수량 : </span>
-          <span>{14}</span>
-        </TotalCount>
-        <TotalPrice>
-          <span>구매금액 : </span>
-          <span>
-            <span>{"342,400"}</span>
-            <span>원</span>
-          </span>
-        </TotalPrice>
-        <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
-      </Bottom>
-      {searchOpen ? <ItemSearch /> : null}
-      {payOpen ? (
-        <Pay>
-          <span>결제하시겠습니까?</span>
-          <div>
-            <button onClick={() => setPayOpen(false)}>돌아가기</button>
-            <button onClick={() => navigate("/pay")}>결제하기</button>
-          </div>
-        </Pay>
-      ) : null}
+      {userInfo?.username ? (
+        <>
+          <Header>
+            <div>
+              <button
+                onClick={() => {
+                  setSearchOpen(true);
+                }}
+              >
+                물건 검색
+              </button>
+              <button onClick={() => navigate("/itemcode")}>
+                코드 상품추가
+              </button>
+            </div>
+            <div>
+              <span>{userInfo?.username}님 환영합니다!</span>
+              <button onClick={() => LogOut(userInfo?.socialType)}>
+                로그아웃
+              </button>
+            </div>
+          </Header>
+          <Content>
+            {imsi.map((item, index: any) => (
+              <SelectedItem key={index}>
+                <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
+                <SelectedItemInfo>
+                  <div>{item.name}</div>
+                  <div>{item.count}</div>
+                  <div>{item.price.toLocaleString()}</div>
+                </SelectedItemInfo>
+              </SelectedItem>
+            ))}
+          </Content>
+          <Bottom>
+            <TotalCount>
+              <span>수량 : </span>
+              <span>{14}</span>
+            </TotalCount>
+            <TotalPrice>
+              <span>구매금액 : </span>
+              <span>
+                <span>{"342,400"}</span>
+                <span>원</span>
+              </span>
+            </TotalPrice>
+            <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
+          </Bottom>
+          {searchOpen ? <ItemSearch /> : null}
+          {payOpen ? (
+            <Pay>
+              <span>결제하시겠습니까?</span>
+              <div>
+                <button onClick={() => setPayOpen(false)}>돌아가기</button>
+                <button onClick={() => navigate("/pay")}>결제하기</button>
+              </div>
+            </Pay>
+          ) : null}
+        </>
+      ) : (
+        <div>YOU NOT LOGIN</div>
+      )}
     </Container>
   );
 };

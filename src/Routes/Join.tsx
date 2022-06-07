@@ -94,6 +94,8 @@ interface ISignup {
 function Join() {
   const [joins, setJoin] = useState(false);
   const [emailAuthMsg, setEmailAuthMsg] = useState("");
+  const [idAuthMsg, setIdAuthMsg] = useState("");
+  const [emailSendMsg, setEmailSendMsg] = useState("");
   const navigate = useNavigate();
   const {
     register,
@@ -111,17 +113,15 @@ function Join() {
     if (joins) {
       if (val === 200) {
         console.log("회원가입 완료!!");
-        navigate("/login");
-      } else {
-        console.log("이미 존재하는 아이디입니다.");
+        navigate("/main");
       }
     }
   };
   const idMath = (val: number) => {
-    if (val === 1) {
-      setEmailAuthMsg("id 중복!");
+    if (val === 0) {
+      setIdAuthMsg("아이디 중복!");
     } else {
-      setEmailAuthMsg("아이디가 중복됩니다.");
+      setIdAuthMsg("사용가능한 아이디입니다.");
     }
   };
   const emailMath = (val: number) => {
@@ -148,12 +148,14 @@ function Join() {
       )
       .then((response) => {
         console.log(response.status);
+        joinMatch(response.status);
       })
       .catch((error) => {
         console.log(error);
       });
   }
-  async function Emailsend() {
+  async function Emailsend(e: any) {
+    e.preventDefault();
     const val = watch().email;
     axios
       .post(`/member/mail?email=${val}`, config)
@@ -163,9 +165,11 @@ function Join() {
       .catch((error) => {
         console.log(error);
       });
+    setEmailSendMsg("인증코드를 전송했습니다.");
   }
 
-  async function Idsendauth() {
+  async function Idsendauth(e: any) {
+    e.preventDefault();
     const val = watch().username;
     axios
       .post(`/api/signup/username/exist?username=${val}`, config)
@@ -177,7 +181,8 @@ function Join() {
         console.log(error);
       });
   }
-  async function Emailsendauth() {
+  async function Emailsendauth(e: any) {
+    e.preventDefault();
     const val = watch().emailauth;
     axios
       .post(`/member/verifyCode?confirm_email=${val}`, config)
@@ -206,6 +211,7 @@ function Join() {
             <Authbtn onClick={Idsendauth}>중복</Authbtn>
           </div>
 
+          <span>{idAuthMsg}</span>
           <span>{errors?.username?.message}</span>
 
           <input
@@ -240,6 +246,7 @@ function Join() {
             />
             <Authbtn onClick={Emailsend}>전송</Authbtn>
           </div>
+          <span>{emailSendMsg}</span>
           <span>{errors?.email?.message}</span>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
@@ -250,9 +257,9 @@ function Join() {
               type="text"
             />
             <Authbtn onClick={Emailsendauth}>인증</Authbtn>
-            {/* 1뜨면 인증완료 */}
-            <span>{emailAuthMsg}</span>
           </div>
+
+          <span>{emailAuthMsg}</span>
           <Joinbtn onClick={join}>회원가입</Joinbtn>
         </Form>
       </Loginwrap>
