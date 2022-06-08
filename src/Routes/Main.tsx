@@ -158,7 +158,7 @@ const Main = () => {
   const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
   const navigate = useNavigate();
-
+  console.log(userInfo);
   //네이버 로그아웃 팝업창
   let testPopUp: any;
   const openPopUp = () => {

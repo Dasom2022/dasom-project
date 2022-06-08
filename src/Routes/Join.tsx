@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { userInfoData } from "../atoms";
+import { useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -92,6 +94,7 @@ interface ISignup {
 }
 
 function Join() {
+  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
   const [joins, setJoin] = useState(false);
   const [emailAuthMsg, setEmailAuthMsg] = useState("");
   const [idAuthMsg, setIdAuthMsg] = useState("");
@@ -113,7 +116,7 @@ function Join() {
     if (joins) {
       if (val === 200) {
         console.log("회원가입 완료!!");
-        navigate("/main");
+        navigate("/login");
       }
     }
   };
@@ -148,6 +151,7 @@ function Join() {
       )
       .then((response) => {
         console.log(response.status);
+        setUserInfo(response.headers);
         joinMatch(response.status);
       })
       .catch((error) => {
