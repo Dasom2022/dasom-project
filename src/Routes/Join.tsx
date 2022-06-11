@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userInfoData } from "../atoms";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { getEmailAuth, getEmailSend, getIdMath, getJoin } from "../api";
 
 const Wrapper = styled.div`
@@ -94,7 +94,7 @@ interface ISignup {
 }
 
 function Join() {
-  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
+  const setUserInfo = useSetRecoilState<any>(userInfoData);
   const [joins, setJoin] = useState(false);
   const [emailAuthMsg, setEmailAuthMsg] = useState("");
   const [idAuthMsg, setIdAuthMsg] = useState("");

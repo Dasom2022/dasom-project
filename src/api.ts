@@ -90,7 +90,7 @@ export function getEmailAuth(emailAuth: string): any {
     });
 }
 
-// 카카오 로그인 요청 api
+// 카카오 로그인 요청 api (인자코드 발급)
 export function getKakaoLogin(code: string | null): any {
   axios
     .post(`/auth/kakaoLogin?code=${code}`, config)

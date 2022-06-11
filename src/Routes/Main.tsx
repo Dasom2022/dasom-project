@@ -4,7 +4,7 @@ import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
-import { Logout } from "../Components/LogoutHook";
+import { LogoutHook } from "../Hooks/LogoutHook";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -179,7 +179,7 @@ const Main = () => {
             </div>
             <div>
               <span>{userInfo?.username}님 환영합니다!</span>
-              <button onClick={() => Logout(userInfo?.socialType)}>
+              <button onClick={() => LogoutHook(userInfo?.socialType)}>
                 로그아웃
               </button>
             </div>

@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import NaverLogin from "../Auth/NaverLogin";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userInfoData } from "../atoms";
 import { getLogin } from "../api";
 
@@ -113,9 +112,9 @@ interface IForm {
 }
 
 function Login() {
-  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
+  const setUserInfo = useSetRecoilState<any>(userInfoData);
   const navigate = useNavigate();
-  const { register, handleSubmit, watch } = useForm<IForm>();
+  const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
     const LoginApi = getLogin(id, pw);
     LoginMatch(LoginApi);

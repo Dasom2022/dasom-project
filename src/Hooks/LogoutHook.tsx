@@ -2,11 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { naverToken, userInfoData } from "../atoms";
 
-const navigate = useNavigate();
-const setUserInfo = useSetRecoilState(userInfoData);
-const naverTokenData = useRecoilValue(naverToken);
-
-export function Logout(social: string) {
+export function LogoutHook(social: string) {
+  const navigate = useNavigate();
+  const setUserInfo = useSetRecoilState(userInfoData);
+  const naverTokenData = useRecoilValue(naverToken);
   if (social === "KAKAO") {
     //카카오 로그아웃
     const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_REST_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_LOGOUT_REDIRECT_URI}`;
