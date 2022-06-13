@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import WelcomeBackground from "../Components/WelcomeBackground";
@@ -72,7 +73,6 @@ const Footter = styled.div`
   position: absolute;
   bottom: 0;
   margin-bottom: 60px;
-  color: white;
 `;
 
 const Loginbtn = styled.div`
@@ -106,8 +106,8 @@ function Welcome() {
           <Explanation>
             <Logo src={process.env.PUBLIC_URL + "/image/qr.png"}></Logo>
             <QRlocation>
-              좌측의 QR코드를 인식해 모바일에서
-              <br /> 발급받은 QR코드로 로그인 해주세요
+              좌측의 QR코드를 카메라로
+              <br /> 인식해 주세요!
             </QRlocation>
           </Explanation>
         </Leftspan>
@@ -123,17 +123,17 @@ function Welcome() {
           </div>
           <div onClick={OnshopingList}>
             <FontAwesomeIcon
-              icon={faCaretRight}
+              icon={faAngleRight}
               color={"#F0F4C3"}
               fontSize="150px"
             />
             <FontAwesomeIcon
-              icon={faCaretRight}
+              icon={faAngleRight}
               color={"#8BC34A"}
               fontSize="150px"
             />
             <FontAwesomeIcon
-              icon={faCaretRight}
+              icon={faAngleRight}
               color={"#4CAF50"}
               fontSize="150px"
             />

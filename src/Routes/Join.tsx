@@ -66,9 +66,6 @@ const Form = styled.form`
       border-color: #388e3c;
     }
   }
-  span {
-    color: tomato;
-  }
 `;
 
 const Joinbtn = styled.button`
@@ -85,6 +82,10 @@ const Authbtn = styled.button`
   background-color: #388e3c;
 `;
 
+const Msg = styled.span<{ spancolor: string }>`
+  color: ${(props) => props.spancolor};
+`;
+
 interface ISignup {
   email: string;
   password: string;
@@ -99,6 +100,7 @@ function Join() {
   const [emailAuthMsg, setEmailAuthMsg] = useState("");
   const [idAuthMsg, setIdAuthMsg] = useState("");
   const [emailSendMsg, setEmailSendMsg] = useState("");
+  const [msgColor, setMsgColor] = useState("tomato");
   const navigate = useNavigate();
   const {
     register,
@@ -127,8 +129,10 @@ function Join() {
   const idMath = (val: any) => {
     if (val === 0) {
       setIdAuthMsg("아이디 중복!");
+      setMsgColor("tomato");
     } else {
       setIdAuthMsg("사용가능한 아이디입니다.");
+      setMsgColor("#388e3c");
     }
   };
 
@@ -136,8 +140,10 @@ function Join() {
   const emailMath = (val: any) => {
     if (val === 1) {
       setEmailAuthMsg("이메일 인증 완료!");
+      setMsgColor("#388e3c");
     } else {
       setEmailAuthMsg("다시 입력해주세요...");
+      setMsgColor("tomato");
     }
   };
 
@@ -152,6 +158,7 @@ function Join() {
     e.preventDefault();
     getEmailSend(watch().email);
     setEmailSendMsg("인증코드를 전송했습니다.");
+    setMsgColor("#388e3c");
   }
 
   // 이메일 코드 검사
@@ -178,8 +185,8 @@ function Join() {
             <Authbtn onClick={Idsendauth}>중복</Authbtn>
           </div>
 
-          <span>{idAuthMsg}</span>
-          <span>{errors?.username?.message}</span>
+          <Msg spancolor={msgColor}>{idAuthMsg}</Msg>
+          <Msg spancolor={msgColor}>{errors?.username?.message}</Msg>
 
           <input
             {...register("password", {
@@ -192,7 +199,7 @@ function Join() {
             placeholder="비밀번호를 입력하세요"
             type="password"
           />
-          <span>{errors?.password?.message}</span>
+          <Msg spancolor={msgColor}>{errors?.password?.message}</Msg>
           <input
             {...register("password2", {
               required: "비밀번호 재입력은 필수입니다.",
@@ -202,7 +209,7 @@ function Join() {
             placeholder="비밀번호를 재입력하세요"
             type="password"
           />
-          <span>{errors?.password2?.message}</span>
+          <Msg spancolor={msgColor}>{errors?.password2?.message}</Msg>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
               {...register("email", {
@@ -213,8 +220,8 @@ function Join() {
             />
             <Authbtn onClick={Emailsend}>전송</Authbtn>
           </div>
-          <span>{emailSendMsg}</span>
-          <span>{errors?.email?.message}</span>
+          <Msg spancolor={msgColor}>{emailSendMsg}</Msg>
+          <Msg spancolor={msgColor}>{errors?.email?.message}</Msg>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
               {...register("emailauth", {
@@ -226,7 +233,7 @@ function Join() {
             <Authbtn onClick={EmailsendAuth}>인증</Authbtn>
           </div>
 
-          <span>{emailAuthMsg}</span>
+          <Msg spancolor={msgColor}>{emailAuthMsg}</Msg>
           <Joinbtn onClick={join}>회원가입</Joinbtn>
         </Form>
       </Loginwrap>
