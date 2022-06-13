@@ -2,9 +2,9 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
 import { userInfoData } from "../atoms";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
+import { getEmailAuth, getEmailSend, getIdMath, getJoin } from "../api";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -66,9 +66,6 @@ const Form = styled.form`
       border-color: #388e3c;
     }
   }
-  span {
-    color: tomato;
-  }
 `;
 
 const Joinbtn = styled.button`
@@ -85,6 +82,10 @@ const Authbtn = styled.button`
   background-color: #388e3c;
 `;
 
+const Msg = styled.span<{ spancolor: string }>`
+  color: ${(props) => props.spancolor};
+`;
+
 interface ISignup {
   email: string;
   password: string;
@@ -94,11 +95,12 @@ interface ISignup {
 }
 
 function Join() {
-  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
+  const setUserInfo = useSetRecoilState<any>(userInfoData);
   const [joins, setJoin] = useState(false);
   const [emailAuthMsg, setEmailAuthMsg] = useState("");
   const [idAuthMsg, setIdAuthMsg] = useState("");
   const [emailSendMsg, setEmailSendMsg] = useState("");
+  const [msgColor, setMsgColor] = useState("tomato");
   const navigate = useNavigate();
   const {
     register,
@@ -110,93 +112,61 @@ function Join() {
     setJoin((prev) => !prev);
   };
   const onSubmit = ({ username, password, email }: ISignup) => {
-    postUserData();
+    const JoinApi: any = getJoin(username, password);
+    joinMatch(JoinApi);
+    setUserInfo(JoinApi.headers);
   };
-  const joinMatch = (val: number) => {
+  const joinMatch = (val: any) => {
     if (joins) {
-      if (val === 200) {
+      if (val?.status === 200) {
         console.log("회원가입 완료!!");
         navigate("/login");
       }
     }
   };
-  const idMath = (val: number) => {
+
+  // 아이디 중복 여부
+  const idMath = (val: any) => {
     if (val === 0) {
       setIdAuthMsg("아이디 중복!");
+      setMsgColor("tomato");
     } else {
       setIdAuthMsg("사용가능한 아이디입니다.");
+      setMsgColor("#388e3c");
     }
   };
-  const emailMath = (val: number) => {
+
+  // 이메일 인증 성공 여부
+  const emailMath = (val: any) => {
     if (val === 1) {
       setEmailAuthMsg("이메일 인증 완료!");
+      setMsgColor("#388e3c");
     } else {
       setEmailAuthMsg("다시 입력해주세요...");
+      setMsgColor("tomato");
     }
   };
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  function postUserData() {
-    axios
-      .post(
-        "/member/signup",
-        JSON.stringify({
-          password: watch().password,
-          username: watch().username,
-        }),
-        config
-      )
-      .then((response) => {
-        console.log(response.status);
-        setUserInfo(response.headers);
-        joinMatch(response.status);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  async function Emailsend(e: any) {
-    e.preventDefault();
-    const val = watch().email;
-    axios
-      .post(`/member/mail?email=${val}`, config)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    setEmailSendMsg("인증코드를 전송했습니다.");
-  }
 
+  // 아이디 중복 검사
   async function Idsendauth(e: any) {
     e.preventDefault();
-    const val = watch().username;
-    axios
-      .post(`/api/signup/username/exist?username=${val}`, config)
-      .then((response) => {
-        idMath(response.data);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    idMath(getIdMath(watch().username).data);
   }
-  async function Emailsendauth(e: any) {
+
+  // 이메일 코드 전송
+  async function Emailsend(e: any) {
     e.preventDefault();
-    const val = watch().emailauth;
-    axios
-      .post(`/member/verifyCode?confirm_email=${val}`, config)
-      .then((response) => {
-        emailMath(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    getEmailSend(watch().email);
+    setEmailSendMsg("인증코드를 전송했습니다.");
+    setMsgColor("#388e3c");
   }
+
+  // 이메일 코드 검사
+  async function EmailsendAuth(e: any) {
+    e.preventDefault();
+    emailMath(getEmailAuth(watch().emailauth).data);
+  }
+
   return (
     <Wrapper>
       <Titlewrap>
@@ -215,8 +185,8 @@ function Join() {
             <Authbtn onClick={Idsendauth}>중복</Authbtn>
           </div>
 
-          <span>{idAuthMsg}</span>
-          <span>{errors?.username?.message}</span>
+          <Msg spancolor={msgColor}>{idAuthMsg}</Msg>
+          <Msg spancolor={msgColor}>{errors?.username?.message}</Msg>
 
           <input
             {...register("password", {
@@ -229,7 +199,7 @@ function Join() {
             placeholder="비밀번호를 입력하세요"
             type="password"
           />
-          <span>{errors?.password?.message}</span>
+          <Msg spancolor={msgColor}>{errors?.password?.message}</Msg>
           <input
             {...register("password2", {
               required: "비밀번호 재입력은 필수입니다.",
@@ -239,7 +209,7 @@ function Join() {
             placeholder="비밀번호를 재입력하세요"
             type="password"
           />
-          <span>{errors?.password2?.message}</span>
+          <Msg spancolor={msgColor}>{errors?.password2?.message}</Msg>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
               {...register("email", {
@@ -250,8 +220,8 @@ function Join() {
             />
             <Authbtn onClick={Emailsend}>전송</Authbtn>
           </div>
-          <span>{emailSendMsg}</span>
-          <span>{errors?.email?.message}</span>
+          <Msg spancolor={msgColor}>{emailSendMsg}</Msg>
+          <Msg spancolor={msgColor}>{errors?.email?.message}</Msg>
           <div style={{ display: "flex", justifyContent: "right" }}>
             <input
               {...register("emailauth", {
@@ -260,10 +230,10 @@ function Join() {
               placeholder="이메일 인증코드를 입력하세요"
               type="text"
             />
-            <Authbtn onClick={Emailsendauth}>인증</Authbtn>
+            <Authbtn onClick={EmailsendAuth}>인증</Authbtn>
           </div>
 
-          <span>{emailAuthMsg}</span>
+          <Msg spancolor={msgColor}>{emailAuthMsg}</Msg>
           <Joinbtn onClick={join}>회원가입</Joinbtn>
         </Form>
       </Loginwrap>

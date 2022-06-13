@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { Link, useHref, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useState } from "react";
 import NaverLogin from "../Auth/NaverLogin";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userInfoData } from "../atoms";
+import { getLogin } from "../api";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -113,21 +112,20 @@ interface IForm {
 }
 
 function Login() {
-  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
+  const setUserInfo = useSetRecoilState<any>(userInfoData);
   const navigate = useNavigate();
-  const { register, handleSubmit, watch } = useForm<IForm>();
+  const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-    postUserData();
+    const LoginApi = getLogin(id, pw);
+    LoginMatch(LoginApi);
   };
-  function postUserData() {
-    onLogin();
-  }
 
   //로그인 성공여부
   const LoginMatch = (val: any) => {
-    if (val.status === 200) {
+    if (val?.status === 200) {
+      console.log(val);
       console.log("성공");
-      setUserInfo(val.headers);
+      setUserInfo(val?.headers);
       navigate("/main");
     } else {
       console.log("로그인 실패");
@@ -142,35 +140,6 @@ function Login() {
     window.location.href = KAKAO_AUTH_URL;
   };
 
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  };
-  //기본 로그인 api 요청
-  function onLogin() {
-    axios
-      .post(
-        "/login",
-        JSON.stringify({
-          username: watch().id,
-          password: watch().pw,
-        }),
-        config
-      )
-      .then((response) => {
-        localStorage.setItem("accessToken", response.data["authorization"]);
-        localStorage.setItem(
-          "refreshToken",
-          response.data["authorization-refresh"]
-        );
-        LoginMatch(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
   return (
     <Wrapper>
       <Titlewrap>

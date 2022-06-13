@@ -17,11 +17,12 @@ const NaverBtn = styled.div`
 `;
 const NaverLogin = () => {
   const [on, SetOn] = useState(false);
+
   const initializeNaverLogin = () => {
     const naverLogin = new naver.LoginWithNaverId({
-      clientId: "ZT4dK4wpFSNrBPdDwfMn",
+      clientId: process.env.REACT_APP_CLIENT_ID,
       callbackUrl: "http://localhost:3000/dasom-project/auth/naver",
-      clientSecret: "WW057qN9pe",
+      clientSecret: process.env.REACT_APP_CLIENT_SECRET,
       isPopup: false, // popup 형식으로 띄울것인지 설정
       loginButton: { color: "green", type: 1, height: "60" },
     });

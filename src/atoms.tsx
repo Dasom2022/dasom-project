@@ -13,6 +13,11 @@ export const userInfoData = atom<any>({
   // effects_UNSTABLE: [persistAtom],
 });
 
+export const naverToken = atom<any>({
+  key: "naverToken",
+  default: "",
+});
+
 export const searchOpenState = atom({
   key: "searchOpen",
   default: false,

@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
+import { LogoutHook } from "../Hooks/LogoutHook";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -155,41 +156,10 @@ const imsi = [
 ];
 const Main = () => {
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
-  const [userInfo, setUserInfo] = useRecoilState<any>(userInfoData);
+  const userInfo = useRecoilValue(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
   const navigate = useNavigate();
-  console.log(userInfo);
-  //네이버 로그아웃 팝업창
-  let testPopUp: any;
-  const openPopUp = () => {
-    testPopUp = window.open(
-      "https://nid.naver.com/nidlogin.logout",
-      "_blank",
-      "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1"
-    );
-  };
-  const LogOut = (social: string) => {
-    if (social === "KAKAO") {
-      //카카오 로그아웃
-      const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-      const LOGOUT_REDIRECT_URL = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
-      const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URL}`;
-      setUserInfo([]);
-      window.location.href = KAKAO_AUTH_URL_LOGOUT;
-    } else if (social === "NAVER") {
-      //네이버 로그아웃
-      openPopUp();
-      setTimeout(() => testPopUp.close(), 1000);
-      setUserInfo([]);
-      navigate("/");
-    } else {
-      //기본 로그아웃
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      setUserInfo([]);
-      navigate("/");
-    }
-  };
+
   return (
     <Container>
       {userInfo?.username ? (
@@ -209,7 +179,7 @@ const Main = () => {
             </div>
             <div>
               <span>{userInfo?.username}님 환영합니다!</span>
-              <button onClick={() => LogOut(userInfo?.socialType)}>
+              <button onClick={() => LogoutHook(userInfo?.socialType)}>
                 로그아웃
               </button>
             </div>
