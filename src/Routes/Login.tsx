@@ -116,7 +116,8 @@ function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-    const LoginApi = getLogin(id, pw);
+    let LoginApi = getLogin(id, pw);
+    console.log(getLogin(id, pw));
     LoginMatch(LoginApi);
   };
 
@@ -129,6 +130,7 @@ function Login() {
       navigate("/main");
     } else {
       console.log("로그인 실패");
+      //예외 처리 추후 추가
     }
   };
   //카카오 로그인시

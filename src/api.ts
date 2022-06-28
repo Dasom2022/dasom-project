@@ -1,8 +1,5 @@
 import axios from "axios";
 
-interface IEmailSendAuth {}
-interface IIdMath {}
-
 const config = {
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +8,7 @@ const config = {
 };
 
 // 로그인 요청 api
-export function getLogin(id: string, pw: string): any {
+export function getLogin(id: string, pw: string) {
   axios
     .post(
       "/login",
@@ -31,6 +28,7 @@ export function getLogin(id: string, pw: string): any {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }
@@ -50,6 +48,7 @@ export function getJoin(id: string, pw: string) {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }
@@ -62,6 +61,7 @@ export function getIdMath(id: string): any {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }
@@ -74,6 +74,7 @@ export function getEmailSend(email: string) {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }
@@ -86,6 +87,7 @@ export function getEmailAuth(emailAuth: string): any {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }
@@ -98,6 +100,7 @@ export function getKakaoLogin(code: string | null): any {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }
@@ -110,6 +113,7 @@ export function getNaverLogin(token: string): any {
       return response;
     })
     .catch((error) => {
+      // 예외처리 추가 예정
       console.log(error);
     });
 }

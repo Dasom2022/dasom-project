@@ -114,13 +114,18 @@ function Join() {
   const onSubmit = ({ username, password, email }: ISignup) => {
     const JoinApi: any = getJoin(username, password);
     joinMatch(JoinApi);
-    setUserInfo(JoinApi.headers);
+    setUserInfo(JoinApi?.headers);
   };
+
+  // 회원가입 성공 여부
   const joinMatch = (val: any) => {
     if (joins) {
       if (val?.status === 200) {
         console.log("회원가입 완료!!");
         navigate("/login");
+      } else {
+        // 예외처리
+        console.log(val);
       }
     }
   };
@@ -150,13 +155,13 @@ function Join() {
   // 아이디 중복 검사
   async function Idsendauth(e: any) {
     e.preventDefault();
-    idMath(getIdMath(watch().username).data);
+    idMath(getIdMath(watch().username)?.data);
   }
 
   // 이메일 코드 전송
   async function Emailsend(e: any) {
     e.preventDefault();
-    getEmailSend(watch().email);
+    getEmailSend(watch()?.email);
     setEmailSendMsg("인증코드를 전송했습니다.");
     setMsgColor("#388e3c");
   }
@@ -164,7 +169,7 @@ function Join() {
   // 이메일 코드 검사
   async function EmailsendAuth(e: any) {
     e.preventDefault();
-    emailMath(getEmailAuth(watch().emailauth).data);
+    emailMath(getEmailAuth(watch().emailauth)?.data);
   }
 
   return (

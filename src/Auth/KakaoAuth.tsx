@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { userInfoData } from "../atoms";
 import { useSetRecoilState } from "recoil";
@@ -18,6 +17,7 @@ function Auth() {
       navigate("/main");
     } else {
       console.log("로그인 실패");
+      //예외처리 추가
     }
   };
 
