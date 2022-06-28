@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Container=styled.div`
@@ -57,7 +60,7 @@ const Right=styled.div`
         display:flex;
         padding:10px 0;
         & > div{
-            width:80px;
+            width:100px;
         }
         input{
             border:none;
@@ -71,18 +74,29 @@ const Right=styled.div`
 `;
 const AddItem=()=>{
     const [imgPath, setImgPath]=useState("");
+    const {register, handleSubmit}=useForm();
+    const navigate=useNavigate();
+    const onValid=(data:any)=>{
+        const config={
+            headers:{
+                'Content-Type':"application/json"
+            }
+        }
+        axios.post("/item/register", JSON.stringify({...data}),config).then(res=>navigate("/admin/product"));
+    }
     return (
         <Container>
-            <AddForm>
+            <AddForm onSubmit={handleSubmit(onValid)}>
                 <Left>
                     <img src={imgPath==""?process.env.PUBLIC_URL+"/image/default.jpg":process.env.PUBLIC_URL+"/image/"+imgPath.split("\\")[imgPath.split("\\").length-1]} />
                     <input type="file" onChange={(e)=>{setImgPath(e.target.value)}} />
                 </Left>
                 <Right>
-                    <div><div><label>상품명</label></div>:<input /></div>
-                    <div><div><label>무게</label></div>:<input /></div>
-                    <div><div><label>코드</label></div>:<input /></div>
-                    <div><div><label>가격</label></div>:<input /></div>
+                    <div><div><label>상품명</label></div>:<input {...register("itemName")} /></div>
+                    <div><div><label>무게</label></div>:<input {...register("weight")} /></div>
+                    <div><div><label>코드</label></div>:<input {...register("itemCode")} /></div>
+                    <div><div><label>가격</label></div>:<input {...register("price")} /></div>
+                    <div><div><label>진열위치</label></div>:<input {...register("locale")} /></div>
                 </Right>
                 <button>등록하기</button>
             </AddForm>

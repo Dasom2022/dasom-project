@@ -8,7 +8,7 @@ const Container=styled.div`
     width:100%;
     height:100vh;
     min-width:720px;
-    min-height:420px;
+    min-height:470px;
 `;
 const Header=styled.div`
     height:50px;

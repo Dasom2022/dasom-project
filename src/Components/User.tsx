@@ -124,8 +124,10 @@ const User=()=>{
                         <Email>{item.email}</Email>
                         <Social>{item.socialType}</Social>
                         <Buttons>
-                            <button>수정</button>
-                            <button>삭제</button>
+                            <button onClick={()=>{
+                                axios.delete(`/api/member/auth/delete?username=${item.username}`).then(res=>console.log(res));
+                                window.location.reload();
+                            }}>삭제</button>
                         </Buttons>
                     </UserInfo>
                 ))}
