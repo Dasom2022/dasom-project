@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userInfoData } from "../atoms";
 import { useSetRecoilState } from "recoil";
-import { getEmailAuth, getEmailSend, getIdMath, getJoin } from "../api";
-
+// import { getEmailAuth, getEmailSend, getIdMath, getJoin } from "../api";
+import axios from "axios";
 const Wrapper = styled.div`
   height: 100vh;
   display: flex;
@@ -112,16 +112,52 @@ function Join() {
     setJoin((prev) => !prev);
   };
   const onSubmit = ({ username, password, email }: ISignup) => {
-    const JoinApi: any = getJoin(username, password);
-    joinMatch(JoinApi);
-    setUserInfo(JoinApi?.headers);
+    getJoin(username, password);
   };
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+  function getJoin(id: string, pw: string) {
+    axios
+      .post(
+        "/member/signup",
+        JSON.stringify({
+          password: pw,
+          username: id,
+        }),
+        config
+      )
+      .then((response) => {
+        joinMatch(response);
+      })
+      .catch((error) => {
+        // 예외처리 추가 예정
+        console.log(error);
+      });
+  }
+
+  // 이메일 인증 코드 보내기
+  function getEmailSend(email: string) {
+    axios
+      .post(`/member/mail?email=${email}`, config)
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        // 예외처리 추가 예정
+        console.log(error);
+      });
+  }
 
   // 회원가입 성공 여부
   const joinMatch = (val: any) => {
     if (joins) {
       if (val?.status === 200) {
         console.log("회원가입 완료!!");
+        setUserInfo(val?.headers);
         navigate("/login");
       } else {
         // 예외처리
@@ -155,7 +191,16 @@ function Join() {
   // 아이디 중복 검사
   async function Idsendauth(e: any) {
     e.preventDefault();
-    idMath(getIdMath(watch().username)?.data);
+    const val = watch().username;
+    axios
+      .post(`/api/signup/username/exist?username=${val}`, config)
+      .then((response) => {
+        idMath(response.data);
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   // 이메일 코드 전송
@@ -167,9 +212,18 @@ function Join() {
   }
 
   // 이메일 코드 검사
-  async function EmailsendAuth(e: any) {
+  async function Emailsendauth(e: any) {
     e.preventDefault();
-    emailMath(getEmailAuth(watch().emailauth)?.data);
+    const val = watch().emailauth;
+    axios
+      .post(`/member/verifyCode?confirm_email=${val}`, config)
+      .then((response) => {
+        console.log(response.data);
+        emailMath(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -235,7 +289,7 @@ function Join() {
               placeholder="이메일 인증코드를 입력하세요"
               type="text"
             />
-            <Authbtn onClick={EmailsendAuth}>인증</Authbtn>
+            <Authbtn onClick={Emailsendauth}>인증</Authbtn>
           </div>
 
           <Msg spancolor={msgColor}>{emailAuthMsg}</Msg>

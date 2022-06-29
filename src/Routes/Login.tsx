@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import NaverLogin from "../Auth/NaverLogin";
 import { useSetRecoilState } from "recoil";
 import { userInfoData } from "../atoms";
+// import { getLogin } from "../api";
+import axios from "axios";
 import { getLogin } from "../api";
-
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -116,16 +117,42 @@ function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-    let LoginApi = getLogin(id, pw);
-    console.log(getLogin(id, pw));
-    LoginMatch(LoginApi);
+    LoginMatch(getLogin(id, pw));
   };
-
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+  // 로그인 요청 api
+  // function getLogin(id: string, pw: string) {
+  //   axios
+  //     .post(
+  //       "/login",
+  //       JSON.stringify({
+  //         username: id,
+  //         password: pw,
+  //       }),
+  //       config
+  //     )
+  //     .then((response) => {
+  //       //로컬에 토큰 저장
+  //       localStorage.setItem("accessToken", response.data["authorization"]);
+  //       localStorage.setItem(
+  //         "refreshToken",
+  //         response.data["authorization-refresh"]
+  //       );
+  //       LoginMatch(response);
+  //     })
+  //     .catch((error) => {
+  //       // 예외처리 추가 예정
+  //       console.log(error);
+  //     });
+  // }
   //로그인 성공여부
   const LoginMatch = (val: any) => {
     if (val?.status === 200) {
-      console.log(val);
-      console.log("성공");
       setUserInfo(val?.headers);
       navigate("/main");
     } else {
@@ -136,7 +163,7 @@ function Login() {
   //카카오 로그인시
   const KakaoClick = () => {
     const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-    const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL;
+    const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
     console.log(REST_API_KEY);
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = KAKAO_AUTH_URL;

@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { userInfoData } from "../atoms";
 import { useSetRecoilState } from "recoil";
-import { getKakaoLogin } from "../api";
+// import { getKakaoLogin } from "../api";
+import axios from "axios";
 function Auth() {
   const setUserInfo = useSetRecoilState<any>(userInfoData);
   // calllback으로 받은 인가코드
@@ -20,9 +21,21 @@ function Auth() {
       //예외처리 추가
     }
   };
-
   useEffect(() => {
-    KakaoLoginMatch(getKakaoLogin(code));
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+    axios
+      .post(`/auth/kakaoLogin?code=${code}`, config)
+      .then((response) => {
+        KakaoLoginMatch(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return <div>Kakao Loging...</div>;

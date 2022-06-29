@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { getNaverLogin } from "../api";
 import { naverToken, userInfoData } from "../atoms";
 
@@ -25,8 +25,20 @@ function NaverAuth() {
   const getNaverToken = () => {
     if (!location.hash) return;
     const token = location.hash.split("=")[1].split("&")[0];
-    setNaverTkenData(token);
-    NaverLoginMatch(getNaverLogin(token));
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+    axios
+      .post(`/auth/naver?token=${token}`, config)
+      .then((response) => {
+        NaverLoginMatch(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {

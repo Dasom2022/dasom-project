@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { naverToken, userInfoData } from "../atoms";
 
-export function LogoutHook(social: string) {
+// export function LogoutHook(social: string) {
+const LogoutHook = (social: string) => {
   const navigate = useNavigate();
   const setUserInfo = useSetRecoilState(userInfoData);
   const naverTokenData = useRecoilValue(naverToken);
@@ -24,4 +25,5 @@ export function LogoutHook(social: string) {
     setUserInfo([]);
     navigate("/");
   }
-}
+};
+export default LogoutHook;

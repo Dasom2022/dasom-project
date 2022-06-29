@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { searchOpenState, userInfoData } from "../atoms";
+import { naverToken, searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
-import { LogoutHook } from "../Hooks/LogoutHook";
+import LogoutHook from "../Hooks/LogoutHook";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -156,9 +156,10 @@ const imsi = [
 ];
 const Main = () => {
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
-  const userInfo = useRecoilValue(userInfoData);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
   const navigate = useNavigate();
+  const naverTokenData = useRecoilValue(naverToken);
 
   return (
     <Container>

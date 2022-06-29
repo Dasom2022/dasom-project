@@ -8,7 +8,7 @@ const config = {
 };
 
 // 로그인 요청 api
-export function getLogin(id: string, pw: string) {
+export async function getLogin(id: string, pw: string) {
   axios
     .post(
       "/login",
@@ -34,7 +34,7 @@ export function getLogin(id: string, pw: string) {
 }
 
 // 회원가입 요청 api
-export function getJoin(id: string, pw: string) {
+export async function getJoin(id: string, pw: string) {
   axios
     .post(
       "/member/signup",
