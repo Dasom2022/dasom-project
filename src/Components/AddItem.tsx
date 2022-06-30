@@ -86,6 +86,8 @@ const AddItem=()=>{
     const [imgPath, setImgPath]=useState("");
     const {register, handleSubmit, setValue}=useForm();
     const navigate=useNavigate();
+    const {state}=useLocation() as StateProps;
+    const param=useParams();
     const config={
         headers:{
             'Content-Type':"application/json"
@@ -95,11 +97,10 @@ const AddItem=()=>{
         axios.post("/item/register", JSON.stringify({...data}),config).then(res=>navigate("/admin/product"));
     }
     const onEdit=(data:any)=>{
-        axios.put("item/UpdateItemState", JSON.stringify({...data}), config).then(res=>console.log(res));
+        axios.post("/item/UpdateItemState", JSON.stringify({id:state.id, ...data}), config).then(res=>navigate("/admin/product"));
 
     }
-    const {state}=useLocation() as StateProps;
-    const param=useParams();
+    
     useEffect(()=>{
         if(param.category=="editItem"){
             setValue("itemName", state.itemName);
@@ -111,13 +112,13 @@ const AddItem=()=>{
     },[]);
     return (
         <Container>
-            <AddForm onSubmit={handleSubmit(onAdd)}>
+            <AddForm onSubmit={param.category=="editItem"?handleSubmit(onEdit):handleSubmit(onAdd)}>
                 <Left>
                     <img src={imgPath==""?process.env.PUBLIC_URL+"/image/default.jpg":process.env.PUBLIC_URL+"/image/"+imgPath.split("\\")[imgPath.split("\\").length-1]} />
                     <input type="file" onChange={(e)=>{setImgPath(e.target.value)}} />
                 </Left>
                 <Right>
-                    <div><div><label>상품명</label></div>:<input {...register("itemName")}  /></div>
+                    <div><div><label>상품명</label></div>:<input {...register("itemName")} /></div>
                     <div><div><label>무게</label></div>:<input {...register("weight")}  /></div>
                     <div><div><label>코드</label></div>:<input {...register("itemCode")} /></div>
                     <div><div><label>가격</label></div>:<input {...register("price")} /></div>
