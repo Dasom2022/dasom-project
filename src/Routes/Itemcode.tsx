@@ -131,7 +131,7 @@ function Itemcode() {
             </svg>
           </Link>
         </CloseBtn>
-        <Leftheader>Enter the item's PLU #</Leftheader>
+        <Leftheader>상품코드를 입력하세요..</Leftheader>
       </LeftWrap>
       <LightWrap>
         <Codeview>{code}</Codeview>

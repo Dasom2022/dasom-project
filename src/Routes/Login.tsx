@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { Link, useHref, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useState } from "react";
 import NaverLogin from "../Auth/NaverLogin";
+import { useSetRecoilState } from "recoil";
+import { userInfoData } from "../atoms";
+import { getLogin } from "../api";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -77,10 +78,18 @@ const Loginbtn = styled.button`
   width: 400px;
   height: 50px;
   background-color: #388e3c;
+  color: whitesmoke;
 `;
 
-const KakaoBtn = styled.img`
-  height: 60px;
+const KakaoBtn = styled.div`
+  background-color: #fee502;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #212121;
+  height: 50px;
   width: 280px;
   margin-bottom: 20px;
 `;
@@ -103,76 +112,34 @@ interface IForm {
 }
 
 function Login() {
-  const [seccess, Setseccess] = useState(0);
+  const setUserInfo = useSetRecoilState<any>(userInfoData);
   const navigate = useNavigate();
-  const { register, handleSubmit, watch } = useForm<IForm>();
+  const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-    // navigate("/DAMA/main");
-    postUserData();
+    const LoginApi = getLogin(id, pw);
+    LoginMatch(LoginApi);
   };
-  function postUserData() {
-    onLogin();
-  }
 
   //로그인 성공여부
-  const LoginMatch = (val: number) => {
-    if (val === 200) {
-      navigate("/main");
+  const LoginMatch = (val: any) => {
+    if (val?.status === 200) {
+      console.log(val);
       console.log("성공");
+      setUserInfo(val?.headers);
+      navigate("/main");
     } else {
       console.log("로그인 실패");
     }
   };
-
   //카카오 로그인시
   const KakaoClick = () => {
     const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-    const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+    const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL;
+    console.log(REST_API_KEY);
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = KAKAO_AUTH_URL;
   };
-  const KakaoLogOut = () => {
-    const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-    const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
-    window.location.href = KAKAO_AUTH_URL;
-  };
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  };
-  //기본 로그인 api 요청
-  function onLogin() {
-    axios
-      .post(
-        "/login",
-        JSON.stringify({
-          username: watch().id,
-          password: watch().pw,
-        }),
-        config
-      )
-      .then((response) => {
-        console.log(response);
 
-        // token이 필요한 API 요청 시 header Authorization에 token 담아서 보내기
-        //  axios.defaults.headers.common[
-        //   "Authorization"
-        // ] = `Bearer ${response.data["accessToken"]}`;
-        localStorage.setItem("accessToken", response.data["authorization"]);
-        localStorage.setItem(
-          "refreshToken",
-          response.data["authorization-refresh"]
-        );
-        // localStorage.setItem("user", JSON.stringify(response.data["user"]));
-        LoginMatch(response.status);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
   return (
     <Wrapper>
       <Titlewrap>
@@ -206,10 +173,8 @@ function Login() {
         </Ul>
       </Joinwrap>
       <APIlogin>
-        {/* <a href={KAKAO_AUTH_URL}>카카오 로그인</a> */}
-        <KakaoBtn onClick={KakaoClick} src="img/kakao_login_large_narrow.png" />
+        <KakaoBtn onClick={KakaoClick}>카카오 로그인</KakaoBtn>
         <NaverLogin />
-        <div onClick={KakaoLogOut}>logout</div>
       </APIlogin>
     </Wrapper>
   );

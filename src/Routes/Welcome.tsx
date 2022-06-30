@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import WelcomeBackground from "../Components/WelcomeBackground";
+
 const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -14,7 +17,6 @@ const Wrapper = styled.div`
 `;
 
 const LeftWrap = styled.div`
-  background-color: #388e3c;
   padding: 40px;
   width: 60%;
 `;
@@ -23,7 +25,6 @@ const LightWrap = styled.div`
   display: flex;
   justify-content: right;
   position: relative;
-  background-color: white;
   padding: 40px;
   width: 40%;
 `;
@@ -31,7 +32,7 @@ const LightWrap = styled.div`
 const Hader = styled.h1`
   margin-top: 30px;
   font-size: 48px;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
   color: white;
   font-weight: 600;
 `;
@@ -39,7 +40,7 @@ const Hader = styled.h1`
 const Explanation = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 30px;
 `;
 
 const Leftspan = styled.span`
@@ -60,36 +61,18 @@ const Rightbox = styled.div`
   font-size: 20px;
 `;
 
-const Logo = styled.div`
+const Logo = styled.img`
   width: 80px;
   height: 80px;
-  background-color: white;
-  border-radius: 10px;
   margin-right: 15px;
 `;
 
 const QRlocation = styled.div``;
 
-const Img = styled.img`
-  position: absolute;
-  height: 450px;
-  left: 0;
-  right: 0;
-  margin: 0 -100px;
-  transform: rotate(15deg);
-`;
-
-const Svg = styled.svg`
-  font-size: 15px;
-  path {
-  }
-`;
-
 const Footter = styled.div`
   position: absolute;
   bottom: 0;
   margin-bottom: 60px;
-  color: white;
 `;
 
 const Loginbtn = styled.div`
@@ -108,6 +91,7 @@ function Welcome() {
   };
   return (
     <Wrapper>
+      <WelcomeBackground />
       <LeftWrap>
         <Hader>
           환영합니다!
@@ -115,31 +99,21 @@ function Welcome() {
           DAMA 쇼핑카트
         </Hader>
         <Leftspan>
-          DAMA웹사이트에서 <span style={{ fontWeight: 400 }}> "QR코드"</span> 를
-          받아 로그인하세요
+          DAMA 모바일 사이트에서
+          <br />
+          <span style={{ fontWeight: 600 }}> "QR코드"</span> 를 받아
+          로그인하세요
           <Explanation>
-            <Logo></Logo>
+            <Logo src={process.env.PUBLIC_URL + "/image/qr.png"}></Logo>
             <QRlocation>
-              "www.m.dama.com" 로그인후{" "}
-              <FontAwesomeIcon
-                icon={faAngleRight}
-                color={"white"}
-                size={"sm"}
-              />
-              <br /> 우측하단{" "}
-              <FontAwesomeIcon
-                icon={faAngleRight}
-                color={"white"}
-                size={"sm"}
-              />
-              <span style={{ fontWeight: 400 }}> "QR코드 발급"</span>
+              좌측의 QR코드를 카메라로
+              <br /> 인식해 주세요!
             </QRlocation>
           </Explanation>
         </Leftspan>
         <Footter>DASOM Project dama</Footter>
       </LeftWrap>
       <LightWrap>
-        {/* <Img src={"img/mainMokup.png"} /> */}
         <Link to="login">
           <Loginbtn>QR외 로그인</Loginbtn>
         </Link>
@@ -149,17 +123,17 @@ function Welcome() {
           </div>
           <div onClick={OnshopingList}>
             <FontAwesomeIcon
-              icon={faCaretRight}
+              icon={faAngleRight}
               color={"#F0F4C3"}
               fontSize="150px"
             />
             <FontAwesomeIcon
-              icon={faCaretRight}
+              icon={faAngleRight}
               color={"#8BC34A"}
               fontSize="150px"
             />
             <FontAwesomeIcon
-              icon={faCaretRight}
+              icon={faAngleRight}
               color={"#4CAF50"}
               fontSize="150px"
             />

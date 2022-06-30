@@ -10,6 +10,8 @@ import KaKaoAuth from "./Auth/KakaoAuth";
 import NaverAuth from "./Auth/NaverAuth";
 import Admin from "./Routes/Admin";
 import AdminDetail from "./Routes/AdminDetail";
+import KaKaoLogout from "./Auth/KaKaoLogout";
+
 function App() {
   const token = localStorage.getItem("accessToken");
 
@@ -19,7 +21,7 @@ function App() {
         <Route path="/" element={<Welcome />}></Route>
         <Route path="login" element={<Login />}></Route>
         <Route path="/auth/kakao" element={<KaKaoAuth />}></Route>
-        <Route path="/auth/kakao/logout" element={<Main />}></Route>
+        <Route path="/auth/kakao/logout" element={<KaKaoLogout />}></Route>
         <Route path="/auth/naver" element={<NaverAuth />}></Route>
         <Route path="join" element={<Join />}></Route>
         <Route path="/admin" element={<Admin />}></Route>
@@ -27,12 +29,13 @@ function App() {
         <Route path="main" element={<Main />}>
           <Route path="/main/:itemId" element={<Main />} />
         </Route>
+        <Route path="/admin" element={<Admin />}></Route>
+        <Route path="/admin/:category" element={<AdminDetail />}></Route>
         <Route path="/itemcode" element={<Itemcode />}>
           <Route path=":num" element={<Itemcode />} />
         </Route>
         <Route path="pay" element={<Payment />} />
         <Route path="receipt" element={<Receipt />} />
-
       </Routes>
     </Router>
   );
