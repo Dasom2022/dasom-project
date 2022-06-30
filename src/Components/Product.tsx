@@ -122,7 +122,6 @@ const Product=()=>{
     useEffect(()=>{
         axios.get("/item/itemList").then(res=>setProduct(res.data));
     },[]);
-    console.log(product);
     return (
         <Container>
             <Head>
@@ -144,9 +143,9 @@ const Product=()=>{
                         <Weight>{item.weight}</Weight>
                         <Code>{item.itemCode}</Code>
                         <Locale>{item.locale}</Locale>
-                        <Price>{item.price}</Price>
+                        <Price>{item.price.toLocaleString()}</Price>
                         <Buttons>
-                            <button>수정</button>
+                            <button onClick={()=>navigate("/admin/editItem", {state:item})}>수정</button>
                             <button onClick={()=>{
                                 axios.delete(`/item/delete?id=${item.id}`).then(res=>console.log(res));
                                 window.location.reload();
