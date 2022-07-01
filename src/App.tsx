@@ -11,6 +11,7 @@ import NaverAuth from "./Auth/NaverAuth";
 import Admin from "./Routes/Admin";
 import AdminDetail from "./Routes/AdminDetail";
 import KaKaoLogout from "./Auth/KaKaoLogout";
+import { useEffect, useState } from "react";
 
 function App() {
   const token = localStorage.getItem("accessToken");

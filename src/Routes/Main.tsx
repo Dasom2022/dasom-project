@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { naverToken, searchOpenState, userInfoData } from "../atoms";
+import { useRecoilState } from "recoil";
+import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
-import LogoutHook from "../Hooks/LogoutHook";
+import axios from "axios";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -159,8 +159,44 @@ const Main = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
   const navigate = useNavigate();
-  const naverTokenData = useRecoilValue(naverToken);
-
+  const Logout = async (social: string) => {
+    if (social === "KAKAO") {
+      //카카오 로그아웃
+      const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_REST_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_LOGOUT_REDIRECT_URI}`;
+      setUserInfo([]);
+      window.location.href = KAKAO_AUTH_URL_LOGOUT;
+    } else if (social === "NAVER") {
+      //네이버 로그아웃
+      //네이버 로그아웃 팝업창
+      let testPopUp: any;
+      const openPopUp = () => {
+        testPopUp = window.open(
+          "https://nid.naver.com/nidlogin.logout",
+          "_blank",
+          "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1"
+        );
+      };
+      openPopUp();
+      setTimeout(() => testPopUp.close(), 1000);
+      setUserInfo([]);
+      navigate("/");
+    } else {
+      //기본 로그아웃
+      const token = localStorage.getItem("refreshToken");
+      axios
+        .post(`/api/member/auth/logout?refreshToken=${token}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          // ... 로그인 실패 처리
+        });
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setUserInfo([]);
+      navigate("/");
+    }
+  };
   return (
     <Container>
       {userInfo?.username ? (
@@ -180,7 +216,7 @@ const Main = () => {
             </div>
             <div>
               <span>{userInfo?.username}님 환영합니다!</span>
-              <button onClick={() => LogoutHook(userInfo?.socialType)}>
+              <button onClick={() => Logout(userInfo?.socialType)}>
                 로그아웃
               </button>
             </div>

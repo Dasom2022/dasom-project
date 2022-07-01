@@ -4,9 +4,7 @@ import { useForm } from "react-hook-form";
 import NaverLogin from "../Auth/NaverLogin";
 import { useSetRecoilState } from "recoil";
 import { userInfoData } from "../atoms";
-// import { getLogin } from "../api";
 import axios from "axios";
-import { getLogin } from "../api";
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -117,49 +115,58 @@ function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = ({ id, pw }: IForm) => {
-    LoginMatch(getLogin(id, pw));
+    getLogin(id, pw);
   };
+
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
     withCredentials: true,
   };
-  // 로그인 요청 api
-  // function getLogin(id: string, pw: string) {
-  //   axios
-  //     .post(
-  //       "/login",
-  //       JSON.stringify({
-  //         username: id,
-  //         password: pw,
-  //       }),
-  //       config
-  //     )
-  //     .then((response) => {
-  //       //로컬에 토큰 저장
-  //       localStorage.setItem("accessToken", response.data["authorization"]);
-  //       localStorage.setItem(
-  //         "refreshToken",
-  //         response.data["authorization-refresh"]
-  //       );
-  //       LoginMatch(response);
-  //     })
-  //     .catch((error) => {
-  //       // 예외처리 추가 예정
-  //       console.log(error);
-  //     });
-  // }
-  //로그인 성공여부
-  const LoginMatch = (val: any) => {
-    if (val?.status === 200) {
-      setUserInfo(val?.headers);
+  //로그인 요청 api
+  function getLogin(id: string, pw: string) {
+    axios
+      .post(
+        "/login",
+        JSON.stringify({
+          username: id,
+          password: pw,
+        }),
+        config
+      )
+      .then(onLoginSuccess)
+      .catch((error) => {
+        // 예외처리 추가 예정
+        console.log(error);
+      });
+  }
+  const onLoginSuccess = (response: any) => {
+    console.log(response);
+    localStorage.setItem("accessToken", response.data["accessToken"]);
+    localStorage.setItem("refreshToken", response.data["refreshToken"]);
+    if (response.status === 200) {
+      setUserInfo(response.data);
       navigate("/main");
-    } else {
-      console.log("로그인 실패");
-      //예외 처리 추후 추가
     }
+    //토큰 만료 시간 24시간
+    const JWT_EXPIRY_TIME = 1 * 3600 * 1000;
+    // 토큰 만료 1분전 연장
+    setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 6000);
   };
+  // 연장처리 리프레쉬
+  const onSilentRefresh = () => {
+    const token = localStorage.getItem("refreshToken");
+    console.log(token);
+    axios
+      .post(`/api/member/auth/state?refreshToken=${token}`)
+      .then(onLoginSuccess)
+      .catch((error) => {
+        // ... 로그인 실패 처리
+      });
+  };
+  //로그인 성공여부
+
   //카카오 로그인시
   const KakaoClick = () => {
     const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;

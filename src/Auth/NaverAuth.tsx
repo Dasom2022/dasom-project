@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { getNaverLogin } from "../api";
 import { naverToken, userInfoData } from "../atoms";
 
 function NaverAuth() {
@@ -16,6 +15,7 @@ function NaverAuth() {
     if (value?.status === 200) {
       console.log("로그인 성공!");
       setUserInfo(value?.data);
+      console.log(value);
       navigate("/main");
     } else {
       console.log("로그인 실패");
@@ -25,6 +25,7 @@ function NaverAuth() {
   const getNaverToken = () => {
     if (!location.hash) return;
     const token = location.hash.split("=")[1].split("&")[0];
+    setNaverTkenData(token);
     const config = {
       headers: {
         "Content-Type": "application/json",

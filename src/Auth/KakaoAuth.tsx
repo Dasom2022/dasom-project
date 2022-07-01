@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { userInfoData } from "../atoms";
 import { useSetRecoilState } from "recoil";
-// import { getKakaoLogin } from "../api";
 import axios from "axios";
 function Auth() {
   const setUserInfo = useSetRecoilState<any>(userInfoData);
@@ -11,7 +10,7 @@ function Auth() {
   const navigate = useNavigate();
 
   const KakaoLoginMatch = (value: any) => {
-    console.log(value);
+    console.log(value.data);
     if (value?.status === 200) {
       console.log("로그인 성공!");
       setUserInfo(value?.data);
