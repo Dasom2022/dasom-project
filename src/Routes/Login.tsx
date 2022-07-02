@@ -111,6 +111,8 @@ interface IForm {
 }
 
 function Login() {
+  //토큰 만료 시간 1시간
+  const JWT_EXPIRY_TIME = 1 * 3600 * 1000;
   const setUserInfo = useSetRecoilState<any>(userInfoData);
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IForm>();
@@ -143,21 +145,22 @@ function Login() {
   }
   const onLoginSuccess = (response: any) => {
     console.log(response);
-    localStorage.setItem("accessToken", response.data["accessToken"]);
-    localStorage.setItem("refreshToken", response.data["refreshToken"]);
-    if (response.status === 200) {
-      setUserInfo(response.data);
-      navigate("/main");
-    }
-    //토큰 만료 시간 24시간
-    const JWT_EXPIRY_TIME = 1 * 3600 * 1000;
+    const { accessToken } = response.data;
+    const { refreshToken } = response.data;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     // 토큰 만료 1분전 연장
     setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 6000);
+    if (response.status === 200) {
+      setTimeout(() => {
+        setUserInfo(response.data);
+        navigate("/main");
+      }, 500);
+    }
   };
   // 연장처리 리프레쉬
   const onSilentRefresh = () => {
     const token = localStorage.getItem("refreshToken");
-    console.log(token);
     axios
       .post(`/api/member/auth/state?refreshToken=${token}`)
       .then(onLoginSuccess)
@@ -165,7 +168,6 @@ function Login() {
         // ... 로그인 실패 처리
       });
   };
-  //로그인 성공여부
 
   //카카오 로그인시
   const KakaoClick = () => {

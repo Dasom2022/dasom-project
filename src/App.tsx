@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import Join from "./Routes/Join";
 import Login from "./Routes/Login";
 import Welcome from "./Routes/Welcome";
@@ -11,11 +16,8 @@ import NaverAuth from "./Auth/NaverAuth";
 import Admin from "./Routes/Admin";
 import AdminDetail from "./Routes/AdminDetail";
 import KaKaoLogout from "./Auth/KaKaoLogout";
-import { useEffect, useState } from "react";
 
 function App() {
-  const token = localStorage.getItem("accessToken");
-
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Routes>

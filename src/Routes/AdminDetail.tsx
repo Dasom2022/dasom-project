@@ -1,8 +1,12 @@
 import { useMatch, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { userInfoData } from "../atoms";
 import AddItem from "../Components/AddItem";
 import Product from "../Components/Product";
 import User from "../Components/User";
+import { useRecoilValue } from "recoil";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Container = styled.div`
   width: 100%;
@@ -67,8 +71,30 @@ const BackBtn = styled.div`
   }
 `;
 function AdminDetail() {
+  const userInfo = useRecoilValue(userInfoData);
   const { category: match } = useParams();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (userInfo.role !== "ADMIN") {
+      navigate("/main");
+      alert("관리자 권한이 없습니다.");
+    } else {
+      const token = localStorage.getItem("refreshToken");
+      axios
+        .get(`/api/member/auth/adminPage?refreshToken=${token}`)
+        .then((response) => {
+          console.log(response);
+          if (response.status !== 200) {
+            navigate("/main");
+            alert("관리자 권한이 없습니다.");
+          }
+        })
+        .catch((error) => {
+          // ...  실패 처리
+          console.log(error);
+        });
+    }
+  }, []);
   return (
     <Container>
       <Header>

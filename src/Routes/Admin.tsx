@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -86,6 +88,27 @@ const Menu = styled.div`
 function Admin() {
   const navigate = useNavigate();
   const userInfo = useRecoilValue(userInfoData);
+  useEffect(() => {
+    if (userInfo.role !== "ADMIN") {
+      navigate("/main");
+      alert("관리자 권한이 없습니다.");
+    } else {
+      const token = localStorage.getItem("refreshToken");
+      axios
+        .get(`/api/member/auth/adminPage?refreshToken=${token}`)
+        .then((response) => {
+          console.log(response);
+          if (response.status !== 200) {
+            navigate("/main");
+            alert("관리자 권한이 없습니다.");
+          }
+        })
+        .catch((error) => {
+          // ...  실패 처리
+          console.log(error);
+        });
+    }
+  }, []);
   return (
     <Container>
       <Header>
