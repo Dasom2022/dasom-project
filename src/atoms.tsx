@@ -1,16 +1,16 @@
-import { atom } from "recoil";
+import { atom, selector, selectorFamily } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-// export interface IInfoData {
-//   username: string;
-//   socialtype: string;
-// }
-
+export interface ILogin {
+  id: string;
+  pw: string;
+}
+const { persistAtom } = recoilPersist();
 // 유저 정보가 담길 데이터
 export const userInfoData = atom<any>({
   key: "userInfoData",
   default: [],
-  // effects_UNSTABLE: [persistAtom],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const naverToken = atom<any>({

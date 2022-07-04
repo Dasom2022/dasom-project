@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -34,35 +35,52 @@ const Container = styled.div`
   }
 `;
 
-const Button=styled.button`
-    bottom:90px;
-    color:white;
-    background-color:transparent;
-    border:3px solid white;
-    padding:10px 50px;
-    border-radius:20px;
-    cursor:pointer;
-    margin-top:30px;
+const Button = styled.button`
+  bottom: 90px;
+  color: white;
+  background-color: transparent;
+  border: 3px solid white;
+  padding: 10px 50px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 30px;
 `;
-function Payment(){
-    return (
-        <Container>
-            <div>Almost done...</div>
-            <div>Keep walking or remove your bags to complete your payment.</div>
-            <div>
-                <div>Other discounts</div>
-                <div>-$10.00</div>
-            </div>
-            <div>
-                <span>$</span>26.46
-            </div>
-            <div>*Includes Taxese & Fees.</div>
-            <Link to="/receipt">
-                <Button>
-                    View receipt
-                </Button>
-            </Link>
-        </Container>
-    )
+function Payment() {
+  const kakaoPay = () => {
+    console.log(1);
+    const config = {
+      headers: {
+        Authorization: "75f98f6d6e46a32d16d274bd51d72eb4",
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+    axios
+      .post(`kapi.kakao.com/v1/payment/ready`, config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Container>
+      <div>Almost done...</div>
+      <div>Keep walking or remove your bags to complete your payment.</div>
+      <div>
+        <div>Other discounts</div>
+        <div>-$10.00</div>
+      </div>
+      <div>
+        <span>$</span>26.46
+      </div>
+      <div>*Includes Taxese & Fees.</div>
+      {/* <Link to="/receipt"> */}
+      <Button onClick={() => kakaoPay()}>카카오페이 결제</Button>
+      {/* </Link> */}
+    </Container>
+  );
 }
 export default Payment;

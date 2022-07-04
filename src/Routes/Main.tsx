@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
-import { LogoutHook } from "../Hooks/LogoutHook";
+import axios from "axios";
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -156,74 +156,108 @@ const imsi = [
 ];
 const Main = () => {
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
-  const userInfo = useRecoilValue(userInfoData);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
   const navigate = useNavigate();
-
+  const Logout = async (social: string) => {
+    if (social === "KAKAO") {
+      //카카오 로그아웃
+      const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_REST_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_LOGOUT_REDIRECT_URI}`;
+      setUserInfo([]);
+      window.location.href = KAKAO_AUTH_URL_LOGOUT;
+    } else if (social === "NAVER") {
+      //네이버 로그아웃
+      //네이버 로그아웃 팝업창
+      let testPopUp: any;
+      const openPopUp = () => {
+        testPopUp = window.open(
+          "https://nid.naver.com/nidlogin.logout",
+          "_blank",
+          "toolbar=yes,scrollbars=yes,resizable=yes,width=1,height=1"
+        );
+      };
+      openPopUp();
+      setTimeout(() => testPopUp.close(), 1000);
+      setUserInfo([]);
+      navigate("/");
+    } else {
+      //기본 로그아웃
+      const token = localStorage.getItem("refreshToken");
+      axios
+        .post(`/api/member/auth/logout?refreshToken=${token}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          // ... 로그인 실패 처리
+          console.log(error);
+        });
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setUserInfo([]);
+      navigate("/");
+    }
+  };
+  useEffect(() => {
+    if (!userInfo?.username) {
+      navigate("/");
+      alert("로그인 필수!");
+    }
+  }, []);
   return (
     <Container>
-      {userInfo?.username ? (
-        <>
-          <Header>
-            <div>
-              <button
-                onClick={() => {
-                  setSearchOpen(true);
-                }}
-              >
-                물건 검색
-              </button>
-              <button onClick={() => navigate("/itemcode")}>
-                코드 상품추가
-              </button>
-            </div>
-            <div>
-              <span>{userInfo?.username}님 환영합니다!</span>
-              <button onClick={() => LogoutHook(userInfo?.socialType)}>
-                로그아웃
-              </button>
-            </div>
-          </Header>
-          <Content>
-            {imsi.map((item, index: any) => (
-              <SelectedItem key={index}>
-                <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
-                <SelectedItemInfo>
-                  <div>{item.name}</div>
-                  <div>{item.count}</div>
-                  <div>{item.price.toLocaleString()}</div>
-                </SelectedItemInfo>
-              </SelectedItem>
-            ))}
-          </Content>
-          <Bottom>
-            <TotalCount>
-              <span>수량 : </span>
-              <span>{14}</span>
-            </TotalCount>
-            <TotalPrice>
-              <span>구매금액 : </span>
-              <span>
-                <span>{"342,400"}</span>
-                <span>원</span>
-              </span>
-            </TotalPrice>
-            <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
-          </Bottom>
-          {searchOpen ? <ItemSearch /> : null}
-          {payOpen ? (
-            <Pay>
-              <span>결제하시겠습니까?</span>
-              <div>
-                <button onClick={() => setPayOpen(false)}>돌아가기</button>
-                <button onClick={() => navigate("/pay")}>결제하기</button>
-              </div>
-            </Pay>
-          ) : null}
-        </>
-      ) : (
-        <div>YOU NOT LOGIN</div>
-      )}
+      <Header>
+        <div>
+          <button
+            onClick={() => {
+              setSearchOpen(true);
+            }}
+          >
+            물건 검색
+          </button>
+          <button onClick={() => navigate("/itemcode")}>코드 상품추가</button>
+        </div>
+        <div>
+          <span>{userInfo?.username}님 환영합니다!</span>
+          <button onClick={() => Logout(userInfo?.socialType)}>로그아웃</button>
+        </div>
+      </Header>
+      <Content>
+        {imsi.map((item, index: any) => (
+          <SelectedItem key={index}>
+            <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
+            <SelectedItemInfo>
+              <div>{item.name}</div>
+              <div>{item.count}</div>
+              <div>{item.price.toLocaleString()}</div>
+            </SelectedItemInfo>
+          </SelectedItem>
+        ))}
+      </Content>
+      <Bottom>
+        <TotalCount>
+          <span>수량 : </span>
+          <span>{14}</span>
+        </TotalCount>
+        <TotalPrice>
+          <span>구매금액 : </span>
+          <span>
+            <span>{"342,400"}</span>
+            <span>원</span>
+          </span>
+        </TotalPrice>
+        <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
+      </Bottom>
+      {searchOpen ? <ItemSearch /> : null}
+      {payOpen ? (
+        <Pay>
+          <span>결제하시겠습니까?</span>
+          <div>
+            <button onClick={() => setPayOpen(false)}>돌아가기</button>
+            <button onClick={() => navigate("/pay")}>결제하기</button>
+          </div>
+        </Pay>
+      ) : null}
     </Container>
   );
 };
