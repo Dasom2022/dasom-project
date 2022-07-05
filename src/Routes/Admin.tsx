@@ -93,9 +93,9 @@ function Admin() {
       navigate("/main");
       alert("관리자 권한이 없습니다.");
     } else {
-      const token = localStorage.getItem("refreshToken");
+      const token = localStorage.getItem("accessToken");
       axios
-        .get(`/api/member/auth/adminPage?refreshToken=${token}`)
+        .get(`/api/member/auth/adminPage?accessToken=${token}`)
         .then((response) => {
           console.log(response);
           if (response.status !== 200) {

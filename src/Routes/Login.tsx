@@ -105,6 +105,8 @@ const Li = styled.li`
   font-weight: 400;
 `;
 
+const FindWrapp = styled.div``;
+
 interface IForm {
   id: string;
   pw: string;
@@ -204,12 +206,20 @@ function Login() {
       </Loginwrap>
       <Joinwrap>
         <Ul>
-          <Li>비밀번호 찾기</Li> |<Li>아이디 찾기</Li> |
+          <Link to="/find/pw">
+            <Li>비밀번호 찾기</Li>
+          </Link>
+          |
+          <Link to="/find/id">
+            <Li>아이디 찾기</Li>
+          </Link>
+          |
           <Link to="/join">
             <Li>회원가입</Li>
           </Link>
         </Ul>
       </Joinwrap>
+      <FindWrapp></FindWrapp>
       <APIlogin>
         <KakaoBtn onClick={KakaoClick}>카카오 로그인</KakaoBtn>
         <NaverLogin />

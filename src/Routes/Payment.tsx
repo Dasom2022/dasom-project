@@ -46,22 +46,41 @@ const Button = styled.button`
   margin-top: 30px;
 `;
 function Payment() {
+  const config = {
+    next_redirect_pc_url: "",
+    tid: "",
+    params: {
+      cid: "TC0ONETIME",
+      partner_order_id: "partner_order_id",
+      partner_user_id: "partner_user_id",
+      item_name: "초코파이",
+      item_code: "100",
+      quantity: 1,
+      total_amount: 2200,
+      vat_amount: 200,
+      tax_free_amount: 0,
+      approval_url: "/payresult",
+      fail_url: "/payresult",
+      cancel_url: "/payresult",
+    },
+  };
   const kakaoPay = () => {
-    console.log(1);
-    const config = {
-      headers: {
-        Authorization: "75f98f6d6e46a32d16d274bd51d72eb4",
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    };
+    const { params } = config;
     axios
-      .post(`kapi.kakao.com/v1/payment/ready`, config)
-      .then((response) => {
-        console.log(response);
+      .post("/v1/payment/ready", null, {
+        params, // config 설정에 데이터를 담아 넘겨준다.
+        headers: {
+          Authorization: `KakaoAK ${process.env.REACT_APP_PAY_KEY}`,
+          "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
       })
-      .catch((error) => {
-        console.log(error);
+      .then((res) => {
+        const {
+          data: { next_redirect_pc_url, tid },
+        } = res;
+        console.log(next_redirect_pc_url);
+        window.localStorage.setItem("tid", tid);
+        window.location.href = next_redirect_pc_url;
       });
   };
 

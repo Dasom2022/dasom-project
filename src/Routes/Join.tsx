@@ -92,6 +92,7 @@ interface ISignup {
   password2: string;
   username: string;
   emailauth: string;
+  phone: string;
 }
 
 function Join() {
@@ -111,8 +112,8 @@ function Join() {
   const join = () => {
     setJoin((prev) => !prev);
   };
-  const onSubmit = ({ username, password, email }: ISignup) => {
-    getJoin(username, password);
+  const onSubmit = ({ username, password, email, phone }: ISignup) => {
+    getJoin(username, password, email, phone);
   };
   const config = {
     headers: {
@@ -120,13 +121,15 @@ function Join() {
     },
     withCredentials: true,
   };
-  function getJoin(id: string, pw: string) {
+  function getJoin(id: string, pw: string, email: string, phone: string) {
     axios
       .post(
         "/member/signup",
         JSON.stringify({
           password: pw,
           username: id,
+          email: email,
+          phoneNumber: phone,
         }),
         config
       )
@@ -144,6 +147,10 @@ function Join() {
     axios
       .post(`/member/mail?email=${email}`, config)
       .then((response) => {
+        if (!response.data) {
+          setEmailSendMsg("중복된 이메일입니다.");
+          setMsgColor("tomato");
+        }
         return response;
       })
       .catch((error) => {
@@ -218,7 +225,6 @@ function Join() {
     axios
       .post(`/member/verifyCode?confirm_email=${val}`, config)
       .then((response) => {
-        console.log(response.data);
         emailMath(response.data);
       })
       .catch((error) => {
@@ -291,7 +297,13 @@ function Join() {
             />
             <Authbtn onClick={Emailsendauth}>인증</Authbtn>
           </div>
-
+          <input
+            {...register("phone", {
+              required: "전화번호 입력은 필수입니다.",
+            })}
+            placeholder="전화번호를 입력하세요"
+            type="phone"
+          />
           <Msg spancolor={msgColor}>{emailAuthMsg}</Msg>
           <Joinbtn onClick={join}>회원가입</Joinbtn>
         </Form>

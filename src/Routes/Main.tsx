@@ -206,58 +206,69 @@ const Main = () => {
   }, []);
   return (
     <Container>
-      <Header>
-        <div>
-          <button
-            onClick={() => {
-              setSearchOpen(true);
-            }}
-          >
-            물건 검색
-          </button>
-          <button onClick={() => navigate("/itemcode")}>코드 상품추가</button>
-        </div>
-        <div>
-          <span>{userInfo?.username}님 환영합니다!</span>
-          <button onClick={() => Logout(userInfo?.socialType)}>로그아웃</button>
-        </div>
-      </Header>
-      <Content>
-        {imsi.map((item, index: any) => (
-          <SelectedItem key={index}>
-            <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
-            <SelectedItemInfo>
-              <div>{item.name}</div>
-              <div>{item.count}</div>
-              <div>{item.price.toLocaleString()}</div>
-            </SelectedItemInfo>
-          </SelectedItem>
-        ))}
-      </Content>
-      <Bottom>
-        <TotalCount>
-          <span>수량 : </span>
-          <span>{14}</span>
-        </TotalCount>
-        <TotalPrice>
-          <span>구매금액 : </span>
-          <span>
-            <span>{"342,400"}</span>
-            <span>원</span>
-          </span>
-        </TotalPrice>
-        <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
-      </Bottom>
-      {searchOpen ? <ItemSearch /> : null}
-      {payOpen ? (
-        <Pay>
-          <span>결제하시겠습니까?</span>
-          <div>
-            <button onClick={() => setPayOpen(false)}>돌아가기</button>
-            <button onClick={() => navigate("/pay")}>결제하기</button>
-          </div>
-        </Pay>
-      ) : null}
+      {userInfo?.username ? (
+        <>
+          <Header>
+            <div>
+              <button
+                onClick={() => {
+                  setSearchOpen(true);
+                }}
+              >
+                물건 검색
+              </button>
+              <button onClick={() => navigate("/itemcode")}>
+                코드 상품추가
+              </button>
+            </div>
+            <div>
+              <span>{userInfo?.username}님 환영합니다!</span>
+              <button onClick={() => navigate("/mypage")}>마이페이지</button>
+              <button onClick={() => Logout(userInfo?.socialType)}>
+                로그아웃
+              </button>
+            </div>
+          </Header>
+          <Content>
+            {imsi.map((item, index: any) => (
+              <SelectedItem key={index}>
+                <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
+                <SelectedItemInfo>
+                  <div>{item.name}</div>
+                  <div>{item.count}</div>
+                  <div>{item.price.toLocaleString()}</div>
+                </SelectedItemInfo>
+              </SelectedItem>
+            ))}
+          </Content>
+          <Bottom>
+            <TotalCount>
+              <span>수량 : </span>
+              <span>{14}</span>
+            </TotalCount>
+            <TotalPrice>
+              <span>구매금액 : </span>
+              <span>
+                <span>{"342,400"}</span>
+                <span>원</span>
+              </span>
+            </TotalPrice>
+            <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
+          </Bottom>
+          {searchOpen ? <ItemSearch /> : null}
+          {payOpen ? (
+            <Pay>
+              <span>결제하시겠습니까?</span>
+              <div>
+                <button onClick={() => setPayOpen(false)}>돌아가기</button>
+                <button onClick={() => navigate("/pay")}>결제하기</button>
+              </div>
+            </Pay>
+          ) : null}
+        </>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };
