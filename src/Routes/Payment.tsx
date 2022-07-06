@@ -1,11 +1,13 @@
 import axios from "axios";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { userInfoData } from "../atoms";
 
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: #7a7c7e;
+  background-color: #388e3c;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,59 +48,58 @@ const Button = styled.button`
   margin-top: 30px;
 `;
 function Payment() {
+  const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const config = {
-    next_redirect_pc_url: "",
-    tid: "",
-    params: {
-      cid: "TC0ONETIME",
-      partner_order_id: "partner_order_id",
-      partner_user_id: "partner_user_id",
-      item_name: "초코파이",
-      item_code: "100",
-      quantity: 1,
-      total_amount: 2200,
-      vat_amount: 200,
-      tax_free_amount: 0,
-      approval_url: "/payresult",
-      fail_url: "/payresult",
-      cancel_url: "/payresult",
+    headers: {
+      "Content-Type": "application/json",
     },
+    withCredentials: true,
   };
   const kakaoPay = () => {
-    const { params } = config;
     axios
-      .post("/v1/payment/ready", null, {
-        params, // config 설정에 데이터를 담아 넘겨준다.
-        headers: {
-          Authorization: `KakaoAK ${process.env.REACT_APP_PAY_KEY}`,
-          "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-        },
+      .post(
+        "/credit/KakaoPay/ready",
+        JSON.stringify({
+          cid: "TC0ONETIME",
+          partner_order_id: userInfo.username + "coffee",
+          partner_user_id: userInfo.username,
+          item_name: "coffee",
+          item_code: "100",
+          quantity: 1,
+          total_amount: 1400,
+          vat_amount: 200,
+          tax_free_amount: 0,
+          approval_url: "/payresult",
+          fail_url: "/payresult",
+          cancel_url: "/payresult",
+        }),
+        config
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          window.localStorage.setItem("tid", response.data.tid);
+          window.location.href = response.data.next_redirect_pc_url;
+        }
       })
-      .then((res) => {
-        const {
-          data: { next_redirect_pc_url, tid },
-        } = res;
-        console.log(next_redirect_pc_url);
-        window.localStorage.setItem("tid", tid);
-        window.location.href = next_redirect_pc_url;
+      .catch((error) => {
+        // 예외처리 추가 예정
+        console.log(error);
       });
   };
-
   return (
     <Container>
-      <div>Almost done...</div>
-      <div>Keep walking or remove your bags to complete your payment.</div>
+      <div>결제 상세</div>
+      <div>카카오페이 결제를 눌러 결제를 진행하세요</div>
       <div>
-        <div>Other discounts</div>
-        <div>-$10.00</div>
+        <div>할인율</div>
+        <div>-₩10.00</div>
       </div>
       <div>
-        <span>$</span>26.46
+        1400<span>₩</span>
       </div>
-      <div>*Includes Taxese & Fees.</div>
-      {/* <Link to="/receipt"> */}
+      <div>* 세금 및 수수료 포함</div>
       <Button onClick={() => kakaoPay()}>카카오페이 결제</Button>
-      {/* </Link> */}
     </Container>
   );
 }
