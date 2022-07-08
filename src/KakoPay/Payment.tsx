@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { userInfoData } from "../atoms";
+import { useState } from "react";
+import Join from "../Routes/Join";
 
 const Container = styled.div`
   width: 100%;
@@ -55,23 +57,25 @@ function Payment() {
     },
     withCredentials: true,
   };
+  const [array, setArray] = useState(["100", "200", "300"]);
+  console.log(array.join());
   const kakaoPay = () => {
     axios
       .post(
         "/credit/KakaoPay/ready",
         JSON.stringify({
           cid: "TC0ONETIME",
-          partner_order_id: userInfo.username + "coffee",
+          partner_order_id: userInfo.username + "커피",
           partner_user_id: userInfo.username,
-          item_name: "coffee",
-          item_code: "100",
+          item_name: "커피",
+          item_code: array,
           quantity: 1,
-          total_amount: 1400,
+          total_amount: 12000,
           vat_amount: 200,
           tax_free_amount: 0,
-          approval_url: "/payresult",
-          fail_url: "/payresult",
-          cancel_url: "/payresult",
+          approval_url: "http://localhost:3000/dasom-project/payresult",
+          fail_url: "http://localhost:3000/dasom-project/payfail",
+          cancel_url: "http://localhost:3000/dasom-project/paycancel",
         }),
         config
       )

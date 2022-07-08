@@ -5,6 +5,8 @@ import { useRecoilState } from "recoil";
 import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import SockJS from "sockjs-client";
+const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -155,6 +157,10 @@ const imsi = [
   { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
 ];
 const Main = () => {
+  //소켓 기본 설정
+  let sock = new SockJS("http://43.200.61.12:3333/stomp");
+  let stomp = Stomp.over(sock);
+
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
@@ -203,6 +209,19 @@ const Main = () => {
       navigate("/");
       alert("로그인 필수!");
     }
+    //stomp.debug = null;
+    // stomp.connect({}, () => {
+    //   stomp.send(
+    //     "/pub/api/websocket/itemList",
+    //     {},
+    //     JSON.stringify({ itemName: "123", itemCode: "100" })
+    //   );
+    //   stomp.subscribe(`/sub/chat/read/`, (data: any) => {
+    //     const newMessage = JSON.parse(data.body);
+    //     console.log(newMessage);
+    //   });
+    //   // return () => stomp.disconnect();
+    // });
   }, []);
   return (
     <Container>
@@ -230,7 +249,7 @@ const Main = () => {
             </div>
           </Header>
           <Content>
-            {imsi.map((item, index: any) => (
+            {/* {imsi.map((item, index: any) => (
               <SelectedItem key={index}>
                 <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
                 <SelectedItemInfo>
@@ -239,17 +258,17 @@ const Main = () => {
                   <div>{item.price.toLocaleString()}</div>
                 </SelectedItemInfo>
               </SelectedItem>
-            ))}
+            ))} */}
           </Content>
           <Bottom>
             <TotalCount>
               <span>수량 : </span>
-              <span>{14}</span>
+              <span></span>
             </TotalCount>
             <TotalPrice>
               <span>구매금액 : </span>
               <span>
-                <span>{"342,400"}</span>
+                <span></span>
                 <span>원</span>
               </span>
             </TotalPrice>
