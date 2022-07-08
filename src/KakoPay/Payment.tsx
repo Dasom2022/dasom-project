@@ -1,10 +1,8 @@
 import axios from "axios";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { userInfoData } from "../atoms";
 import { useState } from "react";
-import Join from "../Routes/Join";
 
 const Container = styled.div`
   width: 100%;
