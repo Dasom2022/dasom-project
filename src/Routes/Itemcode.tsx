@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -100,20 +101,27 @@ function Itemcode() {
       price: ["1500", "3000"],
     },
   });
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
   function onClick(item: string) {
     if (item !== "X" && item !== "Enter") setCode((prev) => prev + item);
     if (item === "X") setCode((prev) => prev.substring(0, prev.length - 1));
     if (item === "Enter") {
-      let item = dumyCode.filter((val) => val === code);
-      if (item.length === 0) setCode("");
-      else {
-        for (let i = 0; i < dumyData.data.code.length; i++) {
-          if (item[0] === dumyData.data.code[i]) {
-            setCode("");
-            navigate(`/itemcode/${i}`);
-          }
-        }
-      }
+      axios
+        .post(`/item/state?itemCode=${code}`, config)
+        .then((response) => {
+          console.log(response);
+          navigate(`/itemcode/${code}`);
+          setCode("");
+        })
+        .catch((error) => {
+          // 예외처리 추가 예정
+          console.log(error);
+        });
     }
   }
   return (
