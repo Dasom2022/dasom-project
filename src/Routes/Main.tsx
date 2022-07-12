@@ -6,6 +6,7 @@ import { searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SockJS from "sockjs-client";
+import ItemViewList from "../Components/ItemViewList";
 const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
@@ -80,38 +81,7 @@ const PayBtn = styled.button`
   transform: translateX(-50%) translateY(-50%);
   cursor: pointer;
 `;
-const SelectedItem = styled.div`
-  height: 80px;
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid #bbbbbb;
-  & > img {
-    width: 80px;
-    height: 64px;
-  }
-  &:last-child {
-    border: none;
-  }
-`;
-const SelectedItemInfo = styled.div`
-  height: 64px;
-  width: 100%;
-  display: flex;
-  padding-top: 10px;
-  box-sizing: border-box;
-  margin-left: 10px;
-  & > div:first-child {
-    width: 60%;
-  }
-  & > div:nth-child(2) {
-    width: 20%;
-    margin-left: 10px;
-  }
-  & > div:last-child {
-    width: 20%;
-    font-weight: bold;
-  }
-`;
+
 const Pay = styled.div`
   width: 30%;
   height: 20vh;
@@ -148,19 +118,11 @@ const Pay = styled.div`
     background-color: #31a737;
   }
 `;
-const imsi = [
-  { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
-  { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
-  { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
-  { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
-  { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
-  { name: "남양유업 이오 요구르트, 80ml, 10개입", count: 1, price: 3960 },
-];
 const Main = () => {
   //소켓 기본 설정
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
   let stomp = Stomp.over(sock);
-
+  const [imsi, setImsi] = useState([]);
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [payOpen, setPayOpen] = useState(false);
@@ -209,19 +171,20 @@ const Main = () => {
       navigate("/");
       alert("로그인 필수!");
     }
-    //stomp.debug = null;
-    // stomp.connect({}, () => {
-    //   stomp.send(
-    //     "/pub/api/websocket/itemList",
-    //     {},
-    //     JSON.stringify({ itemName: "123", itemCode: "100" })
-    //   );
-    //   stomp.subscribe(`/sub/chat/read/`, (data: any) => {
-    //     const newMessage = JSON.parse(data.body);
-    //     console.log(newMessage);
-    //   });
-    //   // return () => stomp.disconnect();
-    // });
+    // stomp.debug = null;
+    stomp.connect({}, () => {
+      stomp.send(
+        `/pub/api/websocket/itemList/${userInfo.username}`,
+        {},
+        JSON.stringify({})
+      );
+      stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
+        const Data = JSON.parse(data.body);
+        setImsi(Data);
+        console.log(Data);
+      });
+      // return () => stomp.disconnect();
+    });
   }, []);
   return (
     <Container>
@@ -248,18 +211,7 @@ const Main = () => {
               </button>
             </div>
           </Header>
-          <Content>
-            {/* {imsi.map((item, index: any) => (
-              <SelectedItem key={index}>
-                <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
-                <SelectedItemInfo>
-                  <div>{item.name}</div>
-                  <div>{item.count}</div>
-                  <div>{item.price.toLocaleString()}</div>
-                </SelectedItemInfo>
-              </SelectedItem>
-            ))} */}
-          </Content>
+          <Content>{imsi && <ItemViewList data={imsi} />}</Content>
           <Bottom>
             <TotalCount>
               <span>수량 : </span>
