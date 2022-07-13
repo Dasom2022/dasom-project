@@ -33,15 +33,16 @@ const SelectedItemInfo = styled.div`
   }
 `;
 function ItemViewList({ data }: any) {
+  console.log(data);
   return (
     <>
-      {data.map((item: any, index: any) => (
+      {data?.map((item: any, index: any) => (
         <SelectedItem key={index}>
           <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
           <SelectedItemInfo>
-            <div>{item.name}</div>
-            <div>{item.count}</div>
-            <div>{item.price.toLocaleString()}</div>
+            <div>{item.itemName}</div>
+            <div>1</div>
+            <div>{item.price}</div>
           </SelectedItemInfo>
         </SelectedItem>
       ))}

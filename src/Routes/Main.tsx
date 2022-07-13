@@ -2,11 +2,12 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState } from "recoil";
-import { searchOpenState, userInfoData } from "../atoms";
+import { itemData, searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SockJS from "sockjs-client";
 import ItemViewList from "../Components/ItemViewList";
+import useInterval from "../hooks/useInterval";
 const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
@@ -118,14 +119,16 @@ const Pay = styled.div`
     background-color: #31a737;
   }
 `;
+
 const Main = () => {
   //소켓 기본 설정
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
   let stomp = Stomp.over(sock);
-  const [imsi, setImsi] = useState([]);
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
+  const [itemData, setItemData] = useState<any>([]);
   const [payOpen, setPayOpen] = useState(false);
+
   const navigate = useNavigate();
   const Logout = async (social: string) => {
     if (social === "KAKAO") {
@@ -171,21 +174,29 @@ const Main = () => {
       navigate("/");
       alert("로그인 필수!");
     }
-    // stomp.debug = null;
+    stomp.debug = null;
     stomp.connect({}, () => {
-      stomp.send(
-        `/pub/api/websocket/itemList/${userInfo.username}`,
-        {},
-        JSON.stringify({})
-      );
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
-        const Data = JSON.parse(data.body);
-        setImsi(Data);
-        console.log(Data);
+        if (JSON.parse(data.body).body !== "wait") {
+          //statusCodeValue
+          const Data = JSON.parse(data.body);
+          console.log(data.body);
+          setItemData((itemData: any) => [...itemData, Data.body]);
+        }
       });
-      // return () => stomp.disconnect();
     });
   }, []);
+
+  //카운트로
+
+  // useInterval(() => {
+  //   stomp.send(
+  //     `/pub/api/websocket/itemList/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  // }, 3000);
+
   return (
     <Container>
       {userInfo?.username ? (
@@ -211,7 +222,7 @@ const Main = () => {
               </button>
             </div>
           </Header>
-          <Content>{imsi && <ItemViewList data={imsi} />}</Content>
+          <Content>{itemData && <ItemViewList data={itemData} />}</Content>
           <Bottom>
             <TotalCount>
               <span>수량 : </span>

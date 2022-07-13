@@ -27,3 +27,9 @@ export const openedMap = atom({
   key: "openedMap",
   default: -1,
 });
+
+export const itemData = atom({
+  key: "itemData",
+  default: [],
+  effects_UNSTABLE: [persistAtom],
+});
