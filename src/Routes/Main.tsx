@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState } from "recoil";
-import { itemData, searchOpenState, userInfoData } from "../atoms";
+import { itemDataVal, searchOpenState, userInfoData } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SockJS from "sockjs-client";
@@ -119,17 +119,33 @@ const Pay = styled.div`
     background-color: #31a737;
   }
 `;
-
 const Main = () => {
   //소켓 기본 설정
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
   let stomp = Stomp.over(sock);
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
+  const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
+
   const [itemData, setItemData] = useState<any>([]);
   const [payOpen, setPayOpen] = useState(false);
-
   const navigate = useNavigate();
+  // {
+  //   count: 1,
+  //   itemCode: "222",
+  //   itemName: "서울우유 1L",
+  //   locale: "d-2",
+  //   price: 200000,
+  //   weight: 90.2,
+  // },
+  // {
+  //   count: 2,
+  //   itemCode: "222",
+  //   itemName: "서울우유 1L",
+  //   locale: "d-2",
+  //   price: 200000,
+  //   weight: 90.2,
+  // },
   const Logout = async (social: string) => {
     if (social === "KAKAO") {
       //카카오 로그아웃
@@ -177,25 +193,25 @@ const Main = () => {
     stomp.debug = null;
     stomp.connect({}, () => {
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
+        // if (itemData[i].itemCode === JSON.parse(data.body).body.itemCode) {
+
         if (JSON.parse(data.body).body !== "wait") {
           //statusCodeValue
           const Data = JSON.parse(data.body);
-          console.log(data.body);
+          setItemDataValue(Data.body);
           setItemData((itemData: any) => [...itemData, Data.body]);
         }
       });
     });
   }, []);
 
-  //카운트로
-
-  // useInterval(() => {
-  //   stomp.send(
-  //     `/pub/api/websocket/itemList/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  // }, 3000);
+  useInterval(() => {
+    stomp.send(
+      `/pub/api/websocket/itemList/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+  }, 3000);
 
   return (
     <Container>

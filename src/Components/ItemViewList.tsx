@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { item, itemDataVal } from "../atoms";
 
 const SelectedItem = styled.div`
   height: 80px;
@@ -33,15 +36,22 @@ const SelectedItemInfo = styled.div`
   }
 `;
 function ItemViewList({ data }: any) {
-  console.log(data);
+  const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
+  const [itemData, setItemData] = useRecoilState<any>(item);
+  for (let i = 0; i < data.length; i++) {
+    if (i !== 0 && data[i].itemCode === itemDataValue.itemCode) {
+      data = data.splice(i, 1, itemDataValue);
+    }
+  }
+
   return (
     <>
-      {data?.map((item: any, index: any) => (
+      {data.map((item: any, index: any) => (
         <SelectedItem key={index}>
           <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
           <SelectedItemInfo>
             <div>{item.itemName}</div>
-            <div>1</div>
+            <div>{item.count}</div>
             <div>{item.price}</div>
           </SelectedItemInfo>
         </SelectedItem>
