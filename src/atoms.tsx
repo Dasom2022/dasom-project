@@ -37,3 +37,40 @@ export const itemDataVal = atom<any>({
   key: "item",
   default: [],
 });
+
+// 배열
+// setItemData (itemData) props로 넘겨줌 : {
+//   {
+//     count: 1,
+//     itemCode: "222",
+//     itemName: "서울우유 1L",
+//     locale: "d-2",
+//     price: 200000,
+//     weight: 90.2,
+//   },
+// }
+
+// data props로 넘어온 거 스태틱(배열):
+// {
+
+//   {
+//     count: 1,
+//     itemCode: "222",
+//     itemName: "치킨",
+//     locale: "d-2",
+//     price: 200000,
+//     weight: 90.2,
+//   },
+
+// }
+
+// itemDataValue :
+
+//   {
+//     count: 1,
+//     itemCode: "222",
+//     itemName: "서울우유 1L",
+//     locale: "d-2",
+//     price: 200000,
+//     weight: 90.2,
+//   },
