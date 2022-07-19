@@ -23,24 +23,28 @@ const SelectedItemInfo = styled.div`
   padding-top: 10px;
   box-sizing: border-box;
   margin-left: 10px;
-
+  & > div:first-child {
+    width: 60%;
+  }
+  & > div:nth-child(2) {
+    width: 20%;
+    margin-left: 10px;
+  }
   & > div:last-child {
     width: 20%;
     font-weight: bold;
   }
 `;
-
 function ItemViewList({ data, setData }: any) {
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
+
   useEffect(() => {
     let added = 0;
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
-      console.log("씨발아");
       return;
     } else if (itemData.length != 0) {
-      console.log("씨발아2");
       for (let i = 0; i < itemData.length; i++) {
         if (itemData[i].itemCode == itemDataValue.itemCode) {
           let a = itemData;

@@ -1,8 +1,8 @@
 import axios from "axios";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { userInfoData } from "../atoms";
-import { useState } from "react";
+import { item, userInfoData } from "../atoms";
+import { useEffect, useState } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -48,27 +48,45 @@ const Button = styled.button`
   margin-top: 30px;
 `;
 function Payment() {
+  // count: 1,
+  //     itemCode: "222",
+  //     itemName: "치킨",
+  //     locale: "d-2",
+  //     price: 200000,
+  //     weight: 90.2,
+  const [itemData, setItemData] = useRecoilState<any>(item);
+  // console.log(itemData);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
+  const [itemCode, setItemCode] = useState<any>([]);
+  const [itemName, setItemName] = useState<any>([]);
+  const [quantity, setQuantity] = useState<any>(0);
+  const [totalAmount, setTotalAmount] = useState<any>(0);
+  useEffect(() => {
+    itemData.map((item: any) => {
+      setItemCode((itemCode: any) => [...itemCode, item.itemCode]);
+      setQuantity((quantity: any) => quantity + item.count);
+      setTotalAmount((totalAmount: any) => totalAmount + item.price);
+    });
+    setItemName(itemData[0].itemName);
+  }, []);
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
     withCredentials: true,
   };
-  const [array, setArray] = useState(["100", "200", "300"]);
-  console.log(array.join());
   const kakaoPay = () => {
     axios
       .post(
         "/credit/KakaoPay/ready",
         JSON.stringify({
           cid: "TC0ONETIME",
-          partner_order_id: userInfo.username + "커피",
+          partner_order_id: userInfo.username,
           partner_user_id: userInfo.username,
-          item_name: "커피",
-          item_code: array,
-          quantity: 1,
-          total_amount: 12000,
+          item_name: itemName,
+          item_code: itemCode.join(),
+          quantity: quantity,
+          total_amount: totalAmount,
           vat_amount: 200,
           tax_free_amount: 0,
           approval_url: "http://localhost:3000/dasom-project/payresult",

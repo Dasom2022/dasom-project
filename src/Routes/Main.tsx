@@ -8,6 +8,7 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import ItemViewList from "../Components/ItemViewList";
 import useInterval from "../hooks/useInterval";
+import PriceView from "../Components/PriceView";
 const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
@@ -52,36 +53,6 @@ const Content = styled.div`
     display: none;
   }
 `;
-const TotalCount = styled.div`
-  display: flex;
-  width: 25%;
-  justify-content: space-between;
-  & > span:last-child {
-    color: red;
-  }
-`;
-const TotalPrice = styled(TotalCount)`
-  width: 40%;
-  margin-left: 15px;
-  & > span:last-child > span:last-child {
-    color: white;
-  }
-`;
-const PayBtn = styled.button`
-  background-color: transparent;
-  border: 2px solid white;
-  padding: 7px 15px;
-  border-radius: 22px;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
-  box-shadow: 0 4px 4px -4px black;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateX(-50%) translateY(-50%);
-  cursor: pointer;
-`;
 
 const Pay = styled.div`
   width: 30%;
@@ -119,6 +90,21 @@ const Pay = styled.div`
     background-color: #31a737;
   }
 `;
+const PayBtn = styled.button`
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 7px 15px;
+  border-radius: 22px;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  box-shadow: 0 4px 4px -4px black;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateX(-50%) translateY(-50%);
+  cursor: pointer;
+`;
 const Main = () => {
   //소켓 기본 설정
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
@@ -126,26 +112,10 @@ const Main = () => {
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
-
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [payOpen, setPayOpen] = useState(false);
+
   const navigate = useNavigate();
-  // {
-  //   count: 1,
-  //   itemCode: "222",
-  //   itemName: "서울우유 1L",
-  //   locale: "d-2",
-  //   price: 200000,
-  //   weight: 90.2,
-  // },
-  // {
-  //   count: 2,
-  //   itemCode: "222",
-  //   itemName: "서울우유 1L",
-  //   locale: "d-2",
-  //   price: 200000,
-  //   weight: 90.2,
-  // },
   const Logout = async (social: string) => {
     if (social === "KAKAO") {
       //카카오 로그아웃
@@ -193,8 +163,6 @@ const Main = () => {
     stomp.debug = null;
     stomp.connect({}, () => {
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
-        // if (itemData[i].itemCode === JSON.parse(data.body).body.itemCode) {
-
         if (JSON.parse(data.body).body !== "wait") {
           //statusCodeValue
           const Data = JSON.parse(data.body);
@@ -237,26 +205,10 @@ const Main = () => {
             </div>
           </Header>
           <Content>
-            {/* {itemData && (
-                            <ItemViewList
-                                data={itemData}
-                                setData={setItemData}
-                            />
-                        )} */}
             <ItemViewList data={itemData} setData={setItemData} />
           </Content>
           <Bottom>
-            <TotalCount>
-              <span>수량 : </span>
-              <span></span>
-            </TotalCount>
-            <TotalPrice>
-              <span>구매금액 : </span>
-              <span>
-                <span></span>
-                <span>원</span>
-              </span>
-            </TotalPrice>
+            <PriceView />
             <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
           </Bottom>
           {searchOpen ? <ItemSearch /> : null}
