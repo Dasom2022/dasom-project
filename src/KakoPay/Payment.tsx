@@ -48,14 +48,7 @@ const Button = styled.button`
   margin-top: 30px;
 `;
 function Payment() {
-  // count: 1,
-  //     itemCode: "222",
-  //     itemName: "치킨",
-  //     locale: "d-2",
-  //     price: 200000,
-  //     weight: 90.2,
   const [itemData, setItemData] = useRecoilState<any>(item);
-  // console.log(itemData);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [itemCode, setItemCode] = useState<any>([]);
   const [itemName, setItemName] = useState<any>([]);
@@ -67,7 +60,7 @@ function Payment() {
       setQuantity((quantity: any) => quantity + item.count);
       setTotalAmount((totalAmount: any) => totalAmount + item.price);
     });
-    setItemName(itemData[0].itemName);
+    setItemName(itemData[0]?.itemName);
   }, []);
   const config = {
     headers: {
@@ -112,11 +105,12 @@ function Payment() {
       <div>결제 상세</div>
       <div>카카오페이 결제를 눌러 결제를 진행하세요</div>
       <div>
-        <div>할인율</div>
-        <div>-₩10.00</div>
+        <div>상품</div>
+        <div>{quantity}개</div>
       </div>
       <div>
-        1400<span>₩</span>
+        {totalAmount}
+        <span>₩</span>
       </div>
       <div>* 세금 및 수수료 포함</div>
       <Button onClick={() => kakaoPay()}>카카오페이 결제</Button>

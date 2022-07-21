@@ -8,7 +8,6 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import ItemViewList from "../Components/ItemViewList";
 import useInterval from "../hooks/useInterval";
-import PriceView from "../Components/PriceView";
 const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
@@ -36,75 +35,7 @@ const Header = styled.div`
     cursor: pointer;
   }
 `;
-const Bottom = styled.div`
-  height: 70px;
-  font-size: 27px;
-  background-color: #31a737;
-  display: flex;
-  align-items: center;
-  color: white;
-  position: relative;
-  padding: 0 20px;
-`;
-const Content = styled.div`
-  height: calc(100% - 140px);
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
 
-const Pay = styled.div`
-  width: 30%;
-  height: 20vh;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  background-color: white;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  & > span {
-    font-weight: bold;
-  }
-  & > div {
-    width: 100%;
-    text-align: center;
-  }
-  button {
-    padding: 5px 8px;
-    border-radius: 20px;
-    border: 2px solid white;
-    color: white;
-    font-weight: bold;
-    box-shadow: 1px 4px 3px -3px #bbbbbb;
-    cursor: pointer;
-  }
-  button:first-child {
-    background-color: red;
-  }
-  button:last-child {
-    background-color: #31a737;
-  }
-`;
-const PayBtn = styled.button`
-  background-color: transparent;
-  border: 2px solid white;
-  padding: 7px 15px;
-  border-radius: 22px;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
-  box-shadow: 0 4px 4px -4px black;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateX(-50%) translateY(-50%);
-  cursor: pointer;
-`;
 const Main = () => {
   //소켓 기본 설정
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
@@ -172,13 +103,13 @@ const Main = () => {
     });
   }, []);
 
-  useInterval(() => {
-    stomp.send(
-      `/pub/api/websocket/itemList/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-  }, 3000);
+  // useInterval(() => {
+  //   stomp.send(
+  //     `/pub/api/websocket/itemList/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  // }, 3000);
   return (
     <Container>
       {userInfo?.username ? (
@@ -204,23 +135,8 @@ const Main = () => {
               </button>
             </div>
           </Header>
-          <Content>
-            <ItemViewList data={itemData} setData={setItemData} />
-          </Content>
-          <Bottom>
-            <PriceView />
-            <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
-          </Bottom>
+          <ItemViewList />
           {searchOpen ? <ItemSearch /> : null}
-          {payOpen ? (
-            <Pay>
-              <span>결제하시겠습니까?</span>
-              <div>
-                <button onClick={() => setPayOpen(false)}>돌아가기</button>
-                <button onClick={() => navigate("/pay")}>결제하기</button>
-              </div>
-            </Pay>
-          ) : null}
         </>
       ) : (
         <></>
