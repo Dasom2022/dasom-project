@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/dasom-project/static/css/main.42b75066.css",
-    "main.js": "/dasom-project/static/js/main.d3dd2fbf.js",
+    "main.js": "/dasom-project/static/js/main.160c8e25.js",
     "index.html": "/dasom-project/index.html",
     "main.42b75066.css.map": "/dasom-project/static/css/main.42b75066.css.map",
-    "main.d3dd2fbf.js.map": "/dasom-project/static/js/main.d3dd2fbf.js.map"
+    "main.160c8e25.js.map": "/dasom-project/static/js/main.160c8e25.js.map"
   },
   "entrypoints": [
     "static/css/main.42b75066.css",
-    "static/js/main.d3dd2fbf.js"
+    "static/js/main.160c8e25.js"
   ]
 }
