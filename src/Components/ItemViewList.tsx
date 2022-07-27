@@ -26,7 +26,7 @@ const SelectedItemInfo = styled.div`
   padding-top: 10px;
   box-sizing: border-box;
   margin-left: 10px;
-  text-align: center;
+
   align-items: center;
   & > div:first-child {
     width: 60%;
@@ -34,11 +34,13 @@ const SelectedItemInfo = styled.div`
   }
   & > div:nth-child(2) {
     width: 20%;
-    margin-left: 10px;
+    text-align: center;
   }
   & > div:last-child {
     width: 20%;
     font-weight: bold;
+    text-align: right;
+    margin-right: 10px;
   }
 `;
 const PayBtn = styled.button`
@@ -78,7 +80,7 @@ const TotalCount = styled.div`
   width: 25%;
   justify-content: space-between;
   & > span:last-child {
-    color: red;
+    color: tomato;
   }
 `;
 const TotalPrice = styled(TotalCount)`
