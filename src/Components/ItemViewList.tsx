@@ -140,6 +140,10 @@ function ItemViewList() {
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
+        // if (itemData[i].itemCode === itemInfoS.itemCode) {
+        //   console.log("삭제");
+        //   setItemData(itemData.splice(i, 1));
+        // }
         if (itemData[i].itemCode == itemDataValue.itemCode) {
           let a = itemData;
           let b = a.map((item: any, index: any) => {
