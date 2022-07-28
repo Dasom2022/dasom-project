@@ -37,3 +37,8 @@ export const itemDataVal = atom<any>({
   key: "item",
   default: [],
 });
+
+export const itemInfo = atom<any>({
+  key: "itemInfo",
+  default: {},
+});
