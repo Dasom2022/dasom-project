@@ -63,7 +63,7 @@
     ]
   },
   "homepage": "https://dasom2022.github.io/dasom-project/",
-  "proxy": "dongyangdama.com",
+  "proxy": "https://dongyangdama.com",
   "devDependencies": {
     "@types/sockjs-client": "^1.5.1"
   }
