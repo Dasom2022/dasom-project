@@ -44,7 +44,7 @@ const Header = styled.div`
 
 const Main = () => {
   //소켓 기본 설정
-  let sock = new SockJS("http://43.200.61.12:3333/stomp");
+  let sock = new SockJS("https://43.200.61.12:3333/stomp");
   let stomp = Stomp.over(sock);
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
