@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { item, itemDataVal } from "../atoms";
+import { item, itemDataVal, itemInfo, userInfoData } from "../atoms";
 
 const SelectedItem = styled.div`
   height: 80px;
@@ -130,15 +130,20 @@ function ItemViewList() {
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [payOpen, setPayOpen] = useState(false);
+  const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
   const navigate = useNavigate();
-
   useEffect(() => {
     let added = 0;
+
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
+        // if (itemData[i].itemCode === itemInfoS.itemCode) {
+        //   console.log("삭제");
+        //   setItemData(itemData.splice(i, 1));
+        // }
         if (itemData[i].itemCode == itemDataValue.itemCode) {
           let a = itemData;
           let b = a.map((item: any, index: any) => {
@@ -178,12 +183,12 @@ function ItemViewList() {
       <Bottom>
         <TotalCount>
           <span>수량 : </span>
-          <span>{itemData[itemData.length - 1]?.totalCount}</span>
+          <span>{itemInfoS?.totalCount}</span>
         </TotalCount>
         <TotalPrice>
           <span>구매금액 : </span>
           <span>
-            <span>{itemData[itemData.length - 1]?.totalPrice}</span>
+            <span>{itemInfoS?.totalPrice}</span>
             <span>원</span>
           </span>
         </TotalPrice>

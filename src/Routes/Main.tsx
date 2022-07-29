@@ -2,7 +2,13 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import ItemSearch from "../Components/ItemSearch";
 import { useRecoilState } from "recoil";
-import { item, itemDataVal, searchOpenState, userInfoData } from "../atoms";
+import {
+  item,
+  itemDataVal,
+  itemInfo,
+  searchOpenState,
+  userInfoData,
+} from "../atoms";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SockJS from "sockjs-client";
@@ -45,7 +51,7 @@ const Main = () => {
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [payOpen, setPayOpen] = useState(false);
-
+  const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
   const navigate = useNavigate();
   const Logout = async (social: string) => {
     if (social === "KAKAO") {
@@ -94,22 +100,39 @@ const Main = () => {
     stomp.debug = null;
     stomp.connect({}, () => {
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
+        // console.log(JSON.parse(data.body).body);
         if (JSON.parse(data.body).body !== "wait") {
           //statusCodeValue
           const Data = JSON.parse(data.body);
           setItemDataValue(Data.body);
         }
       });
+
+      stomp.subscribe(`/sub/item/weight/${userInfo.username}`, (data: any) => {
+        if (JSON.parse(data.body).body !== "wait") {
+          const Data = JSON.parse(data.body);
+          setItemInfoS(Data);
+          // if (Data.ifZero) {
+          //   // setItemDataValue(Data.body);
+          //   console.log(Data);
+          // }
+        }
+      });
     });
   }, []);
 
-  // useInterval(() => {
-  //   stomp.send(
-  //     `/pub/api/websocket/itemList/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  // }, 3000);
+  useInterval(() => {
+    stomp.send(
+      `/pub/api/websocket/itemList/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+    stomp.send(
+      `/pub/api/websocket/itemWeight/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+  }, 3000);
   return (
     <Container>
       {userInfo?.username ? (
