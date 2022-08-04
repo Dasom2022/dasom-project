@@ -125,14 +125,15 @@ function Login() {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      "Acces-Control-Allow-Origin": "*",
     },
-    withCredentials: true,
+    withCredentials: false,
   };
   //로그인 요청 api
   function getLogin(id: string, pw: string) {
     axios
       .post(
-        "http://43.200.61.12:3333/login",
+        "/login",
         JSON.stringify({
           username: id,
           password: pw,
