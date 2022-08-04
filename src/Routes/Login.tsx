@@ -133,7 +133,7 @@ function Login() {
   function getLogin(id: string, pw: string) {
     axios
       .post(
-        "http://43.200.61.12:3333/login",
+        "/login",
         JSON.stringify({
           username: id,
           password: pw,
