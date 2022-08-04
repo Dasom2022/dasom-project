@@ -146,7 +146,6 @@ function Login() {
       });
   }
   const onLoginSuccess = (response: any) => {
-    console.log(response);
     const { accessToken } = response.data;
     const { refreshToken } = response.data;
     localStorage.setItem("accessToken", accessToken);
