@@ -64,7 +64,6 @@
   },
   "homepage": "https://dasom2022.github.io/dasom-project/",
   "proxy": "http://43.200.61.12:3333/",
-
   "devDependencies": {
     "@types/sockjs-client": "^1.5.1"
   }
