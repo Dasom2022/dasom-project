@@ -100,7 +100,7 @@ const Main = () => {
     stomp.debug = null;
     stomp.connect({}, () => {
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
-        // console.log(JSON.parse(data.body).body);
+        console.log(JSON.parse(data.body).body);
         if (JSON.parse(data.body).body !== "wait") {
           //statusCodeValue
           const Data = JSON.parse(data.body);
@@ -112,10 +112,6 @@ const Main = () => {
         if (JSON.parse(data.body).body !== "wait") {
           const Data = JSON.parse(data.body);
           setItemInfoS(Data);
-          // if (Data.ifZero) {
-          //   // setItemDataValue(Data.body);
-          //   console.log(Data);
-          // }
         }
       });
     });

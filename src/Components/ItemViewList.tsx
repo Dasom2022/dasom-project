@@ -137,17 +137,15 @@ function ItemViewList() {
 
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
+
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
-        // if (itemData[i].itemCode === itemInfoS.itemCode) {
-        //   console.log("삭제");
-        //   setItemData(itemData.splice(i, 1));
-        // }
         if (itemData[i].itemCode == itemDataValue.itemCode) {
           let a = itemData;
           let b = a.map((item: any, index: any) => {
             if (index == i) {
+              console.log("삭제3");
               return itemDataValue;
             } else return item;
           });
@@ -157,6 +155,7 @@ function ItemViewList() {
         }
       }
       if (!added) {
+        console.log("삭제4");
         setItemData((prev: any) => [...prev, itemDataValue]);
       }
     }
@@ -166,18 +165,22 @@ function ItemViewList() {
     <>
       <Content>
         {itemData.length > 0
-          ? itemData.map((item: any, index: any) => (
-              <SelectedItem key={index}>
-                <img
-                  src={process.env.PUBLIC_URL + `/image/${item.itemCode}.jpeg`}
-                />
-                <SelectedItemInfo>
-                  <div>{item.itemName}</div>
-                  <div>{item.count}개</div>
-                  <div>{item.price}원</div>
-                </SelectedItemInfo>
-              </SelectedItem>
-            ))
+          ? itemData
+              .filter((item: any) => item.count > 0)
+              .map((item: any, index: any) => (
+                <SelectedItem key={index}>
+                  <img
+                    src={
+                      process.env.PUBLIC_URL + `/image/${item.itemCode}.jpeg`
+                    }
+                  />
+                  <SelectedItemInfo>
+                    <div>{item.itemName}</div>
+                    <div>{item.count}개</div>
+                    <div>{item.price}원</div>
+                  </SelectedItemInfo>
+                </SelectedItem>
+              ))
           : null}
       </Content>
       <Bottom>
