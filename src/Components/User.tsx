@@ -1,99 +1,103 @@
 import axios from "axios";
-import { calcRelativeAxisPosition } from "framer-motion/types/projection/geometry/delta-calc";
+
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const Container=styled.div`
-    width:80%;
-    height:100%;
-    box-sizing: border-box; 
+const Container = styled.div`
+  width: 80%;
+  height: 100%;
+  box-sizing: border-box;
 `;
-const Head=styled.div`
-    display:flex;
-    align-items: center;
-    margin-bottom:7px;
-    & > svg{
-        width:30px;
-        fill:#bbbbbb;
-    }
-    & > span{
-        color:#bbbbbb;
-        font-weight:bold;
-    }
+const Head = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  & > svg {
+    width: 30px;
+    fill: #bbbbbb;
+  }
+  & > span {
+    color: #bbbbbb;
+    font-weight: bold;
+  }
 `;
-const Search=styled.div`
-    background-color:#bbbbbb;
-    border-radius:5px;
-    height:42px;
-    display:flex;
-    align-items: center;
-    position:relative;
-    & > svg{
-        position:absolute;
-        width:20px;
-        transform:translateX(50%);
-        fill:#388e3c;
+const Search = styled.div`
+  background-color: #bbbbbb;
+  border-radius: 5px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  & > svg {
+    position: absolute;
+    width: 20px;
+    transform: translateX(50%);
+    fill: #388e3c;
+  }
+  & > form {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+    & > input {
+      width: calc(100% - 40px);
+      box-sizing: border-box;
+      height: 30px;
+      border-radius: 5px;
+      outline: none;
+      border: 1px solid #bbbbbb;
     }
-    & > form{
-        width:100%;
-        display:flex;
-        justify-content:flex-end;
-        padding-right:10px;
-        & > input{
-            width:calc(100% - 40px);
-            box-sizing: border-box;
-            height:30px;
-            border-radius:5px;
-            outline:none;
-            border:1px solid #bbbbbb;
-        }
-    }
+  }
 `;
-const UserList=styled.ul`
-    padding:0;
-    margin:0;
-    margin-top:20px;
-    height:calc(100% - 106px);
-    overflow:scroll;
-    ::-webkit-scrollbar{
-        display:none;
-    }
-    &, & > li{
-        list-style:none;
-    }
+const UserList = styled.ul`
+  padding: 0;
+  margin: 0;
+  margin-top: 20px;
+  height: calc(100% - 106px);
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  &,
+  & > li {
+    list-style: none;
+  }
 `;
-const UserInfo=styled.li`
-    display:flex;
-    border:1px solid #bbbbbb;
-    border-radius:5px;
-    justify-content: space-between;
-    padding:10px 15px;
-    margin-bottom:10px;
+const UserInfo = styled.li`
+  display: flex;
+  border: 1px solid #bbbbbb;
+  border-radius: 5px;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 10px;
 `;
 
-const Id=styled.div`
-    width:15%;
+const Id = styled.div`
+  width: 15%;
 `;
-const Name=styled.div`
-    width:10%;
+const Name = styled.div`
+  width: 10%;
 `;
-const Email=styled.div`
-    width:35%;
-    word-break:break-all;
+const Email = styled.div`
+  width: 35%;
+  word-break: break-all;
 `;
-const Social=styled.div`width:10%;`;
-const Buttons=styled.div`
-    justify-self: flex-start;
-    & > button{
-        background-color: #388e3c;
-        color:white;
-        padding:5px 8px;
-        border:none;
-        border-radius:4px;
-        margin-left:3px;
-        cursor:pointer; 
-    }
+const Social = styled.div`
+  width: 10%;
 `;
+const Buttons = styled.div`
+  justify-self: flex-start;
+  & > button {
+    background-color: #388e3c;
+    color: white;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 3px;
+    cursor: pointer;
+  }
+`;
+
 
 const User=()=>{
     const [users, setUsers]=useState<any>([]);

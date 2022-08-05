@@ -1,76 +1,108 @@
 import { useMatch, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { userInfoData } from "../atoms";
 import AddItem from "../Components/AddItem";
 import Product from "../Components/Product";
 import User from "../Components/User";
+import { useRecoilValue } from "recoil";
+import { useEffect } from "react";
+import axios from "axios";
+
 
 const Container=styled.div`
     width:100%;
     height:100vh;
     min-width:720px;
     min-height:470px;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  min-width: 720px;
+  min-height: 420px;
+
 `;
-const Header=styled.div`
-    height:50px;
-    background-color: #388e3c;
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    padding:0 20px;
-    
+const Header = styled.div`
+  height: 50px;
+  background-color: #388e3c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 `;
-const Bottom=styled.div`
-    height:70px;
-    background-color: #388e3c;
-    display:flex;
-    justify-content: flex-end;
-    align-items:center;
-    & > div{
-        color:white;
-        margin-right:30px;
-    }
+const Bottom = styled.div`
+  height: 70px;
+  background-color: #388e3c;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  & > div {
+    color: white;
+    margin-right: 30px;
+  }
 `;
-const LogoutBtn=styled.div`
-    display:flex;
-    align-items: center;
-    color:white;
-    padding: 2px 8px;
-    height:30px;
-    border:1px solid white;
-    border-radius:3px;
-    & > svg{
-        fill:white;
-        width:20px;
-        margin-right:8px;
-    }
+const LogoutBtn = styled.div`
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 2px 8px;
+  height: 30px;
+  border: 1px solid white;
+  border-radius: 3px;
+  & > svg {
+    fill: white;
+    width: 20px;
+    margin-right: 8px;
+  }
 `;
-const AdminBtn=styled(LogoutBtn)`
+const AdminBtn = styled(LogoutBtn)``;
+const Content = styled.div`
+  height: calc(100% - 120px);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 `;
-const Content=styled.div`
-     height:calc(100% - 120px);
-     box-sizing:border-box;
-     display:flex;
-     justify-content: center;
-     padding-top:20px;
-`
-const BackBtn=styled.div`
-    border:2px solid #bbbbbb;
-    width:40px;
-    height:40px;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow:0px 1px 3px 1px #bbbbbb;
-    margin-right:20px;
-    cursor:pointer;
-    & > svg{
-        width:25px;
-        fill:#bbbbbb;
-    }
+const BackBtn = styled.div`
+  border: 2px solid #bbbbbb;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 1px 3px 1px #bbbbbb;
+  margin-right: 20px;
+  cursor: pointer;
+  & > svg {
+    width: 25px;
+    fill: #bbbbbb;
+  }
 `;
+
 function AdminDetail(){
     const {category:match}=useParams();
     const navigate=useNavigate();
+    useEffect(() => {
+    if (userInfo.role !== "ADMIN") {
+      navigate("/main");
+      alert("관리자 권한이 없습니다.");
+    } else {
+      const token = localStorage.getItem("refreshToken");
+      axios
+        .get(`/api/member/auth/adminPage?refreshToken=${token}`)
+        .then((response) => {
+          console.log(response);
+          if (response.status !== 200) {
+            navigate("/main");
+            alert("관리자 권한이 없습니다.");
+          }
+        })
+        .catch((error) => {
+          // ...  실패 처리
+          console.log(error);
+        });
+    }
+  }, []);
     return (
         <Container>
             <Header>

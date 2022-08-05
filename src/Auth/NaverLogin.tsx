@@ -17,7 +17,6 @@ const NaverBtn = styled.div`
 `;
 const NaverLogin = () => {
   const [on, SetOn] = useState(false);
-
   const initializeNaverLogin = () => {
     const naverLogin = new naver.LoginWithNaverId({
       clientId: process.env.REACT_APP_CLIENT_ID,
