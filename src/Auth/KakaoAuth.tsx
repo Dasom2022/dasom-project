@@ -7,10 +7,10 @@ function Auth() {
   const setUserInfo = useSetRecoilState<any>(userInfoData);
   // calllback으로 받은 인가코드
   const code = new URL(window.location.href).searchParams.get("code");
+  console.log(code);
   const navigate = useNavigate();
 
   const KakaoLoginMatch = (value: any) => {
-    console.log(value.data);
     if (value?.status === 200) {
       console.log("로그인 성공!");
       setUserInfo(value?.data);

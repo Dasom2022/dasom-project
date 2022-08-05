@@ -20,7 +20,7 @@ const NaverLogin = () => {
   const initializeNaverLogin = () => {
     const naverLogin = new naver.LoginWithNaverId({
       clientId: process.env.REACT_APP_CLIENT_ID,
-      callbackUrl: "http://54.180.55.37:3000/dasom-project/auth/naver",
+      callbackUrl: "http://localhost:3000/dasom-project/auth/naver",
       clientSecret: process.env.REACT_APP_CLIENT_SECRET,
       isPopup: false, // popup 형식으로 띄울것인지 설정
       loginButton: { color: "green", type: 1, height: "60" },
