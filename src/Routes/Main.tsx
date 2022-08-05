@@ -19,7 +19,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   min-width: 620px;
-`;
+`
 const Header = styled.div`
   display: flex;
   justify-content: space-between;

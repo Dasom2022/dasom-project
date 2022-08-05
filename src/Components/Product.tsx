@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -64,19 +65,33 @@ const ItemList=styled.ul`
 `;
 const ItemInfo=styled.li`
     display:flex;
+    justify-content: space-between;
     border:1px solid #bbbbbb;
     border-radius:5px;
-    justify-content: space-between;
     padding:10px 15px;
     margin-bottom:10px;
+    & > *{
+        overflow:hidden;
+    }
 `;
 const Name=styled.div`
+    width:26%;
 `;
-const Weight=styled.div``;
-const Code=styled.div``;
-const Price=styled.div``;
+const Weight=styled.div`
+    width:11%;
+`;
+const Code=styled.div`
+    width:11%;
+`;
+const Price=styled.div`
+    width:11%;
+`;
+const Locale=styled.div`
+    width:11%;
+`
 const Buttons=styled.div`
-    justify-self: flex-start;
+    display:flex;
+    justify-content: flex-end;
     & > button{
         background-color: #388e3c;
         color:white;
@@ -99,18 +114,14 @@ const AddButton=styled.button`
     margin-left:3px;
     cursor:pointer; 
 `;
-const imsi=[
-    {id:1,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:2,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:3,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:3,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:3,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:3,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:3,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},
-    {id:3,name:"남양유업 이오 요구르트, 80ml, 10개입", weight:"0.1kg", code:2315, price:3960},]
+
 const Product=()=>{
     const navigate=useNavigate();
     const [search, setSearch]=useState("");
+    const [product, setProduct]=useState<any>([]);
+    useEffect(()=>{
+        axios.get("/item/itemList").then(res=>setProduct(res.data));
+    },[]);
     return (
         <Container>
             <Head>
@@ -124,17 +135,21 @@ const Product=()=>{
                 </form>
             </Search>
             <ItemList>
-                {imsi.filter((item:any)=>{
-                    return item.name.includes(search)
-                })  .map((item)=>(
+            {product.filter((item:any)=>{
+                    return item.itemName.includes(search)
+                }).map((item:any)=>(
                     <ItemInfo key={item.id}>
-                        <Name>{item.name}</Name>
+                        <Name>{item.itemName}</Name>
                         <Weight>{item.weight}</Weight>
-                        <Code>{item.code}</Code>
-                        <Price>{item.price}</Price>
+                        <Code>{item.itemCode}</Code>
+                        <Locale>{item.locale}</Locale>
+                        <Price>{item.price.toLocaleString()}</Price>
                         <Buttons>
-                            <button>수정</button>
-                            <button>삭제</button>
+                            <button onClick={()=>navigate("/admin/editItem", {state:item})}>수정</button>
+                            <button onClick={()=>{
+                                axios.delete(`/item/delete?id=${item.id}`).then(res=>console.log(res));
+                                window.location.reload();
+                            }}>삭제</button>
                         </Buttons>
                     </ItemInfo>
                 ))}

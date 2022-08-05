@@ -1,4 +1,7 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const Container=styled.div`
@@ -57,7 +60,7 @@ const Right=styled.div`
         display:flex;
         padding:10px 0;
         & > div{
-            width:80px;
+            width:100px;
         }
         input{
             border:none;
@@ -69,22 +72,59 @@ const Right=styled.div`
         
     }
 `;
+interface StateProps{
+    state:{
+        id: string;
+        itemCode: string;
+        itemName: string;
+        locale: string;
+        price: number;
+        weight: number;
+    }
+}
 const AddItem=()=>{
     const [imgPath, setImgPath]=useState("");
+    const {register, handleSubmit, setValue}=useForm();
+    const navigate=useNavigate();
+    const {state}=useLocation() as StateProps;
+    const param=useParams();
+    const config={
+        headers:{
+            'Content-Type':"application/json"
+        }
+    };
+    const onAdd=(data:any)=>{
+        axios.post("/item/register", JSON.stringify({...data}),config).then(res=>navigate("/admin/product"));
+    }
+    const onEdit=(data:any)=>{
+        axios.post("/item/UpdateItemState", JSON.stringify({id:state.id, ...data}), config).then(res=>navigate("/admin/product"));
+
+    }
+    
+    useEffect(()=>{
+        if(param.category=="editItem"){
+            setValue("itemName", state.itemName);
+            setValue("weight", state.weight);
+            setValue("itemCode", state.itemCode);
+            setValue("price", state.price);
+            setValue("locale", state.locale);
+        }
+    },[]);
     return (
         <Container>
-            <AddForm>
+            <AddForm onSubmit={param.category=="editItem"?handleSubmit(onEdit):handleSubmit(onAdd)}>
                 <Left>
                     <img src={imgPath==""?process.env.PUBLIC_URL+"/image/default.jpg":process.env.PUBLIC_URL+"/image/"+imgPath.split("\\")[imgPath.split("\\").length-1]} />
                     <input type="file" onChange={(e)=>{setImgPath(e.target.value)}} />
                 </Left>
                 <Right>
-                    <div><div><label>상품명</label></div>:<input /></div>
-                    <div><div><label>무게</label></div>:<input /></div>
-                    <div><div><label>코드</label></div>:<input /></div>
-                    <div><div><label>가격</label></div>:<input /></div>
+                    <div><div><label>상품명</label></div>:<input {...register("itemName")} /></div>
+                    <div><div><label>무게</label></div>:<input {...register("weight")}  /></div>
+                    <div><div><label>코드</label></div>:<input {...register("itemCode")} /></div>
+                    <div><div><label>가격</label></div>:<input {...register("price")} /></div>
+                    <div><div><label>진열위치</label></div>:<input {...register("locale")} /></div>
                 </Right>
-                <button>등록하기</button>
+                <button>{param.category=="editItem"?"수정하기":"등록하기"}</button>
             </AddForm>
         </Container>
     )

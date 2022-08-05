@@ -28,7 +28,6 @@ function App() {
         <Route path="/auth/kakao" element={<KaKaoAuth />}></Route>
         <Route path="/auth/kakao/logout" element={<KaKaoLogout />}></Route>
         <Route path="/auth/naver" element={<NaverAuth />}></Route>
-
         <Route path="/payresult" element={<PayResult />}></Route>
         <Route path="/payfail" element={<PayFail />}></Route>
         <Route path="/paycancel" element={<PayCancel />}></Route>
