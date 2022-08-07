@@ -84,6 +84,7 @@ function Find() {
     withCredentials: true,
   };
   function getFindId(phone: string) {
+    console.log(phone);
     axios
       .post(`/member/smsId?phoneNumber=${phone}`, config)
       .then((response) => {

@@ -129,8 +129,9 @@ const Pay = styled.div`
 function ItemViewList() {
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
-  const [payOpen, setPayOpen] = useState(false);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
+  const [payOpen, setPayOpen] = useState(false);
+
   const navigate = useNavigate();
   useEffect(() => {
     let added = 0;

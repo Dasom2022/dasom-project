@@ -19,7 +19,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   min-width: 620px;
-`
+`;
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -50,10 +50,12 @@ const Main = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
-  const [payOpen, setPayOpen] = useState(false);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
   const navigate = useNavigate();
   const Logout = async (social: string) => {
+    // setItemDataValue([]);
+    // setItemData([]);
+    // setItemInfoS({});
     if (social === "KAKAO") {
       //카카오 로그아웃
       const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_REST_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_LOGOUT_REDIRECT_URI}`;
@@ -96,6 +98,10 @@ const Main = () => {
     if (!userInfo?.username) {
       navigate("/");
       alert("로그인 필수!");
+    }
+    if (userInfo.role === "ADMIN") {
+      console.log(1);
+      navigate("/admin");
     }
     stomp.debug = null;
     stomp.connect({}, () => {
