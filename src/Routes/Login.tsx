@@ -147,12 +147,11 @@ function Login() {
       });
   }
   const onLoginSuccess = (response: any) => {
-    const { accessToken } = response.data;
-    const { refreshToken } = response.data;
+    const { accessToken, refreshToken } = response.data;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     // 토큰 만료 1분전 연장
-    setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 6000);
+    setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 60000);
     if (response.status === 200) {
       setTimeout(() => {
         setUserInfo(response.data);
