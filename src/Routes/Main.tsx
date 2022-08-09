@@ -43,6 +43,12 @@ const Header = styled.div`
 `;
 
 const Main = () => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
   //소켓 기본 설정
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
   let stomp = Stomp.over(sock);
@@ -99,10 +105,14 @@ const Main = () => {
       navigate("/");
       alert("로그인 필수!");
     }
-    if (userInfo.role === "ADMIN") {
-      console.log(1);
-      navigate("/admin");
-    }
+    if (userInfo.role === "ADMIN") navigate("/admin");
+    const token = localStorage.getItem("accessToken");
+    axios
+      .get(`/member/memberItemList?accessToken=${token}`, config)
+      .then((reponse) => {
+        console.log(reponse);
+      });
+
     stomp.debug = null;
     stomp.connect({}, () => {
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
@@ -123,18 +133,18 @@ const Main = () => {
     });
   }, []);
 
-  useInterval(() => {
-    stomp.send(
-      `/pub/api/websocket/itemList/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-    stomp.send(
-      `/pub/api/websocket/itemWeight/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-  }, 3000);
+  // useInterval(() => {
+  //   stomp.send(
+  //     `/pub/api/websocket/itemList/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  //   stomp.send(
+  //     `/pub/api/websocket/itemWeight/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  // }, 3000);
   return (
     <Container>
       {userInfo?.username ? (

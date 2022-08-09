@@ -10,6 +10,7 @@ const SelectedItem = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0px 10px;
+  /* background-color: rgba(0, 0, 0, 0.15); */
   border-bottom: 2px solid #bbbbbb;
   & > img {
     width: 80px;

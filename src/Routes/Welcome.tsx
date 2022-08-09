@@ -106,8 +106,8 @@ function Welcome() {
         if (JSON.parse(data.body).body.loginToQr) {
           const Data = JSON.parse(data.body);
           // onLoginSuccess();
-          localStorage.setItem("accessToken", data.body.accessToken);
-          localStorage.setItem("refreshToken", data.body.refreshToken);
+          localStorage.setItem("accessToken", Data.body.accessToken);
+          localStorage.setItem("refreshToken", Data.body.refreshToken);
           setUserInfo(Data.body);
           navigate("/main");
         }
