@@ -44,31 +44,7 @@ const SelectedItemInfo = styled.div`
     margin-right: 10px;
   }
 `;
-const PayBtn = styled.button`
-  background-color: transparent;
-  border: 2px solid white;
-  padding: 7px 15px;
-  border-radius: 22px;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
-  box-shadow: 0 4px 4px -4px black;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateX(-50%) translateY(-50%);
-  cursor: pointer;
-`;
-const Bottom = styled.div`
-  height: 70px;
-  font-size: 27px;
-  background-color: #31a737;
-  display: flex;
-  align-items: center;
-  color: white;
-  position: relative;
-  padding: 0 20px;
-`;
+
 const Content = styled.div`
   height: calc(100% - 140px);
   overflow: scroll;
@@ -76,62 +52,11 @@ const Content = styled.div`
     display: none;
   }
 `;
-const TotalCount = styled.div`
-  display: flex;
-  width: 25%;
-  justify-content: space-between;
-  & > span:last-child {
-    color: tomato;
-  }
-`;
-const TotalPrice = styled(TotalCount)`
-  width: 40%;
-  margin-left: 15px;
-  & > span:last-child > span:last-child {
-    color: white;
-  }
-`;
-const Pay = styled.div`
-  width: 30%;
-  height: 20vh;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  background-color: white;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  & > span {
-    font-weight: bold;
-  }
-  & > div {
-    width: 100%;
-    text-align: center;
-  }
-  button {
-    padding: 5px 8px;
-    border-radius: 20px;
-    border: 2px solid white;
-    color: white;
-    font-weight: bold;
-    box-shadow: 1px 4px 3px -3px #bbbbbb;
-    cursor: pointer;
-  }
-  button:first-child {
-    background-color: red;
-  }
-  button:last-child {
-    background-color: #31a737;
-  }
-`;
+
 function ItemViewList() {
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
-  const [payOpen, setPayOpen] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -185,30 +110,6 @@ function ItemViewList() {
               ))
           : null}
       </Content>
-      <Bottom>
-        <TotalCount>
-          <span>수량 : </span>
-          <span>{itemInfoS?.totalCount}</span>
-        </TotalCount>
-        <TotalPrice>
-          <span>구매금액 : </span>
-          <span>
-            <span>{itemInfoS?.totalPrice}</span>
-            <span>원</span>
-          </span>
-        </TotalPrice>
-        <PayBtn onClick={() => setPayOpen(true)}>결제하기</PayBtn>
-      </Bottom>
-
-      {payOpen ? (
-        <Pay>
-          <span>결제하시겠습니까?</span>
-          <div>
-            <button onClick={() => setPayOpen(false)}>돌아가기</button>
-            <button onClick={() => navigate("/pay")}>결제하기</button>
-          </div>
-        </Pay>
-      ) : null}
     </>
   );
 }
