@@ -72,7 +72,6 @@ function ItemViewList() {
           let a = itemData;
           let b = a.map((item: any, index: any) => {
             if (index == i) {
-              console.log("삭제3");
               return itemDataValue;
             } else return item;
           });

@@ -7,6 +7,7 @@ import {
   item,
   itemDataVal,
   itemInfo,
+  openedMap,
   searchOpenState,
   userInfoData,
 } from "../atoms";
@@ -15,6 +16,8 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import ItemViewList from "../Components/ItemViewList";
 import useInterval from "../hooks/useInterval";
+import { motion } from "framer-motion";
+import SearchResultItem from "../Components/SearchResultItem";
 const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
@@ -124,7 +127,6 @@ const Right = styled.div`
   height: 100%;
   background: #dae6de;
   color: white;
-  position: relative;
 `;
 const RightTitle = styled.div`
   background-color: #32965c;
@@ -133,11 +135,9 @@ const RightTitle = styled.div`
   text-align: center;
   padding-left: 15px;
   font-size: 18px;
-  position: relative;
   & > svg {
     width: 20px;
     fill: white;
-    position: absolute;
     top: 50%;
     right: 14px;
     transform: translateY(-50%);
@@ -160,14 +160,14 @@ const Lists = styled.div`
 
 const RightMenu = styled.div`
   display: flex;
-  height: 70px;
-  position: absolute;
+  height: 53px;
   bottom: 0;
   width: 100%;
   & > button {
     width: 50%;
     color: white;
     border: none;
+    border-right: 1px solid gray;
     font-size: 16px;
     &:hover {
       cursor: pointer;
@@ -294,15 +294,16 @@ const Main = () => {
     }
   };
   useEffect(() => {
-    if (!userInfo?.username) {
-      navigate("/");
-      alert("로그인 필수!");
-    }
+    // if (!userInfo?.username) {
+    //   navigate("/");
+    //   alert("로그인 필수!");
+    // }
     if (userInfo.role === "ADMIN") navigate("/admin");
     const token = localStorage.getItem("accessToken");
     axios
       .get(`/member/memberItemList?accessToken=${token}`, config)
       .then((reponse: any) => {
+        setCheckListItem(reponse);
         for (let i = 0; i < reponse.data.length; i++) {
           for (let j = 0; j < reponse.data.length; j++) {
             if (reponse.data[j].itemName === reponse.data[j].itemName) {
@@ -310,14 +311,12 @@ const Main = () => {
             }
           }
         }
-        setCheckListItem(reponse);
-        console.log(reponse);
+        console.log(checkListItem);
       });
 
     stomp.debug = null;
     stomp.connect({}, () => {
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
-        console.log(JSON.parse(data.body).body);
         if (JSON.parse(data.body).body !== "wait") {
           //statusCodeValue
           const Data = JSON.parse(data.body);
@@ -331,20 +330,37 @@ const Main = () => {
           setItemInfoS(Data);
         }
       });
+
+      stomp.subscribe(
+        `/sub/api/beacon/locale/${userInfo.username}`,
+        (data: any) => {
+          console.log(JSON.parse(data.body).body);
+          if (JSON.parse(data.body).body !== "NOT_BEACON") {
+            const Data = JSON.parse(data.body);
+            console.log(Data.body);
+          }
+        }
+      );
     });
   }, []);
-  // useInterval(() => {
-  //   stomp.send(
-  //     `/pub/api/websocket/itemList/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  //   stomp.send(
-  //     `/pub/api/websocket/itemWeight/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  // }, 3000);
+  useInterval(() => {
+    stomp.send(
+      `/pub/api/websocket/itemList/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+    stomp.send(
+      `/pub/api/websocket/itemWeight/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+    stomp.send(
+      `/pub/api/beacon/locale/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+  }, 3000);
+
   return (
     <Container>
       <Left>
@@ -414,7 +430,7 @@ const Main = () => {
               .filter(
                 (v: any, i: any) =>
                   checkListItem.data.findIndex(
-                    (x: any) => x.itemName === v.itemName
+                    (x: any) => x.itemCode === v.itemCode
                   ) === i
               )
               .map((item: any, index: any) => (
@@ -422,14 +438,22 @@ const Main = () => {
                   <span
                     style={{
                       textDecoration:
-                        itemDataValue.itemName === item.itemName &&
+                        itemDataValue.itemCode === item.itemCode &&
                         itemDataValue.count > 0
                           ? "line-through"
                           : "",
                     }}
                   >
-                    {item.itemName} {item.price}원 {count}개
+                    {item.itemName} {item.price}원
                   </span>
+                  <SearchResultItem
+                    type={"check"}
+                    key={index}
+                    name={item.itemName}
+                    price={item.price}
+                    where={item.locale}
+                    index={index}
+                  />
                 </div>
               ))}
         </Lists>

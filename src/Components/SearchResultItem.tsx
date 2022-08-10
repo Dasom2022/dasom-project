@@ -6,11 +6,10 @@ import { openedMap } from "../atoms";
 
 const Item = styled.div<{ opened: boolean }>`
   border: 1px solid #bbbbbb;
-  background-color: white;
   margin-bottom: 5px;
   & > div:first-child {
     height: 70px;
-    background-color: white;
+    /* background-color: white; */
     display: flex;
     align-items: ${(props) => (props.opened ? "flex-start" : "center")};
     padding: 0 10px;
@@ -95,6 +94,18 @@ const MapCenterRight = styled(motion.div)<{ num: number }>`
   border: 1px solid black;
   box-sizing: border-box;
 `;
+const Modal = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  border: 1px solid #5a5a5a;
+  border-radius: 4px;
+  width: 70%;
+  height: 75%;
+  background-color: #dfdfdf;
+  padding: 10px 10px;
+`;
 const blockVariants = {
   animate: {
     backgroundColor: [
@@ -114,84 +125,102 @@ const mapRight = ["b-1", "b-2", "b-3", "b-4", "b-5", "b-6"];
 const mapBottom = ["c-1", "c-2", "c-3", "c-4", "c-5", "c-6", "c-7", "c-8"];
 const mapCenterLeft = ["d-1", "d-2", "d-3"];
 const mapCenterRight = ["e-1", "e-2", "e-3", "e-4"];
-function SearchResultItem({ name, price, where, index }: any) {
+function SearchResultItem({ name, price, where, index, type }: any) {
   const [mapOpen, setMapOpen] = useRecoilState(openedMap);
-  console.log(mapOpen);
+
   return (
     <>
       <Item opened={mapOpen == index}>
         <div>
-          <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
-          <ItemInfo opened={mapOpen == index}>
-            <span>{name}</span>
-            <span>{price.toLocaleString()}</span>
-            <button
-              onClick={() =>
-                setMapOpen((prev) => {
-                  if (prev == index) return -1;
-                  else return index;
-                })
-              }
-            >
-              {mapOpen == index ? "위치 닫기" : "위치 열기"}
-            </button>
-          </ItemInfo>
+          {type === "check" ? (
+            <div>
+              <button
+                style={{ border: "none" }}
+                onClick={() =>
+                  setMapOpen((prev) => {
+                    if (prev == index) return -1;
+                    else return index;
+                  })
+                }
+              >
+                {mapOpen == index ? "위치 닫기" : "위치 열기"}
+              </button>
+            </div>
+          ) : (
+            <ItemInfo opened={mapOpen == index}>
+              <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
+              <span>{name}</span>
+              <span>{price.toLocaleString()}</span>
+              <button
+                onClick={() =>
+                  setMapOpen((prev) => {
+                    if (prev == index) return -1;
+                    else return index;
+                  })
+                }
+              >
+                {mapOpen == index ? "위치 닫기" : "위치 열기"}
+              </button>
+            </ItemInfo>
+          )}
         </div>
         {mapOpen == index ? (
-          <Map>
-            {mapTop.map((item, index) => (
-              <MapTop
-                variants={blockVariants}
-                animate={where == item ? "animate" : "no"}
-                num={index}
-                key={item}
-              >
-                {item}
-              </MapTop>
-            ))}
-            {mapRight.map((item, index) => (
-              <MapRight
-                variants={blockVariants}
-                animate={where == item ? "animate" : "no"}
-                num={index}
-                key={item}
-              >
-                {item}
-              </MapRight>
-            ))}
-            {mapBottom.map((item, index) => (
-              <MapBottom
-                variants={blockVariants}
-                animate={where == item ? "animate" : "no"}
-                num={index}
-                key={item}
-              >
-                {item}
-              </MapBottom>
-            ))}
-            <MapCenter>
-              {mapCenterLeft.map((item, index) => (
-                <MapCenterLeft
+          <Modal>
+            <Map>
+              {mapTop.map((item, index) => (
+                <MapTop
                   variants={blockVariants}
                   animate={where == item ? "animate" : "no"}
                   num={index}
                   key={item}
                 >
                   {item}
-                </MapCenterLeft>
+                </MapTop>
               ))}
-              {mapCenterRight.map((item, index) => (
-                <MapCenterRight
+              {mapRight.map((item, index) => (
+                <MapRight
                   variants={blockVariants}
                   animate={where == item ? "animate" : "no"}
                   num={index}
                   key={item}
                 >
                   {item}
-                </MapCenterRight>
+                </MapRight>
               ))}
-            </MapCenter>
-          </Map>
+              {mapBottom.map((item, index) => (
+                <MapBottom
+                  variants={blockVariants}
+                  animate={where == item ? "animate" : "no"}
+                  num={index}
+                  key={item}
+                >
+                  {item}
+                </MapBottom>
+              ))}
+              <MapCenter>
+                {mapCenterLeft.map((item, index) => (
+                  <MapCenterLeft
+                    variants={blockVariants}
+                    animate={where == item ? "animate" : "no"}
+                    num={index}
+                    key={item}
+                  >
+                    {item}
+                  </MapCenterLeft>
+                ))}
+                {mapCenterRight.map((item, index) => (
+                  <MapCenterRight
+                    variants={blockVariants}
+                    animate={where == item ? "animate" : "no"}
+                    num={index}
+                    key={item}
+                  >
+                    {item}
+                  </MapCenterRight>
+                ))}
+              </MapCenter>
+            </Map>
+          </Modal>
         ) : null}
       </Item>
     </>
