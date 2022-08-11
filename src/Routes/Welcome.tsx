@@ -117,7 +117,7 @@ function Welcome() {
 
   useInterval(() => {
     stomp.send(`/pub/api/camera/qrLogin`, {}, JSON.stringify({}));
-  }, 3000);
+  }, 1000);
 
   // const onLoginSuccess = (response: any) => {
   //   const { accessToken, refreshToken } = response;
