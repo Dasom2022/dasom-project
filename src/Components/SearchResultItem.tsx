@@ -2,17 +2,15 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { openedMap } from "../atoms";
+import { beaconVal, openedMap } from "../atoms";
 
 const Item = styled.div<{ opened: boolean }>`
-  border: 1px solid #bbbbbb;
-  background-color: white;
   margin-bottom: 5px;
   & > div:first-child {
     height: 70px;
-    background-color: white;
+    /* background-color: white; */
     display: flex;
-    align-items: ${(props) => (props.opened ? "flex-start" : "center")};
+    align-items: center;
     padding: 0 10px;
     border-radius: 2px;
   }
@@ -50,11 +48,11 @@ const ItemInfo = styled.div<{ opened: boolean }>`
 
 //약도 관련
 const Map = styled.div`
-  height: 35vw;
+  min-height: 300px;
   width: 100%;
   background-color: white;
   box-sizing: border-box;
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(8, 1fr);
 `;
@@ -78,7 +76,7 @@ const MapBottom = styled(motion.div)<{ num: number }>`
 const MapCenter = styled.div`
   grid-column: 2/9;
   grid-row: 3/7;
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(13, 1fr);
   grid-template-rows: repeat(7, 1fr);
 `;
@@ -92,14 +90,29 @@ const MapCenterLeft = styled(motion.div)<{ num: number }>`
 const MapCenterRight = styled(motion.div)<{ num: number }>`
   grid-column: 8/14;
   grid-row: ${(props) => `${props.num * 2 + 1}/${props.num * 2 + 2}`};
-  border: 1px solid black;
+  border: 1px solid black !important;
   box-sizing: border-box;
+`;
+const Modal = styled.div`
+  border: 1px solid #5a5a5a;
+  border-radius: 4px;
+  width: 100%;
+  height: 75%;
+  background-color: #dfdfdf;
+  padding: 10px 10px;
 `;
 const blockVariants = {
   animate: {
+    backgroundColor: ["rgba(255,255,255,1)", "#7d7979", "rgba(255,255,255,1)"],
+    transition: {
+      repeat: Infinity,
+      duration: 1,
+    },
+  },
+  animate2: {
     backgroundColor: [
       "rgba(255,255,255,1)",
-      "rgba(0,0,0,1)",
+      "rgb(255, 99, 71)",
       "rgba(255,255,255,1)",
     ],
     transition: {
@@ -114,35 +127,55 @@ const mapRight = ["b-1", "b-2", "b-3", "b-4", "b-5", "b-6"];
 const mapBottom = ["c-1", "c-2", "c-3", "c-4", "c-5", "c-6", "c-7", "c-8"];
 const mapCenterLeft = ["d-1", "d-2", "d-3"];
 const mapCenterRight = ["e-1", "e-2", "e-3", "e-4"];
-function SearchResultItem({ name, price, where, index }: any) {
+function SearchResultItem({ name, price, where, index, type }: any) {
   const [mapOpen, setMapOpen] = useRecoilState(openedMap);
-  console.log(mapOpen);
+  const [beacon, setBeacon] = useRecoilState(beaconVal);
   return (
     <>
       <Item opened={mapOpen == index}>
         <div>
-          <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
-          <ItemInfo opened={mapOpen == index}>
-            <span>{name}</span>
-            <span>{price.toLocaleString()}</span>
-            <button
-              onClick={() =>
-                setMapOpen((prev) => {
-                  if (prev == index) return -1;
-                  else return index;
-                })
-              }
-            >
-              {mapOpen == index ? "위치 닫기" : "위치 열기"}
-            </button>
-          </ItemInfo>
+          {type === "check" ? (
+            <div>
+              <button
+                style={{ border: "none" }}
+                onClick={() =>
+                  setMapOpen((prev) => {
+                    if (prev == index) return -1;
+                    else return index;
+                  })
+                }
+              >
+                {mapOpen == index ? "위치 닫기" : "위치 열기"}
+              </button>
+            </div>
+          ) : (
+            <ItemInfo opened={mapOpen == index}>
+              <img src={process.env.PUBLIC_URL + "/image/apple.jpg"} />
+              <span>{name}</span>
+              <span>{price.toLocaleString()}</span>
+              <button
+                onClick={() =>
+                  setMapOpen((prev) => {
+                    if (prev == index) return -1;
+                    else return index;
+                  })
+                }
+              >
+                {mapOpen == index ? "위치 닫기" : "위치 열기"}
+              </button>
+            </ItemInfo>
+          )}
         </div>
-        {mapOpen == index ? (
+      </Item>
+      {mapOpen == index ? (
+        <Modal>
           <Map>
             {mapTop.map((item, index) => (
               <MapTop
                 variants={blockVariants}
-                animate={where == item ? "animate" : "no"}
+                animate={
+                  where == item ? "animate" : beacon == item ? "animate2" : "no"
+                }
                 num={index}
                 key={item}
               >
@@ -152,7 +185,9 @@ function SearchResultItem({ name, price, where, index }: any) {
             {mapRight.map((item, index) => (
               <MapRight
                 variants={blockVariants}
-                animate={where == item ? "animate" : "no"}
+                animate={
+                  where == item ? "animate" : beacon == item ? "animate2" : "no"
+                }
                 num={index}
                 key={item}
               >
@@ -162,7 +197,9 @@ function SearchResultItem({ name, price, where, index }: any) {
             {mapBottom.map((item, index) => (
               <MapBottom
                 variants={blockVariants}
-                animate={where == item ? "animate" : "no"}
+                animate={
+                  where == item ? "animate" : beacon == item ? "animate2" : "no"
+                }
                 num={index}
                 key={item}
               >
@@ -173,7 +210,13 @@ function SearchResultItem({ name, price, where, index }: any) {
               {mapCenterLeft.map((item, index) => (
                 <MapCenterLeft
                   variants={blockVariants}
-                  animate={where == item ? "animate" : "no"}
+                  animate={
+                    where == item
+                      ? "animate"
+                      : beacon == item
+                      ? "animate2"
+                      : "no"
+                  }
                   num={index}
                   key={item}
                 >
@@ -183,7 +226,13 @@ function SearchResultItem({ name, price, where, index }: any) {
               {mapCenterRight.map((item, index) => (
                 <MapCenterRight
                   variants={blockVariants}
-                  animate={where == item ? "animate" : "no"}
+                  animate={
+                    where == item
+                      ? "animate"
+                      : beacon == item
+                      ? "animate2"
+                      : "no"
+                  }
                   num={index}
                   key={item}
                 >
@@ -192,8 +241,8 @@ function SearchResultItem({ name, price, where, index }: any) {
               ))}
             </MapCenter>
           </Map>
-        ) : null}
-      </Item>
+        </Modal>
+      ) : null}
     </>
   );
 }

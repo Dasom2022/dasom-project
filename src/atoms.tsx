@@ -42,3 +42,13 @@ export const itemInfo = atom<any>({
   key: "itemInfo",
   default: {},
 });
+
+export const checkList = atom<any>({
+  key: "checkList",
+  default: [],
+});
+
+export const beaconVal = atom<any>({
+  key: "beaconVal",
+  default: "",
+});
