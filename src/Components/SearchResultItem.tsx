@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { openedMap } from "../atoms";
+import { beaconVal, openedMap } from "../atoms";
 
 const Item = styled.div<{ opened: boolean }>`
   margin-bottom: 5px;
@@ -48,7 +48,7 @@ const ItemInfo = styled.div<{ opened: boolean }>`
 
 //약도 관련
 const Map = styled.div`
-  min-height:300px;
+  min-height: 300px;
   width: 100%;
   background-color: white;
   box-sizing: border-box;
@@ -103,9 +103,16 @@ const Modal = styled.div`
 `;
 const blockVariants = {
   animate: {
+    backgroundColor: ["rgba(255,255,255,1)", "#7d7979", "rgba(255,255,255,1)"],
+    transition: {
+      repeat: Infinity,
+      duration: 1,
+    },
+  },
+  animate2: {
     backgroundColor: [
       "rgba(255,255,255,1)",
-      "rgba(0,0,0,1)",
+      "rgb(255, 99, 71)",
       "rgba(255,255,255,1)",
     ],
     transition: {
@@ -122,7 +129,7 @@ const mapCenterLeft = ["d-1", "d-2", "d-3"];
 const mapCenterRight = ["e-1", "e-2", "e-3", "e-4"];
 function SearchResultItem({ name, price, where, index, type }: any) {
   const [mapOpen, setMapOpen] = useRecoilState(openedMap);
-
+  const [beacon, setBeacon] = useRecoilState(beaconVal);
   return (
     <>
       <Item opened={mapOpen == index}>
@@ -161,63 +168,81 @@ function SearchResultItem({ name, price, where, index, type }: any) {
         </div>
       </Item>
       {mapOpen == index ? (
-          <Modal>
-            <Map>
-              {mapTop.map((item, index) => (
-                <MapTop
+        <Modal>
+          <Map>
+            {mapTop.map((item, index) => (
+              <MapTop
+                variants={blockVariants}
+                animate={
+                  where == item ? "animate" : beacon == item ? "animate2" : "no"
+                }
+                num={index}
+                key={item}
+              >
+                {item}
+              </MapTop>
+            ))}
+            {mapRight.map((item, index) => (
+              <MapRight
+                variants={blockVariants}
+                animate={
+                  where == item ? "animate" : beacon == item ? "animate2" : "no"
+                }
+                num={index}
+                key={item}
+              >
+                {item}
+              </MapRight>
+            ))}
+            {mapBottom.map((item, index) => (
+              <MapBottom
+                variants={blockVariants}
+                animate={
+                  where == item ? "animate" : beacon == item ? "animate2" : "no"
+                }
+                num={index}
+                key={item}
+              >
+                {item}
+              </MapBottom>
+            ))}
+            <MapCenter>
+              {mapCenterLeft.map((item, index) => (
+                <MapCenterLeft
                   variants={blockVariants}
-                  animate={where == item ? "animate" : "no"}
+                  animate={
+                    where == item
+                      ? "animate"
+                      : beacon == item
+                      ? "animate2"
+                      : "no"
+                  }
                   num={index}
                   key={item}
                 >
                   {item}
-                </MapTop>
+                </MapCenterLeft>
               ))}
-              {mapRight.map((item, index) => (
-                <MapRight
+              {mapCenterRight.map((item, index) => (
+                <MapCenterRight
                   variants={blockVariants}
-                  animate={where == item ? "animate" : "no"}
+                  animate={
+                    where == item
+                      ? "animate"
+                      : beacon == item
+                      ? "animate2"
+                      : "no"
+                  }
                   num={index}
                   key={item}
                 >
                   {item}
-                </MapRight>
+                </MapCenterRight>
               ))}
-              {mapBottom.map((item, index) => (
-                <MapBottom
-                  variants={blockVariants}
-                  animate={where == item ? "animate" : "no"}
-                  num={index}
-                  key={item}
-                >
-                  {item}
-                </MapBottom>
-              ))}
-              <MapCenter>
-                {mapCenterLeft.map((item, index) => (
-                  <MapCenterLeft
-                    variants={blockVariants}
-                    animate={where == item ? "animate" : "no"}
-                    num={index}
-                    key={item}
-                  >
-                    {item}
-                  </MapCenterLeft>
-                ))}
-                {mapCenterRight.map((item, index) => (
-                  <MapCenterRight
-                    variants={blockVariants}
-                    animate={where == item ? "animate" : "no"}
-                    num={index}
-                    key={item}
-                  >
-                    {item}
-                  </MapCenterRight>
-                ))}
-              </MapCenter>
-            </Map>
-          </Modal>
-        ) : null}
+            </MapCenter>
+          </Map>
+        </Modal>
+      ) : null}
     </>
   );
 }
