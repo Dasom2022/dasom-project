@@ -332,23 +332,23 @@ const Main = () => {
       );
     });
   }, []);
-  // useInterval(() => {
-  //   stomp.send(
-  //     `/pub/api/websocket/itemList/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  //   stomp.send(
-  //     `/pub/api/websocket/itemWeight/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  //   stomp.send(
-  //     `/pub/api/beacon/locale/${userInfo.username}`,
-  //     {},
-  //     JSON.stringify({})
-  //   );
-  // }, 3000);
+  useInterval(() => {
+    stomp.send(
+      `/pub/api/websocket/itemList/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+    stomp.send(
+      `/pub/api/websocket/itemWeight/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+    stomp.send(
+      `/pub/api/beacon/locale/${userInfo.username}`,
+      {},
+      JSON.stringify({})
+    );
+  }, 3000);
 
   return (
     <Container>
