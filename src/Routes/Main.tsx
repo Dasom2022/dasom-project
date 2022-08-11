@@ -8,7 +8,6 @@ import {
   item,
   itemDataVal,
   itemInfo,
-  openedMap,
   searchOpenState,
   userInfoData,
 } from "../atoms";
