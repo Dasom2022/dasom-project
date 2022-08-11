@@ -5,13 +5,12 @@ import styled from "styled-components";
 import { openedMap } from "../atoms";
 
 const Item = styled.div<{ opened: boolean }>`
-  border: 1px solid #bbbbbb;
   margin-bottom: 5px;
   & > div:first-child {
     height: 70px;
     /* background-color: white; */
     display: flex;
-    align-items: ${(props) => (props.opened ? "flex-start" : "center")};
+    align-items: center;
     padding: 0 10px;
     border-radius: 2px;
   }
@@ -49,11 +48,11 @@ const ItemInfo = styled.div<{ opened: boolean }>`
 
 //약도 관련
 const Map = styled.div`
-  height: 35vw;
+  min-height:300px;
   width: 100%;
   background-color: white;
   box-sizing: border-box;
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(8, 1fr);
 `;
@@ -77,7 +76,7 @@ const MapBottom = styled(motion.div)<{ num: number }>`
 const MapCenter = styled.div`
   grid-column: 2/9;
   grid-row: 3/7;
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(13, 1fr);
   grid-template-rows: repeat(7, 1fr);
 `;
@@ -91,17 +90,13 @@ const MapCenterLeft = styled(motion.div)<{ num: number }>`
 const MapCenterRight = styled(motion.div)<{ num: number }>`
   grid-column: 8/14;
   grid-row: ${(props) => `${props.num * 2 + 1}/${props.num * 2 + 2}`};
-  border: 1px solid black;
+  border: 1px solid black !important;
   box-sizing: border-box;
 `;
 const Modal = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
   border: 1px solid #5a5a5a;
   border-radius: 4px;
-  width: 70%;
+  width: 100%;
   height: 75%;
   background-color: #dfdfdf;
   padding: 10px 10px;
@@ -164,7 +159,8 @@ function SearchResultItem({ name, price, where, index, type }: any) {
             </ItemInfo>
           )}
         </div>
-        {mapOpen == index ? (
+      </Item>
+      {mapOpen == index ? (
           <Modal>
             <Map>
               {mapTop.map((item, index) => (
@@ -222,7 +218,6 @@ function SearchResultItem({ name, price, where, index, type }: any) {
             </Map>
           </Modal>
         ) : null}
-      </Item>
     </>
   );
 }

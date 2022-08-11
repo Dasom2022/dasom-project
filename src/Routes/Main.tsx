@@ -148,10 +148,12 @@ const Lists = styled.div`
   height: calc(100% - 100px);
   div {
     display: flex;
-    align-items: center;
-    height: 40px;
-    width: 100%;
-    border-bottom: 1px solid #bbbbbb;
+    flex-wrap:wrap;
+    color:black;
+    & > span{
+      display:flex;
+      align-items:center;
+    }
   }
   div:last-child {
     border: none;
@@ -243,6 +245,28 @@ const Main = () => {
     withCredentials: true,
   };
   //소켓 기본 설정
+  const data = [
+    {
+      category: null,
+      id: 10,
+      itemCode: "123",
+      itemName: "오레오",
+      locale: "r-2",
+      member: null,
+      price: 5000,
+      weight: 200,
+    },
+    {
+      category: null,
+      id: 7,
+      itemCode: "553",
+      itemName: "코카콜라 1.5L",
+      locale: "c-2",
+      member: null,
+      price: 1900,
+      weight: 0.51,
+    },
+  ];
   let sock = new SockJS("http://43.200.61.12:3333/stomp");
   let stomp = Stomp.over(sock);
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
@@ -343,23 +367,23 @@ const Main = () => {
       );
     });
   }, []);
-  useInterval(() => {
-    stomp.send(
-      `/pub/api/websocket/itemList/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-    stomp.send(
-      `/pub/api/websocket/itemWeight/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-    stomp.send(
-      `/pub/api/beacon/locale/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-  }, 3000);
+  // useInterval(() => {
+  //   stomp.send(
+  //     `/pub/api/websocket/itemList/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  //   stomp.send(
+  //     `/pub/api/websocket/itemWeight/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  //   stomp.send(
+  //     `/pub/api/beacon/locale/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  // }, 3000);
 
   return (
     <Container>
@@ -425,13 +449,11 @@ const Main = () => {
           <span>체크 리스트</span>
         </RightTitle>
         <Lists>
-          {checkListItem.data &&
-            checkListItem.data
+          {data &&
+            data
               .filter(
                 (v: any, i: any) =>
-                  checkListItem.data.findIndex(
-                    (x: any) => x.itemCode === v.itemCode
-                  ) === i
+                  data.findIndex((x: any) => x.itemCode === v.itemCode) === i
               )
               .map((item: any, index: any) => (
                 <div key={index}>
