@@ -78,6 +78,7 @@ interface StateProps {
     locale: string;
     price: number;
     weight: number;
+    image: any;
   };
 }
 const AddItem = () => {
@@ -93,6 +94,7 @@ const AddItem = () => {
     },
   };
   const onAdd = (data: any) => {
+    console.log(data);
     axios
       .post(
         `/item/register?accessToken=${token}`,
@@ -134,15 +136,14 @@ const AddItem = () => {
             src={
               imgPath == ""
                 ? process.env.PUBLIC_URL + "/image/default.jpg"
-                : process.env.PUBLIC_URL +
-                  "/image/" +
-                  imgPath.split("\\")[imgPath.split("\\").length - 1]
+                : imgPath
             }
           />
           <input
+            {...register("itemImg")}
             type="file"
-            onChange={(e) => {
-              setImgPath(e.target.value);
+            onChange={(e: any) => {
+              setImgPath(URL.createObjectURL(e.target.files[0]));
             }}
           />
         </Left>

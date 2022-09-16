@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { item, itemDataVal, itemInfo, userInfoData } from "../atoms";
+import { item, itemAdded, itemDataVal, itemInfo, userInfoData } from "../atoms";
 
 const SelectedItem = styled.div`
   height: 80px;
@@ -10,7 +10,7 @@ const SelectedItem = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0px 10px;
-  /* background-color: rgba(0, 0, 0, 0.15); */
+
   border-bottom: 2px solid #bbbbbb;
   & > img {
     width: 80px;
@@ -19,6 +19,9 @@ const SelectedItem = styled.div`
   &:last-child {
     border: none;
   }
+`;
+const ItemAddedWrap = styled.div`
+  background-color: rgba(0, 0, 0, 0.15);
 `;
 const SelectedItemInfo = styled.div`
   height: 64px;
@@ -57,14 +60,37 @@ function ItemViewList() {
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
-
-  const navigate = useNavigate();
+  const [addedItem, setAddedItem] = useRecoilState(itemAdded);
+  const [dumy, setDumy] = useState([
+    {
+      category: null,
+      id: 2,
+      itemCode: "321",
+      itemName: "코코볼",
+      locale: "e-4",
+      member: null,
+      price: 6640,
+      weight: 3.1,
+    },
+    {
+      category: null,
+      id: 2,
+      itemCode: "321",
+      itemName: "치킨",
+      locale: "e-4",
+      member: null,
+      price: 6640,
+      weight: 3.1,
+    },
+  ]);
   useEffect(() => {
     let added = 0;
+    //코드로 상품추가 리스트 상품이 추가되면 제거
+    const filter = dumy.findIndex((data) => data.itemCode === "321");
+    dumy.splice(filter, 1);
 
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
-
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
@@ -77,15 +103,15 @@ function ItemViewList() {
           });
           setItemData([...b]);
           added = 1;
+
           break;
         }
       }
       if (!added) {
-        console.log("삭제4");
         setItemData((prev: any) => [...prev, itemDataValue]);
       }
     }
-  }, [itemDataValue]);
+  }, [itemDataValue, addedItem]);
 
   return (
     <>
@@ -108,6 +134,21 @@ function ItemViewList() {
                 </SelectedItem>
               ))
           : null}
+        {dumy &&
+          dumy.map((item: any, index: any) => (
+            <ItemAddedWrap>
+              <SelectedItem key={index}>
+                <img
+                  src={process.env.PUBLIC_URL + `/image/${item.itemCode}.jpeg`}
+                />
+                <SelectedItemInfo>
+                  <div>{item.itemName}</div>
+                  <div>{item.count}1개</div>
+                  <div>{item.price}원</div>
+                </SelectedItemInfo>
+              </SelectedItem>
+            </ItemAddedWrap>
+          ))}
       </Content>
     </>
   );

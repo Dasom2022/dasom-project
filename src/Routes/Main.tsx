@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import {
   beaconVal,
   checkList,
-  item,
+  itemAdded,
   itemDataVal,
   itemInfo,
   searchOpenState,
@@ -234,8 +234,8 @@ const Main = () => {
   const [searchOpen, setSearchOpen] = useRecoilState(searchOpenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoData);
   const [itemDataValue, setItemDataValue] = useRecoilState(itemDataVal);
-  const [itemData, setItemData] = useRecoilState<any>(item);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
+  const [addedItem, setAddedItem] = useRecoilState(itemAdded);
   const [checkListItem, setCheckListItem] = useRecoilState(checkList);
   const [beacon, setBeacon] = useRecoilState(beaconVal);
   const [payOpen, setPayOpen] = useState(false);
@@ -283,29 +283,26 @@ const Main = () => {
     }
   };
   useEffect(() => {
-    if (!userInfo?.username) {
-      navigate("/");
-      alert("로그인 필수!");
-    }
+    // if (!userInfo?.username) {
+    //   navigate("/");
+    //   alert("로그인 필수!");
+    // }
     if (userInfo.role === "ADMIN") navigate("/admin");
     const token = localStorage.getItem("accessToken");
+    //체크리스트
     axios
       .get(`/member/memberItemList?accessToken=${token}`, config)
       .then((reponse: any) => {
         setCheckListItem(reponse);
         if (checkListItem.length !== 0) setOnCheckList(true);
-        console.log(checkListItem.length !== 0);
-        for (let i = 0; i < reponse.data.length; i++) {
-          for (let j = 0; j < reponse.data.length; j++) {
-            if (reponse.data[j].itemName === reponse.data[j].itemName) {
-              setCount((prev) => prev + 1 / 2);
-            }
-          }
-        }
       });
-
+    axios.get(`/item/itemListPutByCode`, config).then((reponse: any) => {
+      setAddedItem(reponse);
+    });
+    //물품코드로 상품추가
     stomp.debug = null;
     stomp.connect({}, () => {
+      //아이템
       stomp.subscribe(`/sub/chat/read/${userInfo.username}`, (data: any) => {
         if (JSON.parse(data.body).body !== "wait") {
           //statusCodeValue
@@ -313,14 +310,14 @@ const Main = () => {
           setItemDataValue(Data.body);
         }
       });
-
+      //총가격
       stomp.subscribe(`/sub/item/weight/${userInfo.username}`, (data: any) => {
         if (JSON.parse(data.body).body !== "wait") {
           const Data = JSON.parse(data.body);
           setItemInfoS(Data);
         }
       });
-
+      //비콘센서
       stomp.subscribe(
         `/sub/api/beacon/locale/${userInfo.username}`,
         (data: any) => {
@@ -332,23 +329,23 @@ const Main = () => {
       );
     });
   }, []);
-  useInterval(() => {
-    stomp.send(
-      `/pub/api/websocket/itemList/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-    stomp.send(
-      `/pub/api/websocket/itemWeight/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-    stomp.send(
-      `/pub/api/beacon/locale/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
-  }, 3000);
+  // useInterval(() => {
+  //   stomp.send(
+  //     `/pub/api/websocket/itemList/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  //   stomp.send(
+  //     `/pub/api/websocket/itemWeight/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  //   stomp.send(
+  //     `/pub/api/beacon/locale/${userInfo.username}`,
+  //     {},
+  //     JSON.stringify({})
+  //   );
+  // }, 3000);
 
   return (
     <Container>

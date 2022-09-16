@@ -50,5 +50,9 @@ export const checkList = atom<any>({
 
 export const beaconVal = atom<any>({
   key: "beaconVal",
-  default: "",
+  default: "a-1",
+});
+export const itemAdded = atom<any>({
+  key: "itemAdded",
+  default: [],
 });

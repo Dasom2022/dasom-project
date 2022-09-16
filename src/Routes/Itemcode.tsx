@@ -112,7 +112,13 @@ function Itemcode() {
     if (item === "X") setCode((prev) => prev.substring(0, prev.length - 1));
     if (item === "Enter") {
       axios
-        .post(`/item/state?itemCode=${code}`, config)
+        .post(
+          `/item/itemCodePutItem`,
+          JSON.stringify({
+            itemCode: code,
+          }),
+          config
+        )
         .then((response) => {
           console.log(response);
           navigate(`/itemcode/${code}`);
