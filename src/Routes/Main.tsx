@@ -18,6 +18,7 @@ import ItemViewList from "../Components/ItemViewList";
 import useInterval from "../hooks/useInterval";
 import { motion } from "framer-motion";
 import SearchResultItem from "../Components/SearchResultItem";
+import QandA from "../Components/QandA";
 const Stomp = require("stompjs");
 const Container = styled.div`
   width: 100%;
@@ -108,6 +109,7 @@ const Infos = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
+  margin-right: 70px;
   & > :last-child {
     margin-left: 40px;
   }
@@ -297,7 +299,9 @@ const Main = () => {
         if (checkListItem.length !== 0) setOnCheckList(true);
       });
     axios.get(`/item/itemListPutByCode`, config).then((reponse: any) => {
-      setAddedItem(reponse);
+      if (reponse.data[0].itemCode) {
+        setAddedItem(reponse.data);
+      }
     });
     //물품코드로 상품추가
     stomp.debug = null;
@@ -471,6 +475,7 @@ const Main = () => {
           </div>
         </Pay>
       ) : null}
+      <QandA />
     </Container>
   );
 };

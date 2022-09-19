@@ -61,36 +61,20 @@ function ItemViewList() {
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
   const [addedItem, setAddedItem] = useRecoilState(itemAdded);
-  const [dumy, setDumy] = useState([
-    {
-      category: null,
-      id: 2,
-      itemCode: "321",
-      itemName: "코코볼",
-      locale: "e-4",
-      member: null,
-      price: 6640,
-      weight: 3.1,
-    },
-    {
-      category: null,
-      id: 2,
-      itemCode: "321",
-      itemName: "치킨",
-      locale: "e-4",
-      member: null,
-      price: 6640,
-      weight: 3.1,
-    },
-  ]);
+
   useEffect(() => {
     let added = 0;
     //코드로 상품추가 리스트 상품이 추가되면 제거
-    const filter = dumy.findIndex((data) => data.itemCode === "321");
-    dumy.splice(filter, 1);
-
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
+      //코드로 상품추가 리스트 상품이 추가되면 제거
+      if (addedItem.length > 0) {
+        setAddedItem(
+          addedItem.filter(
+            (data: any) => data.itemCode != itemDataValue.itemCode
+          )
+        );
+      }
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
@@ -109,6 +93,14 @@ function ItemViewList() {
       }
       if (!added) {
         setItemData((prev: any) => [...prev, itemDataValue]);
+        //코드로 상품추가 리스트 상품이 추가되면 제거
+        if (addedItem.length > 0) {
+          setAddedItem(
+            addedItem.filter(
+              (data: any) => data.itemCode != itemDataValue.itemCode
+            )
+          );
+        }
       }
     }
   }, [itemDataValue, addedItem]);
@@ -134,8 +126,8 @@ function ItemViewList() {
                 </SelectedItem>
               ))
           : null}
-        {dumy &&
-          dumy.map((item: any, index: any) => (
+        {addedItem &&
+          addedItem.map((item: any, index: any) => (
             <ItemAddedWrap>
               <SelectedItem key={index}>
                 <img

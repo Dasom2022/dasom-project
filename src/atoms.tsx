@@ -56,3 +56,7 @@ export const itemAdded = atom<any>({
   key: "itemAdded",
   default: [],
 });
+export const qandaDeatils = atom<any>({
+  key: "qandaDeatils",
+  default: null,
+});

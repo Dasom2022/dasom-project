@@ -34,6 +34,7 @@ function App() {
         <Route path="/join" element={<Join />}></Route>
         <Route path="/main" element={<Main />}>
           <Route path="/main/:itemId" element={<Main />} />
+          <Route path="/main/qna/:id" element={<Main />} />
         </Route>
         <Route path="/admin" element={<Admin />}></Route>
         <Route path="/admin/:category" element={<AdminDetail />}></Route>
