@@ -84,7 +84,7 @@ const Contents = styled.div`
   ::-webkit-scrollbar {
     width: 0px;
   }
-  height: 365px;
+  height: 330px;
 `;
 const ContentHeader = styled.div`
   span {
@@ -126,21 +126,17 @@ const ChatDescription = styled.div`
   text-align: right;
   font-weight: 600;
 `;
-const Etc = styled.div`
-  margin-top: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  div {
-    border-radius: 20px;
+
+const Number = styled.div`
+  text-align: center;
+  span {
     padding: 10px;
     background-color: #32965c;
     font-size: 14px;
-    color: white;
-    :first-child {
-      margin-right: 15px;
-    }
+    border-radius: 10px;
+    color: whitesmoke;
   }
+  margin-top: 15px;
 `;
 function QandA() {
   const [id, setId] = useState<null | string>(null);
@@ -207,6 +203,9 @@ function QandA() {
                   </ChatBox>
                 ))}
               </Contents>
+              <Number>
+                <span>문의사항은 010-1234-1234</span>
+              </Number>
             </>
           )}
         </NavList>
