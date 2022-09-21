@@ -68,13 +68,13 @@ function ItemViewList() {
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
       //코드로 상품추가 리스트 상품이 추가되면 제거
-      if (addedItem.length > 0) {
-        setAddedItem(
-          addedItem.filter(
-            (data: any) => data.itemCode != itemDataValue.itemCode
-          )
-        );
-      }
+      // if (addedItem.length > 0) {
+      //   setAddedItem(
+      //     addedItem.filter(
+      //       (data: any) => data.itemCode != itemDataValue.itemCode
+      //     )
+      //   );
+      // }
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
@@ -94,13 +94,13 @@ function ItemViewList() {
       if (!added) {
         setItemData((prev: any) => [...prev, itemDataValue]);
         //코드로 상품추가 리스트 상품이 추가되면 제거
-        if (addedItem.length > 0) {
-          setAddedItem(
-            addedItem.filter(
-              (data: any) => data.itemCode != itemDataValue.itemCode
-            )
-          );
-        }
+        // if (addedItem.length > 0) {
+        //   setAddedItem(
+        //     addedItem.filter(
+        //       (data: any) => data.itemCode != itemDataValue.itemCode
+        //     )
+        //   );
+        // }
       }
     }
   }, [itemDataValue, addedItem]);
