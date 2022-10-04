@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import {
   beaconVal,
   checkList,
+  item,
   itemAdded,
   itemDataVal,
   itemInfo,
@@ -243,8 +244,10 @@ const Main = () => {
   const [payOpen, setPayOpen] = useState(false);
   const [count, setCount] = useState(0);
   const [onCheckList, setOnCheckList] = useState(false);
+  const [itemData, setItemData] = useRecoilState<any>(item);
   const navigate = useNavigate();
   const Logout = async (social: string) => {
+    setItemData([]);
     if (social === "KAKAO") {
       //카카오 로그아웃
       const KAKAO_AUTH_URL_LOGOUT = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_REST_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_LOGOUT_REDIRECT_URI}`;
@@ -283,6 +286,7 @@ const Main = () => {
       setOnCheckList(false);
       navigate("/");
     }
+    window.location.reload();
   };
   useEffect(() => {
     // if (!userInfo?.username) {
@@ -298,12 +302,13 @@ const Main = () => {
         setCheckListItem(reponse);
         if (checkListItem.length !== 0) setOnCheckList(true);
       });
+    //물품코드로 상품추가
     axios.get(`/item/itemListPutByCode`, config).then((reponse: any) => {
-      if (reponse.data[0].itemCode) {
+      if (reponse?.data.itemList.length > 0) {
         setAddedItem(reponse.data);
       }
     });
-    //물품코드로 상품추가
+
     stomp.debug = null;
     stomp.connect({}, () => {
       //아이템
@@ -334,11 +339,7 @@ const Main = () => {
     });
   }, []);
   useInterval(() => {
-    stomp.send(
-      `/pub/api/websocket/itemList/${userInfo.username}`,
-      {},
-      JSON.stringify({})
-    );
+    stomp.send(`/pub/api/websocket/itemList/${userInfo.username}`, {});
     stomp.send(
       `/pub/api/websocket/itemWeight/${userInfo.username}`,
       {},

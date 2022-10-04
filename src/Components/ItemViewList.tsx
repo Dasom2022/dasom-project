@@ -61,20 +61,49 @@ function ItemViewList() {
   const [itemData, setItemData] = useRecoilState<any>(item);
   const [itemInfoS, setItemInfoS] = useRecoilState(itemInfo);
   const [addedItem, setAddedItem] = useRecoilState(itemAdded);
-
+  const [dumy, setDumy] = useState([
+    {
+      category: null,
+      id: 2,
+      itemCode: "321",
+      itemName: "코코볼",
+      locale: "e-4",
+      member: null,
+      price: 6640,
+      weight: 3.1,
+    },
+    {
+      category: null,
+      id: 2,
+      itemCode: "321",
+      itemName: "치킨",
+      locale: "e-4",
+      member: null,
+      price: 6640,
+      weight: 3.1,
+    },
+  ]);
   useEffect(() => {
+    // console.log(
+    //   addedItem.itemList.filter(
+    //     (data: any) =>
+    //       itemDataValue.itemCode != Object.entries(addedItem.hashMap)[0][0]
+    //   )
+    // );
     let added = 0;
     //코드로 상품추가 리스트 상품이 추가되면 제거
     if (itemDataValue.length != 0 && itemData.length == 0) {
       setItemData([itemDataValue]);
       //코드로 상품추가 리스트 상품이 추가되면 제거
-      // if (addedItem.length > 0) {
+      // if (addedItem.itemList.length > 0) {
       //   setAddedItem(
       //     addedItem.filter(
       //       (data: any) => data.itemCode != itemDataValue.itemCode
       //     )
       //   );
       // }
+      // Object.entries(addedItem.hashMap)[0][0] == item.itemCode &&
+      //                 Object.entries(addedItem.hashMap)[0][1]}
       return;
     } else if (itemData.length != 0) {
       for (let i = 0; i < itemData.length; i++) {
@@ -104,7 +133,7 @@ function ItemViewList() {
       }
     }
   }, [itemDataValue, addedItem]);
-
+  console.log();
   return (
     <>
       <Content>
@@ -126,21 +155,37 @@ function ItemViewList() {
                 </SelectedItem>
               ))
           : null}
-        {addedItem &&
-          addedItem.map((item: any, index: any) => (
-            <ItemAddedWrap>
-              <SelectedItem key={index}>
-                <img
-                  src={process.env.PUBLIC_URL + `/image/${item.itemCode}.jpeg`}
-                />
-                <SelectedItemInfo>
-                  <div>{item.itemName}</div>
-                  <div>{item.count}1개</div>
-                  <div>{item.price}원</div>
-                </SelectedItemInfo>
-              </SelectedItem>
-            </ItemAddedWrap>
-          ))}
+        {addedItem.itemList &&
+          addedItem.itemList
+            .filter(
+              (data: any) =>
+                Object.entries(addedItem.hashMap)[0][0] !=
+                  itemDataValue.itemCode ||
+                data.itemCode != Object.entries(addedItem.hashMap)[0][0]
+              // || Object.entries(addedItem.hashMap)[0][0] ==
+              // data.itemCode
+            )
+            .map((item: any, index: any) => (
+              <ItemAddedWrap>
+                <SelectedItem key={index}>
+                  <img
+                    src={
+                      process.env.PUBLIC_URL + `/image/${item.itemCode}.jpeg`
+                    }
+                  />
+                  <SelectedItemInfo>
+                    <div>{item.itemName}</div>
+                    <div>
+                      {Object.entries(addedItem.hashMap)[0][0] ==
+                        item.itemCode &&
+                        Object.entries(addedItem.hashMap)[0][1]}
+                      개
+                    </div>
+                    <div>{item.price}원</div>
+                  </SelectedItemInfo>
+                </SelectedItem>
+              </ItemAddedWrap>
+            ))}
       </Content>
     </>
   );
