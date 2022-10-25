@@ -323,6 +323,7 @@ const Main = () => {
       stomp.subscribe(`/sub/item/weight/${userInfo.username}`, (data: any) => {
         if (JSON.parse(data.body).body !== "wait") {
           const Data = JSON.parse(data.body);
+          console.log(Data);
           setItemInfoS(Data);
         }
       });
@@ -371,7 +372,7 @@ const Main = () => {
             </div>
             <div>
               <UserName>
-                <span>{userInfo?.username}</span>님 환영합니다!
+                <span>{userInfo?.username}test</span>님 환영합니다!
               </UserName>
               <button onClick={() => navigate("/mypage")}>마이페이지</button>
               <button onClick={() => Logout(userInfo?.socialType)}>
@@ -393,11 +394,11 @@ const Main = () => {
             <Infos>
               <Infomation>
                 <span>개수</span>
-                <span>{itemInfoS?.totalCount}</span>
+                <span>{itemInfoS?.totalCount}1</span>
               </Infomation>
               <Infomation>
                 <span>총 가격</span>
-                <span>{itemInfoS?.totalPrice}</span>
+                <span>{itemInfoS?.totalPrice}6640</span>
               </Infomation>
             </Infos>
           </SelectedInfo>

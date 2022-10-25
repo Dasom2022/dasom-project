@@ -71,16 +71,7 @@ function ItemViewList() {
       member: null,
       price: 6640,
       weight: 3.1,
-    },
-    {
-      category: null,
-      id: 2,
-      itemCode: "321",
-      itemName: "치킨",
-      locale: "e-4",
-      member: null,
-      price: 6640,
-      weight: 3.1,
+      count: 1,
     },
   ]);
   useEffect(() => {
@@ -137,8 +128,8 @@ function ItemViewList() {
   return (
     <>
       <Content>
-        {itemData.length > 0
-          ? itemData
+        {dumy.length > 0
+          ? dumy
               .filter((item: any) => item.count > 0)
               .map((item: any, index: any) => (
                 <SelectedItem key={index}>
@@ -155,7 +146,7 @@ function ItemViewList() {
                 </SelectedItem>
               ))
           : null}
-        {addedItem.itemList &&
+        {/* {addedItem.itemList &&
           addedItem.itemList
             .filter(
               (data: any) =>
@@ -185,7 +176,7 @@ function ItemViewList() {
                   </SelectedItemInfo>
                 </SelectedItem>
               </ItemAddedWrap>
-            ))}
+            ))} */}
       </Content>
     </>
   );
