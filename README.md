@@ -1,6 +1,6 @@
 ## 📖 상세 내용
 
-![4](https://user-images.githubusercontent.com/77488652/197758466-e2d63454-e9fc-4623-aaab-eaf140fbce36.png)
+![4](https://user-images.githubusercontent.com/77488652/197758913-353423e9-dc22-4c70-86c0-65bcbb9e7685.png)
 
 ## 📹 Video
 
