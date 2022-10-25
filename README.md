@@ -1,6 +1,10 @@
 ## 📖 상세 내용
 
-![6.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7e409646-fc2f-4b39-8774-d4896127e680/6.png)
+![4](https://user-images.githubusercontent.com/77488652/197758466-e2d63454-e9fc-4623-aaab-eaf140fbce36.png)
+
+## 📹 Video
+
+[[다솜] 스마트 쇼핑카트 DAMA 졸업작품](https://www.youtube.com/watch?v=-njb_OkTuNA)
 
 ## 🛠️ 사용 기술 및 라이브러리
 
